@@ -20,14 +20,12 @@ class MyApp extends StatelessWidget{
           child: Column(
            mainAxisAlignment: MainAxisAlignment.center,
            children: <Widget>[
-            textbutton(),
-             
+             textbutton(),
+              SizedBox(height: 20,),
              Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, //linhas
               children: <Widget>[
-                
-              Container(width: 50,height:50 , color: Colors.deepPurple),
-              Container(width: 50,height: 50, color: Colors.green,)
+              Container(width: 30,height:30 , color: Colors.deepPurple),
+              Container(width: 30,height: 30, color: Colors.green,)
               ],
              )
            ]
@@ -66,22 +64,11 @@ class _textbuttonState extends State<textbutton> {
            height: 50,
          
           alignment: Alignment.center,
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:<Widget> [ 
-              Expanded(
-                flex: 1,
-                child:  Icon(Icons.add, color: Colors.black),
-           ),
-          Expanded(
-            flex: 4,// divide em colunas no numero das somas do flex do objeto
-            child: Text('ola mundo',textAlign: TextAlign.right, style: TextStyle(color: Colors.amber),) ) // expanded serve para ocupar todo o espaço da row ou collunm
-          ]
-          ) ,
+          child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
             ),
-    
-        );
-    
+          ),
+        ),
+    );
     
   }
 }
