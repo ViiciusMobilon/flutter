@@ -12,26 +12,44 @@ class MyApp extends StatelessWidget{
         ),
         home:Scaffold(
          body: Container(
+           
           decoration: BoxDecoration(
-            color: Colors.amber,
-
+            image: DecorationImage(image: AssetImage("assets/image/fundo1.jpeg"),//fundo da imagem
+            fit: BoxFit.cover
+            ) 
           ),
           
           child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
+           mainAxisAlignment: MainAxisAlignment.spaceAround,
            children: <Widget>[
+            Container(
+              decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/image/fundo1.jpeg"),
+               fit: BoxFit.cover)
+              
+              ),
+            ),
+           
+             Container(
+ width: MediaQuery.of(context).size.width * 0.7, // 70% da largura da tela
+  height: MediaQuery.of(context).size.height * 0.3, // 30% da altura da tela
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage("assets/image/LOGO.png"),
+      fit: BoxFit.contain
+    )
+  ),
+), 
+Container(
+            child: Text("ola mundo" , style: TextStyle(color: Colors.white),),
+           ),
+             SizedBox(height: 20,),
              textbutton(),
-              SizedBox(height: 20,),
-             Row(
-              children: <Widget>[
-              Container(width: 30,height:30 , color: Colors.deepPurple),
-              Container(width: 30,height: 30, color: Colors.green,)
-              ],
-             )
+              
            ]
           ),
          ),
         ),
+        debugShowCheckedModeBanner: false,
     );
     
   }
@@ -52,15 +70,9 @@ class _textbuttonState extends State<textbutton> {
         decoration: BoxDecoration(
           color: Colors.blue,// se tiver decoration coloque a cor aqui
           borderRadius:  BorderRadius.circular(10.0),
-          boxShadow: <BoxShadow>[//para todas as caracteristicas do boxshadow
-           BoxShadow(
-            color: Colors.black,
-            offset: Offset(10, 5),//posição 
-            blurRadius: 5 //fumaça
-           )
-          ]
+         
         ),
-           width: double.infinity,
+           width: 150,
            height: 50,
          
           alignment: Alignment.center,
