@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/row.dart';
 
-void main () => runApp(MyApp());
+void main () => runApp(Homepage());
 
-class MyApp extends StatelessWidget{
+class Homepage extends StatelessWidget{
     @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget{
       fit: BoxFit.contain
     )
   ),
+  
 ), 
 Container(
             child: Text("ola mundo" , style: TextStyle(color: Colors.white),),
@@ -66,20 +68,24 @@ class _textbuttonState extends State<textbutton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,// se tiver decoration coloque a cor aqui
-          borderRadius:  BorderRadius.circular(10.0),
-         
-        ),
-           width: 150,
-           height: 50,
-         
-          alignment: Alignment.center,
-          child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyApp() )),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,// se tiver decoration coloque a cor aqui
+            borderRadius:  BorderRadius.circular(10.0),
+            
+           
+          ),
+             width: 150,
+             height: 50,
+           
+            alignment: Alignment.center,
+            child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
+              ),
             ),
           ),
-        ),
+      ),
     );
     
   }
