@@ -61,6 +61,7 @@ flutter:
   assets:
    - assets/image/fundo1.jpeg
    - assets/image/LOGO.png
+   - assets/image/fundog.jpg
    
 
   # An image asset can refer to one or more resolution-specific "variants", see
