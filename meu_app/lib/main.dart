@@ -68,24 +68,25 @@ class _textbuttonState extends State<textbutton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Raised
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,// se tiver decoration coloque a cor aqui
-            borderRadius:  BorderRadius.circular(10.0),
-            
-           
-          ),
-             width: 150,
-             height: 50,
-           
-            alignment: Alignment.center,
-            child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyApp() )),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,// se tiver decoration coloque a cor aqui
+              borderRadius:  BorderRadius.circular(10.0),
+              
+             
+            ),
+               width: 150,
+               height: 50,
+             
+              alignment: Alignment.center,
+              child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
+                ),
               ),
             ),
-          ),
-      ),
-    );
+        ),
+      );
     
   }
 }

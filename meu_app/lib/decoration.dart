@@ -26,12 +26,30 @@ class stackwidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(// sobrepondo widget
-      children:   <Widget>[
-        Container(height: 400, color: Colors.red),
-        Container(height: 300, color: Colors.amber,),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
         
+        Stack(// sobrepondo widget
+          children:   <Widget>[
+           
+           Container(height: 400, color: Colors.red),
+            Container(height: 300, color: Colors.amber,),
+             
+               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                 children: [
+                   CircleAvatar(
+                    backgroundColor: Colors.blue,
+                       child: Text("vm"),),
+                 ],
+               )
+                           
+             
+          ],
+        ),
       ],
     );
     }
     }
+    
