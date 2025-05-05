@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/scrollview.dart';
 
 void main() => runApp(Decorationwidget());   
 
@@ -11,6 +12,7 @@ class Decorationwidget extends StatelessWidget {
          theme:ThemeData(
          ),
          home: Scaffold(
+          appBar: AppBar(),
           body: stackwidget(),
             
           
@@ -29,7 +31,12 @@ class stackwidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        
+        GestureDetector(
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>scrollviewwidget() )),
+          child: Container(height: 50,
+          width: 50,
+          color: Colors.blue,),
+        ),
         Stack(// sobrepondo widget
           children:   <Widget>[
            
@@ -39,11 +46,13 @@ class stackwidget extends StatelessWidget {
                Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                  children: [
-                   CircleAvatar(
-                    backgroundColor: Colors.blue,
-                       child: Text("vm"),),
+                    CircleAvatar(
+                      backgroundColor: Colors.blue,
+                         child: Text("vm"),),
+                   
                  ],
                )
+               
                            
              
           ],
