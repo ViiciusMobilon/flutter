@@ -68,8 +68,7 @@ class _textbuttonState extends State<textbutton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyApp() )),
+      child: Raised
         child: Container(
           decoration: BoxDecoration(
             color: Colors.blue,// se tiver decoration coloque a cor aqui
