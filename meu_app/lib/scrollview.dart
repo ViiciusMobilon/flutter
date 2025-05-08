@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:meu_app/widgetsinglescroll.dart';
 
 void main() => runApp(scrollviewwidget());
 
@@ -10,7 +11,9 @@ class scrollviewwidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(),
-      home: Scaffold(appBar: AppBar(), body: MyWidget(),),
+      home: Scaffold(appBar: AppBar(), body: //MyWidget(),
+      MyWidget()
+      ),
     );
   }
 }
@@ -23,75 +26,40 @@ class MyWidget extends StatelessWidget {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
+      child: ListView(
+        children: <Widget>[
+          
+          ListTile(
+            leading: Icon(Icons.abc_outlined),
+            title: Text("data"),),
+         Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Funcaosingle())),
+              child: Container(height: 200, width: 200, color: Colors.blue)),
+          ),
            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.blue),
-            ),
-         widget2() ],
-        ),
+            padding: const EdgeInsets.all(8.0),
+            child: Container(height: 200, width: 200, color: Colors.blue),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(height: 200, width: 200, color: Colors.blue),
+          ),
+           Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(height: 200, width: 200, color: Colors.blue),
+          ),Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(height: 200, width: 200, color: Colors.blue),
+          ),
+           Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(height: 200, width: 200, color: Colors.blue),
+          ),
+       ],
       ),
     );
   }
 }
-class widget2 extends StatelessWidget {
-  const widget2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: SingleChildScrollView(
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),
-             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(height: 200, width: 200, color: Colors.red),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+  

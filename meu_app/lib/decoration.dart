@@ -33,9 +33,13 @@ class stackwidget extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>scrollviewwidget() )),
-          child: Container(height: 50,
-          width: 50,
-          color: Colors.blue,),
+          child: Material(
+            elevation: 7,//sombra
+            borderRadius: BorderRadius.circular(40),
+            child: Container(height: 50,
+            width: 50,
+            color: Colors.blue,),
+          ),
         ),
         Stack(// sobrepondo widget
           children:   <Widget>[
