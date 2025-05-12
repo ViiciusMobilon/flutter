@@ -32,33 +32,37 @@ class widgetglip extends StatefulWidget {
 class _widgetglipState extends State<widgetglip> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: ListView(
-        children: <Widget>[
-     GestureDetector(
-      onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Homepage() )),
-       child: Container(
+    return ClipPath(
+   clipper: ClipHome(),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.black,
+        child: ListView(
+          children: <Widget>[
+       GestureDetector(
+        onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Homepage() )),
+         child: Container(
+              
+              alignment: Alignment.center,
+              child: ClipOval( //corta a borda ovalmente
+                child: Image.network("https://gru.ifsp.edu.br/images/phocagallery/galeria2/image03_grd.png",
             
-            alignment: Alignment.center,
-            child: ClipOval( //corta a borda ovalmente
-              child: Image.network("https://gru.ifsp.edu.br/images/phocagallery/galeria2/image03_grd.png",
-          
-                fit: BoxFit.cover,
-              )
+                  fit: BoxFit.cover,
+                )
+              ),
             ),
-          ),
-     ),
-        reacwidget(),
-        reacwidget(),
-        reacwidget(),
-        reacwidget(),
-        reacwidget(),
-
-        
-      ]),
-
+       ),
+          reacwidget(),
+          reacwidget(),
+          reacwidget(),
+          reacwidget(),
+          reacwidget(),
+      
+          
+        ]),
+      
+      ),
     );
   }
 }
@@ -82,4 +86,29 @@ class reacwidget extends StatelessWidget {
       ),
     );
   }
+}
+class ClipHome  extends CustomClipper<Path>{
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    // TODO: implement shouldReclip
+    return oldClipper != this;
+  }
+  
+  @override
+  Path getClip(Size size) {
+    // TODO: implement getClip
+
+
+     var path =   Path();
+     path.lineTo(0.0, 0.0);
+     path.lineTo(0.0, size.height);
+     path.lineTo(size.width, 0.0);
+     path.lineTo(0.0, 0.0);
+
+
+
+    return path;
+  }
+
 }
