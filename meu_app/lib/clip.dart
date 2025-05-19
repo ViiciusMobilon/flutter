@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app/main.dart';
+import 'package:meu_app/material.dart';
 
 void main() => runApp(Clipwidget());
 
@@ -41,7 +42,7 @@ class _widgetglipState extends State<widgetglip> {
         child: ListView(
           children: <Widget>[
        GestureDetector(
-        onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Homepage() )),
+        onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Materialwidget() )),
          child: Container(
               
               alignment: Alignment.center,
