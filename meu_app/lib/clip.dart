@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/cadastro.dart';
 import 'package:meu_app/main.dart';
 import 'package:meu_app/material.dart';
 
@@ -42,7 +43,7 @@ class _widgetglipState extends State<widgetglip> {
         child: ListView(
           children: <Widget>[
        GestureDetector(
-        onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Materialwidget() )),
+        onDoubleTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Cadastro() )),
          child: Container(
               
               alignment: Alignment.center,
