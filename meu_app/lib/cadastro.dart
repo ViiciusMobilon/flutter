@@ -9,231 +9,19 @@ class Cadastro extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(),
       home: Scaffold(
-        body: Column(
+        
+        body: ListView(
+children: [
+     Padding(padding: EdgeInsets.only(top:100, left: 100,right: 100),
+     child: email(),),
+     Padding(padding: EdgeInsets.only())
+],
+
+        )
+
           
-            children: <Widget>[
-                
-                 Container(
-                   height: double.infinity,
-                        width:double.infinity,
-                   child: ListView(
-                    children: [
-                      Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                     Padding(
-                       padding: EdgeInsets.only(top:MediaQuery.of(context).size.width * 0.1, left: MediaQuery.of(context).size.width * 0.1, ),
-                       child: Container(
-                       
-                        child: email(),
-                        
-                       ),
-                     ),
-                   ],),
-                 )
-
-            ],
-        ),
-      ),
-    );
+        )
+        );
   }
 }
 
@@ -262,3 +50,4 @@ class _emailState extends State<email> {
     );
   }
 }
+
