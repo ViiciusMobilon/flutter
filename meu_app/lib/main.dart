@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:meu_app/cadastro.dart';
 import 'package:meu_app/row.dart';
 
-void main () => runApp(Homepage());
+void main() {
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Somente retrato normal
+    // Você pode adicionar outras se quiser permitir
+  ]).then((_) {
+    runApp(Homepage());
+  });
+}
 
 class Homepage extends StatelessWidget{
     @override
@@ -69,7 +80,7 @@ class _textbuttonState extends State<textbutton> {
     return Padding(
       padding: const EdgeInsets.all(10),
         child: GestureDetector(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyApp() )),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Cadastro() )),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.blue,// se tiver decoration coloque a cor aqui

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(Cadastro());
+void main(){  runApp(Cadastro());}
 class Cadastro extends StatelessWidget {
    Cadastro({super.key});
 
@@ -21,17 +21,42 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
         ),
         body: ListView(
 children: [
-
-    Padding(padding: EdgeInsets.only()),
+ //imagem
+    Padding(padding: EdgeInsets.only(top: 20)),
     Container(
-    width: MediaQuery.of(context).size.width * 0.4, // 70% da largura da tela
+    width: MediaQuery.of(context).size.width * 0.7, // 70% da largura da tela
     height: MediaQuery.of(context).size.height * 0.2, // 30% da altura da tela
     decoration: BoxDecoration(
     image: DecorationImage(
       image: AssetImage("assets/image/LOGO.png"),
       fit: BoxFit.contain))),
+//fim da imagem
 
-      Padding(padding: EdgeInsets.only(bottom:10,left:MediaQuery.of(context).size.width*0.2 ,right: MediaQuery.of(context).size.width*0.1,top: 40)),
+
+//email
+     Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.1, 
+     left: MediaQuery.of(context).size.width*0.2, 
+     bottom:MediaQuery.of(context).size.width*0.1,
+     right:MediaQuery.of(context).size.width*0.2  ),
+     child: email(),),
+     //fim email
+     //senha
+     Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.0, 
+     left: MediaQuery.of(context).size.width*0.2, 
+     bottom:MediaQuery.of(context).size.width*0,
+     right:MediaQuery.of(context).size.width*0.2  ),
+     child: senha(),),
+ //fim senha
+     Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.0, 
+     left: MediaQuery.of(context).size.width*0.2, 
+     bottom:MediaQuery.of(context).size.width*0,
+     right:MediaQuery.of(context).size.width*0.2  ),
+     child: verificarsenha(),),
+     //texto clique aqui
+      Padding(padding: EdgeInsets.only(bottom:10,
+      left:MediaQuery.of(context).size.width*0.2 ,
+      right: MediaQuery.of(context).size.width*0.1,
+      top: 10)),
       Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,21 +70,17 @@ children: [
         )
        ],
       ),
+//fim do texto clique aqui
 
-     Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.1, 
+       Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.1, 
      left: MediaQuery.of(context).size.width*0.2, 
-     bottom:MediaQuery.of(context).size.width*0.1,
+     bottom:MediaQuery.of(context).size.width*0,
      right:MediaQuery.of(context).size.width*0.2  ),
-     child: email(),),
-
-     Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.1, 
-     left: MediaQuery.of(context).size.width*0.2, 
-     bottom:MediaQuery.of(context).size.width*0.2,
-     right:MediaQuery.of(context).size.width*0.2  ),
-     child: senha(),),
-
-
-     
+     child: SizedBox(
+      height: 50,
+      width: 200,
+      child: button(),
+     )),
 
 
 ],
@@ -88,10 +109,10 @@ class _emailState extends State<email> {
         labelText:"email" ,labelStyle: TextStyle(color: Colors.black)  ,
             hintText: "blabla@gmail.com",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red)
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5)
         ),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black)
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5)
         )
       ),
 
@@ -128,14 +149,14 @@ class _senhaState extends State<senha> {
             border: UnderlineInputBorder(
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: const Color.fromARGB(255, 255, 0, 0), width: 1.5),
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
               
             ),
             disabledBorder:UnderlineInputBorder(
-              borderSide: BorderSide(color: const Color.fromARGB(255, 0, 0, 0)),
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
             ),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: const Color.fromARGB(255, 0, 0, 0)),
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
             ),
             suffixIcon: IconButton( icon:Icon(senha ? Icons.visibility_off :Icons.visibility ), onPressed: mudarvisao )
              ),
@@ -145,29 +166,72 @@ class _senhaState extends State<senha> {
   }
 }
  
- class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+ class verificarsenha extends StatefulWidget {
+  const verificarsenha({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  _verificarsenhaState createState() =>_verificarsenhaState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _verificarsenhaState extends State<verificarsenha> {
   @override
-  Widget build(BuildContext context) {
-    return TextField(
+  bool senha = true;
 
-      decoration: InputDecoration(
-        labelText:"email" ,labelStyle: TextStyle(color: Colors.black)  ,
-            hintText: "blabla@gmail.com",
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red)
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.black)
-        )
-      ),
-    );
+  void mudarvisao(){
+    setState(() {
+      senha=! senha;
+    });
+  }
+  Widget build(BuildContext context) {
+    return 
+          TextField(
+                   
+                   maxLength: 5,  
+                   autofocus: false,
+                   obscureText: senha,
+             decoration: InputDecoration(
+            labelText:"confirmar senha" ,labelStyle: TextStyle(color: Colors.black)  ,
+            hintText: "123456",
+            border: UnderlineInputBorder(
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
+              
+            ),
+            disabledBorder:UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5),
+            ),
+            suffixIcon: IconButton( icon:Icon(senha ? Icons.visibility_off :Icons.visibility ), onPressed: mudarvisao )
+             ),
+               
+        
+         );
   }
 }
 
+class button extends StatefulWidget {
+  button({super.key});
+final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
+  @override
+  State<button> createState() => _buttonState();
+}
+
+class _buttonState extends State<button> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(15, 40, 89, 1.0),
+        borderRadius: BorderRadius.all(Radius.circular(10))
+      ),
+      alignment: Alignment.center,
+      height: MediaQuery.of(context).size.height*0.01,
+      
+      width: MediaQuery.of(context).size.width*0.01,
+     child: Text("cadastrar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+    );
+  }
+}
