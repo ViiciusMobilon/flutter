@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/escolha_registro.dart';
 
 void main(){  runApp(Cadastro());}
 class Cadastro extends StatelessWidget {
@@ -222,16 +223,19 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
 class _buttonState extends State<button> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(15, 40, 89, 1.0),
-        borderRadius: BorderRadius.all(Radius.circular(10))
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder:(context) => Escolha_registro(), )),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(15, 40, 89, 1.0),
+          borderRadius: BorderRadius.all(Radius.circular(10))
+        ),
+        alignment: Alignment.center,
+        height: MediaQuery.of(context).size.height*0.01,
+        
+        width: MediaQuery.of(context).size.width*0.01,
+       child: Text("Continuar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
       ),
-      alignment: Alignment.center,
-      height: MediaQuery.of(context).size.height*0.01,
-      
-      width: MediaQuery.of(context).size.width*0.01,
-     child: Text("cadastrar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
     );
   }
 }
