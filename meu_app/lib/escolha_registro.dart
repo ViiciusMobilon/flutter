@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/cadastro.dart';
 
 void main()=> runApp(Escolha_registro());
 class Escolha_registro extends StatelessWidget {
@@ -14,13 +15,23 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
           title: Text("Qual é o seu perfil?",textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
           backgroundColor: cor,
         ),
-        body: Container(
-          child: Center(
+        body: Stack(
+          children: [
+            Positioned(
+              top: 16,
+              left: 16,
+              child: GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Cadastro(),)),
+                child: Icon(Icons.arrow_back_ios_rounded)),
+            ),
+           Center(
             child: Column(
 
               children: <Widget>[
                   //imagem
-    Padding(padding: EdgeInsets.only(top: 40)),
+                  
+   
+        Padding(padding: EdgeInsets.only(top: 40)),
     Container(
     width: MediaQuery.of(context).size.width * 0.7, // 70% da largura da tela
     height: MediaQuery.of(context).size.height * 0.3, // 30% da altura da tela
@@ -28,13 +39,15 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
     image: DecorationImage(
       image: AssetImage("assets/image/LOGO.png"),
       fit: BoxFit.contain))),
+ 
+    
 //fim da imagem
 //empresa
       Padding(padding: EdgeInsets.only(
         top:MediaQuery.of(context).size.width*0.1),
         child: SizedBox(
-          height: 100,
-          width: 300,
+          height:MediaQuery.of(context).size.height*0.15 ,
+          width: MediaQuery.of(context).size.width*0.8,
           child: button_empresa(),
         ) 
         ),          
@@ -42,8 +55,8 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
              Padding(padding: EdgeInsets.only(
         top:MediaQuery.of(context).size.width*0.01),
         child: SizedBox(
-            height: 100,
-            width: 300,
+          height:MediaQuery.of(context).size.height*0.15 ,
+          width: MediaQuery.of(context).size.width*0.8,
           child: button_prestador(),
         ),
         ),      
@@ -51,15 +64,15 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
         Padding(padding: EdgeInsets.only(
         top:MediaQuery.of(context).size.width*0.01),
         child: SizedBox(
-            height: 100,
-            width: 300,
+           height:MediaQuery.of(context).size.height*0.15 ,
+          width: MediaQuery.of(context).size.width*0.8,
           child: _button_contratante(),
         ),
         ),      
               ],
             ),
           ),
-        ),
+       ] ),
       ),
     );
 }
@@ -74,16 +87,19 @@ class button_empresa extends StatefulWidget {
 class _button_empresaState extends State<button_empresa> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-      height: MediaQuery.of(context).size.height*0.3,
-      width: MediaQuery.of(context).size.width*0.5,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-        color: Color.fromRGBO(15, 40, 89, 1.0),
-      ),
-      child: Center(
-        child: Text("Empresa", textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: 26),
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Empresa(),)),
+      child: Container(
+        
+        height: MediaQuery.of(context).size.height*0.3,
+        width: MediaQuery.of(context).size.width*0.5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+          color: Color.fromRGBO(15, 40, 89, 1.0),
+        ),
+        child: Center(
+          child: Text("Empresa", textAlign: TextAlign.center,style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.width * 0.06,),
+          ),
         ),
       ),
     );
@@ -99,15 +115,18 @@ class button_prestador extends StatefulWidget {
 class _button_prestadorState extends State<button_prestador> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-      height: MediaQuery.of(context).size.height*0.3,
-      width: MediaQuery.of(context).size.width*0.5,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(15, 40, 89, 1.0),
-      ),
-      child: Center(
-        child: Text("Prestador", textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: 26),),
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Prestador(),)),
+      child: Container(
+        
+        height: MediaQuery.of(context).size.height*0.3,
+        width: MediaQuery.of(context).size.width*0.5,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(15, 40, 89, 1.0),
+        ),
+        child: Center(
+          child: Text("Prestador", textAlign: TextAlign.center, style: TextStyle(color: Colors.white,fontSize: MediaQuery.of(context).size.width * 0.06,),),
+        ),
       ),
     );
   }
@@ -122,16 +141,19 @@ class _button_contratante extends StatefulWidget {
 class __button_contratanState extends State<_button_contratante> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-      height: MediaQuery.of(context).size.height*0.3,
-      width: MediaQuery.of(context).size.width*0.5,
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(15, 40, 89, 1.0),
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-      ),
-      child: Center(
-        child: Text("Contrante", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 26),),
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Contratante(),)),
+      child: Container(
+        
+        height: MediaQuery.of(context).size.height*0.3,
+        width: MediaQuery.of(context).size.width*0.5,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(15, 40, 89, 1.0),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+        ),
+        child: Center(
+          child: Text("Contrante", textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width * 0.06,),),
+        ),
       ),
     );
   }

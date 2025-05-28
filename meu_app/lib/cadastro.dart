@@ -63,11 +63,11 @@ children: [
         mainAxisAlignment: MainAxisAlignment.center,
        children: [
        
-        Text("ja tem uma conta? clique "),
+        Text("ja tem uma conta? clique ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),),
         
         GestureDetector(
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Cadastro() )),
-          child: Text("Aqui", style: TextStyle(color: Colors.blueAccent),),
+          child: Text("Aqui", style: TextStyle(color: Colors.blueAccent ,fontSize: MediaQuery.of(context).size.width * 0.03,),),
         )
        ],
       ),
@@ -78,8 +78,8 @@ children: [
      bottom:MediaQuery.of(context).size.width*0,
      right:MediaQuery.of(context).size.width*0.2  ),
      child: SizedBox(
-      height: 50,
-      width: 200,
+     height: MediaQuery.of(context).size.height*0.1,
+      width: MediaQuery.of(context).size.width*0.5,
       child: button(),
      )),
 
@@ -107,8 +107,8 @@ class _emailState extends State<email> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        labelText:"email" ,labelStyle: TextStyle(color: Colors.black)  ,
-            hintText: "blabla@gmail.com",
+        labelText:"email" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
+            hintText: "blabla@gmail.com",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5)
         ),
@@ -145,8 +145,8 @@ class _senhaState extends State<senha> {
                    autofocus: false,
                    obscureText: senha,
              decoration: InputDecoration(
-            labelText:"senha" ,labelStyle: TextStyle(color: Colors.black)  ,
-            hintText: "123456",
+            labelText:"senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
+            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
             border: UnderlineInputBorder(
             ),
             focusedBorder: UnderlineInputBorder(
@@ -191,8 +191,8 @@ class _verificarsenhaState extends State<verificarsenha> {
                    autofocus: false,
                    obscureText: senha,
              decoration: InputDecoration(
-            labelText:"confirmar senha" ,labelStyle: TextStyle(color: Colors.black)  ,
-            hintText: "123456",
+            labelText:"confirmar senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
+            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
             border: UnderlineInputBorder(
             ),
             focusedBorder: UnderlineInputBorder(
@@ -231,10 +231,10 @@ class _buttonState extends State<button> {
           borderRadius: BorderRadius.all(Radius.circular(10))
         ),
         alignment: Alignment.center,
-        height: MediaQuery.of(context).size.height*0.01,
+        height: MediaQuery.of(context).size.height*0.009,
         
         width: MediaQuery.of(context).size.width*0.01,
-       child: Text("Continuar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+       child: Text("Continuar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white ,fontSize: MediaQuery.of(context).size.width * 0.06,),),
       ),
     );
   }

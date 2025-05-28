@@ -53,7 +53,7 @@ class Homepage extends StatelessWidget{
   
 ), 
 Container(
-            child: Text("ola mundo" , style: TextStyle(color: Colors.white),),
+            child: Text("ola mundo" , style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width * 0.06,),),
            ),
              SizedBox(height: 20,),
              textbutton(),
@@ -88,11 +88,11 @@ class _textbuttonState extends State<textbutton> {
               
              
             ),
-               width: 150,
-               height: 50,
+               width:MediaQuery.of(context).size.width * 0.4,
+               height: MediaQuery.of(context).size.height * 0.1,
              
               alignment: Alignment.center,
-              child: Text("Ola mundo" ,style: TextStyle(color: Colors.white
+              child: Text("Ola mundo" ,style: TextStyle(color: Colors.white ,fontSize: MediaQuery.of(context).size.width * 0.06,
                 ),
               ),
             ),
