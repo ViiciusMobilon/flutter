@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:meu_app/clip.dart';
+import 'package:meu_app/resto/clip.dart';
 
 void main() => runApp(Funcaosingle());
 

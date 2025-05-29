@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meu_app/cadastro.dart';
-import 'package:meu_app/row.dart';
+import 'package:meu_app/resto/row.dart';
 
 void main() {
   
@@ -88,8 +88,8 @@ class _textbuttonState extends State<textbutton> {
               
              
             ),
-               width:MediaQuery.of(context).size.width * 0.4,
-               height: MediaQuery.of(context).size.height * 0.1,
+               width:MediaQuery.of(context).size.width * 0.47,
+               height: MediaQuery.of(context).size.height * 0.09,
              
               alignment: Alignment.center,
               child: Text("Ola mundo" ,style: TextStyle(color: Colors.white ,fontSize: MediaQuery.of(context).size.width * 0.06,

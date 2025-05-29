@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app/cadastro.dart';
+import 'package:meu_app/contratante.dart';
+import 'package:meu_app/empresa.dart';
+import 'package:meu_app/prestador.dart';
 
 void main()=> runApp(Escolha_registro());
 class Escolha_registro extends StatelessWidget {

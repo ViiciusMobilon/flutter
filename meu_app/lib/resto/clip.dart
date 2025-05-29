@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app/cadastro.dart';
 import 'package:meu_app/main.dart';
-import 'package:meu_app/material.dart';
+import 'package:meu_app/resto/material.dart';
 
 void main() => runApp(Clipwidget());
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_app/decoration.dart';
+import 'package:meu_app/resto/decoration.dart';
 
 void main () => runApp(MyApp());
 

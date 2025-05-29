@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:meu_app/widgetsinglescroll.dart';
+import 'package:meu_app/resto/widgetsinglescroll.dart';
 
 void main() => runApp(scrollviewwidget());
 
