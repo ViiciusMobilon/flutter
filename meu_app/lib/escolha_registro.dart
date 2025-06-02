@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app/cadastro.dart';
 import 'package:meu_app/contratante.dart';
-import 'package:meu_app/empresa.dart';
 import 'package:meu_app/prestador.dart';
 
 void main()=> runApp(Escolha_registro());
@@ -91,7 +90,7 @@ class _button_empresaState extends State<button_empresa> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Empresa(),)),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Prestador(),)),
       child: Container(
         
         height: MediaQuery.of(context).size.height*0.3,
