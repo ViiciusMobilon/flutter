@@ -5,7 +5,7 @@ void main(){  runApp(Cadastro());}
 class Cadastro extends StatelessWidget {
    Cadastro({super.key});
 
-final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
+final Color cor =  Color(0xFF0F2859);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +14,7 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
       home: Scaffold(
         appBar: AppBar(
           title:Text("Cadastro",
-        style: TextStyle( color: Colors.white),
+        style: TextStyle( color: const Color.fromARGB(252, 255, 254, 254)),
         textAlign: TextAlign.center,
           ),
           centerTitle: true,
@@ -63,11 +63,11 @@ children: [
         mainAxisAlignment: MainAxisAlignment.center,
        children: [
        
-        Text("ja tem uma conta? clique ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),),
+        Text("ja tem uma conta? clique ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),),
         
         GestureDetector(
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Cadastro() )),
-          child: Text("Aqui", style: TextStyle(color: Colors.blueAccent ,fontSize: MediaQuery.of(context).size.width * 0.03,),),
+          child: Text("Aqui", style: TextStyle(color: const Color.fromRGBO(68, 138, 255, 1) ,fontSize: MediaQuery.of(context).size.width * 0.05,),),
         )
        ],
       ),
@@ -82,7 +82,15 @@ children: [
       width: MediaQuery.of(context).size.width*0.5,
       child: button(),
      )),
+     
 
+     Padding(
+       padding:  EdgeInsets.only(right: MediaQuery.of(context).size.width*0.1,
+       left: MediaQuery.of(context).size.width*0.21
+       ),
+       child: texto(),
+     )
+     
 
 ],
 
@@ -107,8 +115,8 @@ class _emailState extends State<email> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        labelText:"email" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
-            hintText: "blabla@gmail.com",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
+        labelText:"email" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.05,)  ,
+            hintText: "blabla@gmail.com",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1), width: 1.5)
         ),
@@ -145,8 +153,8 @@ class _senhaState extends State<senha> {
                    autofocus: false,
                    obscureText: senha,
              decoration: InputDecoration(
-            labelText:"senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
-            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
+            labelText:"senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.05,)  ,
+            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),
             border: UnderlineInputBorder(
             ),
             focusedBorder: UnderlineInputBorder(
@@ -191,8 +199,8 @@ class _verificarsenhaState extends State<verificarsenha> {
                    autofocus: false,
                    obscureText: senha,
              decoration: InputDecoration(
-            labelText:"confirmar senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.03,)  ,
-            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.03,),
+            labelText:"confirmar senha" ,labelStyle: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.width * 0.05,)  ,
+            hintText: "123456",hintStyle: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05,),
             border: UnderlineInputBorder(
             ),
             focusedBorder: UnderlineInputBorder(
@@ -237,5 +245,20 @@ class _buttonState extends State<button> {
        child: Text("Continuar", textAlign: TextAlign.center, style: TextStyle(color: Colors.white ,fontSize: MediaQuery.of(context).size.width * 0.06,),),
       ),
     );
+  }
+}
+class texto extends StatelessWidget {
+  const texto({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return  Row(
+        children: <Widget>[
+          Text("Ao clicar no botão eu concordo com os ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02)),
+          Text("Termos ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02,color: Colors.blueAccent)),
+          Text("e ", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02)),
+          Text("Publicação", style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.02, color: Colors.blueAccent),)
+        ],
+       );
   }
 }

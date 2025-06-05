@@ -9,28 +9,28 @@ void main() => runApp( Prestador());
 class Prestador extends StatelessWidget {
   
   Prestador({super.key});
-final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
+ 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(),
       home: Scaffold(  
-      appBar: AppBar(backgroundColor:cor ,
-      title: Text("Prestador", style: TextStyle(color: Colors.white),),
-      centerTitle: true,)
-      ,
-        
-         body: Stack(
-          children: [
-            Positioned(
-              top: 16,
-              left: 16,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Escolha_registro(),)),
-                child: Icon(Icons.arrow_back_ios_rounded)),
-            ),
-        
-        ListView(
+      appBar: AppBar(
+  backgroundColor: const Color(0xFFFEF7FD),
+  title: Text("Prestador", style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))),
+  centerTitle: true,
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back_ios_rounded, color: const Color.fromARGB(255, 0, 0, 0)),
+    onPressed: () {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => Escolha_registro(),
+      ));
+    },
+  ),
+),
+      
+      
+      body:   ListView(
           children: <Widget>[
           //perfil
               Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.1, 
@@ -80,13 +80,15 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
       ], ), ),
       Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.08, 
      left: MediaQuery.of(context).size.width*0.1, 
-     bottom:MediaQuery.of(context).size.width*0.1,
      right:MediaQuery.of(context).size.width*0.1  ),
-     child: button(),)
-         ]
+     child: button(),),
+
+     
+     
+         ],
          
-         ),],),)); 
-  }
+      
+  )));}
 }
 
 class Perfil extends StatefulWidget {
@@ -155,8 +157,10 @@ class _PerfilState extends State<Perfil> {
               : Container(
                   width:MediaQuery.of(context).size.width*0.3,
                   height: MediaQuery.of(context).size.width*0.3,
+                  child: Icon(Icons.camera_alt,size: MediaQuery.of(context).size.width*0.1,),
                   decoration: BoxDecoration(
-                    color: Colors.grey
+                    color: Colors.grey,
+                    
                   ),
                 ),
         ),

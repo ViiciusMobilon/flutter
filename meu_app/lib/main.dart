@@ -93,6 +93,8 @@ class _textbuttonState extends State<textbutton> {
              
               alignment: Alignment.center,
               child: Text("Ola mundo" ,style: TextStyle(color: Colors.white ,fontSize: MediaQuery.of(context).size.width * 0.06,
+
+              
                 ),
               ),
             ),

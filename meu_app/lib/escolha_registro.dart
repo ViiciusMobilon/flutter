@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:meu_app/cadastro.dart';
 import 'package:meu_app/contratante.dart';
+import 'package:meu_app/empresa.dart';
 import 'package:meu_app/prestador.dart';
 
 void main()=> runApp(Escolha_registro());
 class Escolha_registro extends StatelessWidget {
  Escolha_registro({super.key});
-final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,18 +14,10 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
       home: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Qual é o seu perfil?",textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
-          backgroundColor: cor,
+        //  title: Text("Quem é você?",textAlign: TextAlign.center, style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),),
+          backgroundColor: const Color(0xFFFEF7FD) ,
         ),
-        body: Stack(
-          children: [
-            Positioned(
-              top: 16,
-              left: 16,
-              child: GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Cadastro(),)),
-                child: Icon(Icons.arrow_back_ios_rounded)),
-            ),
+        body: 
            Center(
             child: Column(
 
@@ -33,7 +25,7 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
                   //imagem
                   
    
-        Padding(padding: EdgeInsets.only(top: 40)),
+        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.001,)),
     Container(
     width: MediaQuery.of(context).size.width * 0.7, // 70% da largura da tela
     height: MediaQuery.of(context).size.height * 0.3, // 30% da altura da tela
@@ -42,7 +34,11 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
       image: AssetImage("assets/image/LOGO.png"),
       fit: BoxFit.contain))),
  
-    
+    Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.width*0.009, 
+     left: MediaQuery.of(context).size.width*0.21, 
+     bottom:MediaQuery.of(context).size.width*0.009,
+     right:MediaQuery.of(context).size.width*0.21  ),
+     child: Text("Quem é você?", style: TextStyle(fontSize:MediaQuery.of(context).size.width*0.05 ),),),
 //fim da imagem
 //empresa
       Padding(padding: EdgeInsets.only(
@@ -74,9 +70,9 @@ final Color cor =  Color.fromRGBO(15, 40, 89, 1.0);
               ],
             ),
           ),
-       ] ),
-      ),
-    );
+       ),
+      );
+  
 }
 }
 class button_empresa extends StatefulWidget {
@@ -90,7 +86,7 @@ class _button_empresaState extends State<button_empresa> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Prestador(),)),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Empresa(),)),
       child: Container(
         
         height: MediaQuery.of(context).size.height*0.3,
