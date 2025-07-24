@@ -33,10 +33,7 @@ class Homepage extends StatelessWidget {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/image/fundo1.jpeg"),
-                    fit: BoxFit.cover,
-                  ),
+                 
                 ),
               ),
 
