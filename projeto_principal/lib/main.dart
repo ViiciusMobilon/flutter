@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro1.dart';
+import 'package:projeto_principal/pagina_principal.dart';
 
 void main() => runApp(Main());
 
@@ -259,47 +260,45 @@ class botao extends StatefulWidget {
 class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.6,
-      height: MediaQuery.of(context).size.height * 0.08,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
-        borderRadius: BorderRadius.all(Radius.circular(40)),
-        boxShadow: <BoxShadow>[
-          //para todas as caracteristicas do boxshadow
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.6),
-            offset: Offset(0, 4), //posição
-            blurRadius: 8, //fumaça
-            spreadRadius: 1,
-          ),
-        ],
+    return  GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => TelaPrincipal()),
       ),
-
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              left: MediaQuery.of(context).size.width * 0.09,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.6,
+        height: MediaQuery.of(context).size.height * 0.08,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
+          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              offset: const Offset(0, 4),
+              blurRadius: 8,
+              spreadRadius: 1,
             ),
-            child: Text(
-              "Entrar",
-              style: TextStyle(
-                color: const Color.from(
-                  alpha: 1,
-                  red: 0.988,
-                  green: 0.984,
-                  blue: 0.984,
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.09,
+              ),
+              child: Text(
+                "Entrar",
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 252, 251, 251),
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w800,
                 ),
-                fontSize: MediaQuery.of(context).size.width * 0.05,
-                fontFamily: "Poppins",
-                fontWeight: FontWeight.w800,
               ),
             ),
-          ),
-          Icon(Icons.arrow_forward_ios_sharp, color: Colors.white),
-        ],
+            const Icon(Icons.arrow_forward_ios_sharp, color: Colors.white),
+          ],
+        ),
       ),
     );
   }

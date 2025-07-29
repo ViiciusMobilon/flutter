@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/CEP.dart';
 import 'package:projeto_principal/Escolha.dart';
+import 'package:projeto_principal/pagina_principal.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-###',
@@ -235,7 +236,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CEP())),
+          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

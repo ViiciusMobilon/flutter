@@ -53,7 +53,7 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: const Perfil(),
+              child: const Perfilimagem(),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -106,14 +106,14 @@ class Prestador extends StatelessWidget {
   }
 }
 
-class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+class Perfilimagem extends StatefulWidget {
+  const Perfilimagem({super.key});
 
   @override
-  State<Perfil> createState() => _PerfilState();
+  State<Perfilimagem> createState() => _PerfilimagemState();
 }
 
-class _PerfilState extends State<Perfil> {
+class _PerfilimagemState extends State<Perfilimagem> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
