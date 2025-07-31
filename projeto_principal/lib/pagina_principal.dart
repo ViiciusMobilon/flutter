@@ -18,14 +18,13 @@ class TelaPrincipal extends StatefulWidget {
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
   int _paginaAtual = 0;
-  final GlobalKey<_CriacaoDeCardState> _cardKey = GlobalKey<_CriacaoDeCardState>();
   late final List<Widget> _paginas;
 
   @override
   void initState() {
     super.initState();
     _paginas = [
-      CriacaoDeCard(key: _cardKey),
+      const Center(child: Text("inicio")),
       const Center(child: Text("Buscar")),
       const Perfileditar(),
     ];
@@ -34,10 +33,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("App com Cards"),
-        backgroundColor: Colors.indigoAccent,
-      ),
+   
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 80),
@@ -52,7 +48,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   MaterialPageRoute(builder: (ctx) => const CadastroCardPage()),
                 );
                 if (resultado != null && mounted) {
-                  _cardKey.currentState?.adicionarCard(resultado);
+                
                 }
               },
               backgroundColor: Colors.indigoAccent,
@@ -96,74 +92,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 }
 
 // Lista de cards
-class CriacaoDeCard extends StatefulWidget {
-  const CriacaoDeCard({super.key});
-
-  @override
-  State<CriacaoDeCard> createState() => _CriacaoDeCardState();
-}
-
-class _CriacaoDeCardState extends State<CriacaoDeCard> {
-  final List<Map<String, dynamic>> _dadosCards = [];
-
-  void adicionarCard(Map<String, dynamic> dados) {
-    setState(() => _dadosCards.add(dados));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: _dadosCards.map((card) {
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          elevation: 6,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (card['imagem'] != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      card['imagem'],
-                      height: 180,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                ListTile(
-                  title: Text(
-                    card['nome'],
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "Data: ${card['data'].day}/${card['data'].month}/${card['data'].year}",
-                  ),
-                  trailing: const Icon(Icons.info_outline),
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.indigoAccent),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        card['local'] ?? 'Local não informado',
-                        style: const TextStyle(fontSize: 16, color: Colors.black87),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
 
 // Tela de cadastro de card
 class CadastroCardPage extends StatefulWidget {

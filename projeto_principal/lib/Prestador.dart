@@ -312,7 +312,8 @@ class _cpfState extends State<cpf> {
     );
   }
 }
- class area extends StatefulWidget {
+
+class area extends StatefulWidget {
   const area({super.key});
 
   @override
@@ -320,33 +321,37 @@ class _cpfState extends State<cpf> {
 }
 
 class _areaState extends State<area> {
+   String? selectedOption = 'Maçã'; // valor inicial selecionado
+  List<String> options = ['Maçã', 'Banana', 'Laranja', 'Uva'];
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: "Area",
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+    return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DropdownButton<String>(
+              value: selectedOption,
+              items: options.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedOption = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Selecionado: $selectedOption',
+              style: const TextStyle(fontSize: 18),
+            ),
+          ],
         ),
-        hintText: "Pedreiro",
-        hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
-        ),
-        focusedBorder:OutlineInputBorder(
-           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
+      );
+    
   }
 }
 

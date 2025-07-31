@@ -36,7 +36,7 @@ class CEP extends StatelessWidget {
   },
 ),
           title:  Text(
-            "Edereço",
+            "Endereço",
             style: TextStyle(color: Colors.black,
             fontSize: MediaQuery.of(context).size.width*0.07,
             fontWeight: FontWeight.w800,
