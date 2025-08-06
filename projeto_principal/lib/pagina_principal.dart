@@ -26,7 +26,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     _paginas = [
       const Center(child: Text("inicio")),
       const Center(child: Text("Buscar")),
-      const Perfileditar(),
+       const Perfilpessoa()
     ];
   }
 
@@ -203,42 +203,6 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
 }
 
 // Perfil estilizado
-class Perfileditar extends StatefulWidget {
-  const Perfileditar({super.key});
-
-  @override
-  State<Perfileditar> createState() => _PerfileditarState();
-}
-
-class _PerfileditarState extends State<Perfileditar> {
-  final nomeCtrl = TextEditingController(text: "João da Silva");
-  final emailCtrl = TextEditingController(text: "joao@email.com");
-  final telCtrl = TextEditingController(text: "11999999999");
-
-  @override
-  Widget build(BuildContext context) {
-    final altura = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _campoTexto("Nome", nomeCtrl),
-            SizedBox(height: altura * 0.02),
-            _campoTexto("E-mail", emailCtrl),
-            SizedBox(height: altura * 0.02),
-            _campoTexto("Telefone", telCtrl),
-            SizedBox(height: altura * 0.04),
-            _botaoGradient(texto: "Salvar", onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Informações salvas!")));
-            }),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _campoTexto(String label, TextEditingController ctrl) {
     return TextField(
@@ -289,6 +253,24 @@ class _PerfileditarState extends State<Perfileditar> {
           ),
         ),
       ),
+    );
+  }
+
+class Perfilpessoa extends StatelessWidget {
+  const Perfilpessoa({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return 
+       Container(
+          width: MediaQuery.of(context).size.width * 1,
+          height: MediaQuery.of(context).size.width * 1,
+        child: Column(
+
+        )
+          
+        
+      
     );
   }
 }

@@ -170,8 +170,8 @@ class _PerfilimagemState extends State<Perfilimagem> {
                   fit: BoxFit.cover,
                 )
               : Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.width * 0.3,
+                 width: MediaQuery.of(context).size.width * 0.3,
+                   height: MediaQuery.of(context).size.width * 0.3,
                   decoration: BoxDecoration(
                     color: Colors.grey,
                     shape: BoxShape.circle,
