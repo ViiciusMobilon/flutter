@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 // Entry point
-void main() => runApp(MaterialApp(
-  home: const TelaPrincipal(),
-  debugShowCheckedModeBanner: false,
-));
+void main() => runApp(
+  MaterialApp(home: const TelaPrincipal(), debugShowCheckedModeBanner: false),
+);
 
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
@@ -24,59 +23,55 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [
-      const PesquisaWidget(),
-      const Perfilpessoa(),
-    ];
+    _paginas = [const PesquisaWidget(), const Perfilpessoa()];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // AppBar movido para cá - apenas na página de pesquisa
-      appBar: _paginaAtual == 0 
-        ? AppBar(
-            title: const Text("Pesquisa"),
-            backgroundColor: Colors.indigoAccent,
-            foregroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: BarraDePesquisa(),
-                  );
-                },
-              )
-            ],
-          )
-        : AppBar(
-            title: const Text("Perfil"),
-            backgroundColor: Colors.indigoAccent,
-            foregroundColor: Colors.white,
-          ),
-      body: IndexedStack(
-        index: _paginaAtual,
-        children: _paginas,
-      ),
-      floatingActionButton: _paginaAtual == 0
-          ? FloatingActionButton(
-              onPressed: () async {
-                final resultado = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => const CadastroCardPage(),
+      appBar:
+          _paginaAtual == 0
+              ? AppBar(
+              
+                title: const Text("Pesqsa"),
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.indigoAccent,
+                foregroundColor: Colors.white,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      showSearch(context: context, delegate: BarraDePesquisa());
+                    },
                   ),
-                );
-                if (resultado != null && mounted) {
-                  // Lógica para lidar com o resultado
-                }
-              },
-              backgroundColor: Colors.indigoAccent,
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
+               
+                ],
+              )
+              : AppBar(
+                title: const Text("Perfil"),
+                backgroundColor: Colors.indigoAccent,
+                foregroundColor: Colors.white,
+              ),
+      body: IndexedStack(index: _paginaAtual, children: _paginas),
+      floatingActionButton:
+          _paginaAtual == 0
+              ? FloatingActionButton(
+                onPressed: () async {
+                  final resultado = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (ctx) => const CadastroCardPage(),
+                    ),
+                  );
+                  if (resultado != null && mounted) {
+                    // Lógica para lidar com o resultado
+                  }
+                },
+                backgroundColor: Colors.indigoAccent,
+                child: const Icon(Icons.add, color: Colors.white),
+              )
+              : null,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -160,7 +155,7 @@ class _PesquisaWidgetState extends State<PesquisaWidget> {
 class BarraDePesquisa extends SearchDelegate<String> {
   final List<String> dados = [
     "Pedreiro",
-    "Pintor", 
+    "Pintor",
     "Eletricista",
     "Encanador",
     "Marceneiro",
@@ -195,25 +190,19 @@ class BarraDePesquisa extends SearchDelegate<String> {
         onPressed: () {
           query = ""; // limpa o campo de busca
         },
-      )
+      ),
     ];
   }
 
   @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, ""); // fecha a pesquisa
-      },
-    );
-  }
+  Widget? buildLeading(BuildContext context) {}
 
   @override
   Widget buildResults(BuildContext context) {
-    final resultados = dados
-        .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+    final resultados =
+        dados
+            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+            .toList();
 
     if (resultados.isEmpty) {
       return const Center(
@@ -272,11 +261,16 @@ class BarraDePesquisa extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final sugestoes = query.isEmpty
-        ? dados.take(5).toList() // Mostra primeiros 5 se query vazia
-        : dados
-            .where((item) => item.toLowerCase().startsWith(query.toLowerCase()))
-            .toList();
+    final sugestoes =
+        query.isEmpty
+            ? dados
+                .take(5)
+                .toList() // Mostra primeiros 5 se query vazia
+            : dados
+                .where(
+                  (item) => item.toLowerCase().startsWith(query.toLowerCase()),
+                )
+                .toList();
 
     return ListView.builder(
       padding: const EdgeInsets.all(8),
@@ -409,9 +403,10 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
             _input("Local", localController),
             SizedBox(height: altura * 0.02),
             _botaoGradient(
-              texto: dataSelecionada == null
-                  ? "Selecionar Data"
-                  : "Data: ${dataSelecionada!.day}/${dataSelecionada!.month}/${dataSelecionada!.year}",
+              texto:
+                  dataSelecionada == null
+                      ? "Selecionar Data"
+                      : "Data: ${dataSelecionada!.day}/${dataSelecionada!.month}/${dataSelecionada!.year}",
               onTap: _selecionarData,
             ),
             SizedBox(height: altura * 0.02),
@@ -513,11 +508,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.search, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 20),
           Text(
             "Encontre Profissionais",
@@ -557,11 +548,7 @@ class Perfilpessoa extends StatelessWidget {
           const CircleAvatar(
             radius: 50,
             backgroundColor: Colors.indigoAccent,
-            child: Icon(
-              Icons.person,
-              size: 50,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.person, size: 50, color: Colors.white),
           ),
           const SizedBox(height: 20),
           Text(

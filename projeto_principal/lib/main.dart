@@ -110,6 +110,7 @@ class Main extends StatelessWidget {
           ),
         ),
       ),
+       debugShowCheckedModeBanner: false,
     );
   }
 }
