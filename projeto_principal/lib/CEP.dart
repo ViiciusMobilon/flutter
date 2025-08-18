@@ -110,12 +110,17 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength:9 ,
+       keyboardType: TextInputType.number,
+          inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
+      
         labelText: "CEP",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
         ),
+        
         hintText: "99999-999",
         hintStyle: TextStyle(
           fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
