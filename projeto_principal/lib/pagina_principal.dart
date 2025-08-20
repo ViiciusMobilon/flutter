@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projeto_principal/ifeed.dart';
 
 // Entry point
 void main() => runApp(
@@ -33,7 +34,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       appBar:
           _paginaAtual == 0
               ? AppBar(
-              
                 title: const Text("Pesqsa"),
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.indigoAccent,
@@ -45,7 +45,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       showSearch(context: context, delegate: BarraDePesquisa());
                     },
                   ),
-               
                 ],
               )
               : AppBar(
@@ -121,33 +120,18 @@ class PesquisaWidget extends StatefulWidget {
 }
 
 class _PesquisaWidgetState extends State<PesquisaWidget> {
+  
+  List<Ifeed> feed = [];
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Text(
-            "Bem-vindo à tela de pesquisa!",
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            "Use o ícone de pesquisa no AppBar para buscar profissionais.",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              fontFamily: "Poppins",
-              color: Colors.grey,
-            ),
-          ),
-        ],
+    return Container(
+      child: ListView.builder(
+        itemCount:feed.length,
+        itemBuilder: (context, index) => feed[index].reader(),
+
       ),
     );
+
   }
 }
 
