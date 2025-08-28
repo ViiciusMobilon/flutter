@@ -89,71 +89,100 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   }
 }
 
-class Mais extends StatelessWidget {
+class Mais extends StatefulWidget {
   const Mais({super.key});
 
   @override
+  State<Mais> createState() => _MaisState();
+}
+
+class _MaisState extends State<Mais> {
+  bool mostrarFechar = false;
+
+  @override
   Widget build(BuildContext context) {
+    if (mostrarFechar) {
+      return const PerfilPrincipal(); // volta para o perfil principal
+    }
+
+    // Exemplo de descrição com limite de 255 caracteres
+    String descricao =
+        "Este é um exemplo de descrição que será exibida no perfil. "
+        "Ela pode ter até 255 caracteres e o container vai se adaptar ao tamanho do texto. "
+        "Você pode colocar informações adicionais aqui para testar o comportamento do container. "
+        "Lembre-se de não ultrapassar o limite máximo para manter o layout consistente.";
+    // corta para 255 caracteres caso ultrapasse
+    if (descricao.length > 255) {
+      descricao = descricao.substring(0, 255);
+    }
+
     return ListView(
+      padding: const EdgeInsets.all(0),
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.4,
-          decoration: const BoxDecoration(color: Colors.white),
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.08,
-            vertical: MediaQuery.of(context).size.width * 0.08,
+            vertical: 16,
           ),
-          child: Row(
+          decoration: const BoxDecoration(color: Colors.white),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Foto de perfil
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width * 0.12,
-                backgroundImage: const NetworkImage(
-                  "https://link-da-foto.com/foto.jpg",
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: MediaQuery.of(context).size.width * 0.12,
+                    backgroundImage: const NetworkImage(
+                      "https://link-da-foto.com/foto.jpg",
+                    ),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "Vinicius Mobilon",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                        Text(
+                          "profissão",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 151, 151, 151),
+                            fontWeight: FontWeight.w800,
+                            fontFamily: "Poppins",
+                          ),
+                        ),
+                        EstrelaRating(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-
-              // Nome do perfil
-              Expanded(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: Text(
-                        "Vinicius Mobilon",
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.06,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w800,
-                          fontFamily: "Poppins",
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: Text(
-                        "profissão",
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.width * 0.027,
-                          color: const Color.fromARGB(255, 151, 151, 151),
-                          fontWeight: FontWeight.w800,
-                          fontFamily: "Poppins",
-                        ),
-                      ),
-                    ),
-
-                    // Sistema de estrelas
-                    const EstrelaRating(),
-                  ],
+              const SizedBox(height: 16),
+              // Texto da descrição adaptável
+              Text(
+                descricao,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16),
+              // Botão "Fechar"
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      mostrarFechar = true;
+                    });
+                  },
+                  child: const Text("Fechar"),
                 ),
               ),
             ],

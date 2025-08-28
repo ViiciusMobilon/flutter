@@ -12,23 +12,9 @@ class CadastroCardPage extends StatefulWidget {
 
 class _CadastroCardPageState extends State<CadastroCardPage> {
   final TextEditingController nomeController = TextEditingController();
-  final TextEditingController localController = TextEditingController();
-  DateTime? dataSelecionada;
   File? imagemSelecionada;
 
-  Future<void> _selecionarData() async {
-    final data = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-    );
-    if (data != null) {
-      setState(() {
-        dataSelecionada = data;
-      });
-    }
-  }
+
 
   Future<void> _selecionarImagem() async {
     final picker = ImagePicker();
@@ -41,7 +27,7 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
   }
 
   void _salvar() {
-    if (nomeController.text.isEmpty || localController.text.isEmpty) {
+    if (nomeController.text.isEmpty ) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Preencha todos os campos obrigatórios"),
@@ -76,32 +62,43 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _input("Nome", nomeController),
-            SizedBox(height: altura * 0.02),
-            _input("Local", localController),
-            SizedBox(height: altura * 0.02),
-            _botaoGradient(
-              texto:
-                  dataSelecionada == null
-                      ? "Selecionar Data"
-                      : "Data: ${dataSelecionada!.day}/${dataSelecionada!.month}/${dataSelecionada!.year}",
-              onTap: _selecionarData,
-            ),
-            SizedBox(height: altura * 0.02),
-            _botaoGradient(
-              texto: "Selecionar Imagem",
-              onTap: _selecionarImagem,
-            ),
-            if (imagemSelecionada != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.file(imagemSelecionada!, height: 150),
-                ),
-              ),
-            SizedBox(height: altura * 0.04),
-            _botaoGradient(texto: "Criar Card", onTap: _salvar),
+           
+           
+        
+          
+             _botaoGradient(
+      texto: "Selecionar Imagem",
+      onTap: _selecionarImagem,
+    ),
+
+    // Espaço
+    const SizedBox(height: 12),
+
+    // Imagem selecionada (opcional)
+    if (imagemSelecionada != null)
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.file(
+            imagemSelecionada!,
+            height: MediaQuery.of(context).size.height * 0.5,
+            width: MediaQuery.of(context).size.height * 1,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+
+    const SizedBox(height: 16),
+
+    // Input de descrição vem por último
+    _input("Descrição", nomeController
+    ),
+
+    const SizedBox(height: 32),
+
+    // Botão Criar Card
+    _botaoGradient(texto: "Criar Card", onTap: _salvar),
           ],
         ),
       ),
@@ -111,6 +108,10 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
   Widget _input(String label, TextEditingController ctrl) {
     return TextField(
       controller: ctrl,
+      maxLength: 255,
+       keyboardType: TextInputType.multiline,
+       minLines: 1,       // começa com 1 linha
+       maxLines: null,    // cres
       style: const TextStyle(fontFamily: "Poppins"),
       decoration: InputDecoration(
         labelText: label,

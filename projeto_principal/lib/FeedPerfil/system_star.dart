@@ -7,7 +7,7 @@ class EstrelaRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RatingBar.builder(
-      initialRating: 3,
+      initialRating: 5,
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: false,
