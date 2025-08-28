@@ -12,7 +12,7 @@ final maskFormatter = MaskTextInputFormatter(
 );
 final cnpjMaskFormatter = MaskTextInputFormatter(
   mask: '##.###.###/####-##',
-  filter: { "#": RegExp(r'[0-14]') },
+  filter: { "#": RegExp(r'[0-9]') },
 );
 
 void main() => runApp(const Empresa());

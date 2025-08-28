@@ -6,10 +6,8 @@ import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
-final maskFormatter = MaskTextInputFormatter(
-  mask: '(##) #####-###',
-  filter: { "#": RegExp(r'[0-9]') },
-);
+
+
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
   filter: { "#": RegExp(r'[0-9]') },
@@ -56,7 +54,7 @@ class CEP extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Nome(),
+              child: const cep(),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -65,7 +63,7 @@ class CEP extends StatelessWidget {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Telefone(),
+              child: const Rua(),
             ),
 
             Padding(
@@ -100,14 +98,14 @@ class CEP extends StatelessWidget {
 
 
 
-class Nome extends StatefulWidget {
-  const Nome({super.key});
+class cep extends StatefulWidget {
+  const cep({super.key});
 
   @override
-  State<Nome> createState() => _NomeState();
+  State<cep> createState() => _cepState();
 }
 
-class _NomeState extends State<Nome> {
+class _cepState extends State<cep> {
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -143,20 +141,19 @@ class _NomeState extends State<Nome> {
   }
 }
 
-class Telefone extends StatefulWidget {
-  const Telefone({super.key});
+class Rua extends StatefulWidget {
+  const Rua({super.key});
 
   @override
-  State<Telefone> createState() => _TelefoneState();
+  State<Rua> createState() => _RuaState();
 }
 
-class _TelefoneState extends State<Telefone> {
+class _RuaState extends State<Rua> {
   @override
   Widget build(BuildContext context) {
     return TextField(
       
       
-      keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: "Rua / Avenida",
         labelStyle: TextStyle(
@@ -302,7 +299,6 @@ class _adicionaisState extends State<adicionais> {
   Widget build(BuildContext context) {
     return TextField(
       maxLength: 128,
-      keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: "não sei o que não sei oque la",
         hintStyle: TextStyle(
