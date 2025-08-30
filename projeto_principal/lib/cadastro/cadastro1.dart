@@ -1,10 +1,30 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/models/user.dart';
 
 void main()=>runApp(Cadastro());
-class Cadastro extends StatelessWidget {
+class Cadastro extends StatefulWidget{
   const Cadastro({super.key});
+  @override
+  State<Cadastro> createState() => _CadastroState();
+} 
+class _CadastroState extends State<Cadastro> {
+  // ← Aqui você cria os controllers
+  final nomeController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmation_passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Limpar controllers quando a tela for destruída
+    nomeController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmation_passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +76,7 @@ class Cadastro extends StatelessWidget {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(),
+                  child: email(controller: emailController),
                 ),
                 //fim email
                 //textfield senha
@@ -66,7 +86,7 @@ class Cadastro extends StatelessWidget {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: senha(),
+                  child: senha(controller: passwordController,),
                 ),
 
                 // fim senha
@@ -76,7 +96,7 @@ class Cadastro extends StatelessWidget {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: confirmar(),
+                  child: confirmar(controller: confirmation_passwordController,),
                 ),
                 //botao
                 Padding(
@@ -139,7 +159,8 @@ class _nomeState extends State<nome> {
 }
 
 class email extends StatefulWidget {
-  const email({super.key});
+  final TextEditingController? controller;
+  const email({super.key, required this.controller});
 
   @override
   State<email> createState() => _emailState();
@@ -149,6 +170,7 @@ class _emailState extends State<email> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         hintText: "xxxxx@gmail.com",
         hintStyle: TextStyle(
@@ -180,7 +202,8 @@ class _emailState extends State<email> {
 }
 
 class senha extends StatefulWidget {
-  const senha({super.key});
+  final TextEditingController? controller;
+  const senha({super.key, required this.controller});
 
   @override
   _senhaState createState() => _senhaState();
@@ -198,6 +221,7 @@ class _senhaState extends State<senha> {
 
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       autofocus: false,
       obscureText: senha,
       decoration: InputDecoration(
@@ -233,7 +257,8 @@ class _senhaState extends State<senha> {
   }
 }
 class confirmar extends StatefulWidget {
-  const confirmar({super.key});
+  final TextEditingController? controller;
+  const confirmar({super.key, required this.controller});
 
   @override
   State<confirmar> createState() => _confirmarState();
@@ -251,6 +276,7 @@ class _confirmarState extends State<confirmar> {
 
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       autofocus: false,
       obscureText: senha2,
       decoration: InputDecoration(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -5,6 +7,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:http/http.dart' as http;
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -314,27 +317,35 @@ class _cpfState extends State<cpf> {
     );
   }
 }
- class Area extends StatelessWidget {
-  final dropValue = ValueNotifier('');
-  final dropOpcoes = [
-    'Pedreiro',
-    'Pintor',
-    'Eletricista',
-    'Encanador',
-    'Marceneiro',
-    'Jardineiro',
-    'Gesseiro',
-    'Serralheiro',
-    'Vidraceiro',
-    'Alvenaria',
-    'Telhadista',
-    'Azulejista',
-    'Instalador de drywall',
-    'Servente de obras',
-    'Outros'
-  ];
+ class Area extends StatefulWidget {
+  @override
+  _AreaState createState() => _AreaState();
+ }
+ class _AreaState extends State<Area> {
+  List<String> ramo = [];
+  ValueNotifier<String> dropValue = ValueNotifier('');
 
-  Area({super.key});
+  @override
+  void initState() {
+    super.initState();
+    carregarRamos();
+ }
+ void carregarRamos() async {
+    try{
+      String url = 'http://192.168.1.5:8000/api/ramo';
+
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          ramo = List<String>.from(json.decode(response.body).map((item) => item['nome'].toString()));
+        });
+      } else {
+        
+      }
+    }catch (e) {
+      print('Erro ao carregar ramos: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -345,7 +356,7 @@ class _cpfState extends State<cpf> {
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
             child: DropdownSearch<String>(
-              items: dropOpcoes,
+              items: ramo,
               selectedItem: value.isEmpty ? null : value,
               onChanged: (String? newValue) {
                 dropValue.value = newValue ?? '';
@@ -401,7 +412,6 @@ class _cpfState extends State<cpf> {
     );
   }
 }
-
 class botao extends StatefulWidget {
   const botao({super.key});
 
