@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/models/user.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
 
@@ -13,13 +14,21 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const CEP());
+// void main() => runApp(const CEP());
 
 class CEP extends StatelessWidget {
-  const CEP({super.key});
+  final UsuarioGeral usuario;
+  const CEP({super.key, required this.usuario});
 
   @override
   Widget build(BuildContext context) {
+    print( "Email: ${usuario.email}");
+    print( "senha: ${usuario.password}");
+    print( "senhaconfirmation: ${usuario.confirmation_password}");
+    print( "Tipo: ${usuario.tipo}");
+    print( "nome: ${usuario.nome}");
+    print( "tel: ${usuario.telefone}");
+    print( "cpf: ${usuario.cpf}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -30,7 +39,7 @@ class CEP extends StatelessWidget {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha()),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
     );
   },
 ),

@@ -11,6 +11,7 @@ class Cadastro extends StatefulWidget{
 } 
 class _CadastroState extends State<Cadastro> {
   // ← Aqui você cria os controllers
+  final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmation_passwordController = TextEditingController();
@@ -18,7 +19,7 @@ class _CadastroState extends State<Cadastro> {
   @override
   void dispose() {
     // Limpar controllers quando a tela for destruída
-    // nomeController.dispose();
+    nomeController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmation_passwordController.dispose();
@@ -102,13 +103,7 @@ class _CadastroState extends State<Cadastro> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(
-                    child: 
-                    botao(
-                        emailController: emailController,
-                        passwordController: passwordController,
-                        passwordConfirmationController: confirmation_passwordController,)
-                    ),
+                  child: Center(child: botao()),
                 ),
                 //fim botao
                 //escrita para o cadastro
@@ -318,15 +313,10 @@ class _confirmarState extends State<confirmar> {
 }
 
 class botao extends StatefulWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController passwordConfirmationController;
-  const botao({
-    super.key,
-    required this.emailController,
-    required this.passwordController,
-    required this.passwordConfirmationController
-  });
+  final TextEditingController? controller;
+  final TextEditingController? controller;
+  final TextEditingController? controller;
+  const botao({super.key});
 
   @override
   State<botao> createState() => _botaoState();
@@ -336,17 +326,7 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:(){
-        final usuario = UsuarioGeral(
-          email: widget.emailController.text,
-          password: widget.passwordController.text,
-          confirmation_password: widget.passwordConfirmationController.text,
-        );
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario),
-          ),
-        );
-      },
+      onTap:() => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Escolha()), ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

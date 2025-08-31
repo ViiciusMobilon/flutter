@@ -8,6 +8,7 @@ import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
+import 'package:projeto_principal/models/user.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -18,10 +19,11 @@ final cnpjMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const Empresa());
+// void main() => runApp(const Empresa());
 
 class Empresa extends StatelessWidget {
-  const Empresa({super.key});
+  final UsuarioGeral usuario;
+  const Empresa({super.key, required  this.usuario});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class Empresa extends StatelessWidget {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha()),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
     );
   },
 ),
@@ -102,7 +104,7 @@ class Empresa extends StatelessWidget {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(usuario: usuario,)),
                 ),
           ],
         ),
@@ -413,7 +415,8 @@ class _cpfState extends State<cpf> {
   }
 }
 class botao extends StatefulWidget {
-  const botao({super.key});
+  final UsuarioGeral usuario;
+  const botao({super.key, required this.usuario});
 
   @override
   State<botao> createState() => _botaoState();
@@ -426,7 +429,7 @@ class _botaoState extends State<botao> {
        onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CEP())),
+          ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,))),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

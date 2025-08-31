@@ -1,6 +1,6 @@
 enum TipoUsuario { prestador, contratante, empresa }
 
-class Usuario {
+class UsuarioGeral {
   String? nome;
   String? email;
   String? password;
@@ -15,7 +15,7 @@ class Usuario {
   String? ramo;
   TipoUsuario? tipo;
 
-  Usuario({this.nome, this.email, this.password, 
+  UsuarioGeral({this.nome, this.email, this.password, 
     this.confirmation_password, this.cpf, this.cnpj,
     this.telefone, this.whatsapp, 
     this.foto, this.cep, this.cidade, 
