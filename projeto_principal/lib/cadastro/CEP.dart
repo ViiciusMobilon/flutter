@@ -295,7 +295,7 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Entrar",
+                "Proximo",
                 style: TextStyle(
                   color: const Color.from(
                     alpha: 1,
