@@ -43,7 +43,7 @@ class _ContratanteState extends State<Contratante>{
     // final UsuarioGeral usuario;
     print( "Email: ${widget.usuario.email}");
     print( "senha: ${widget.usuario.password}");
-    print( "senhaconfirmation: ${widget.usuario.confirmation_password}");
+    print( "senha-confirmation: ${widget.usuario.confirmation_password}");
     print( "Tipo: ${widget.usuario.tipo}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -114,7 +114,9 @@ class _ContratanteState extends State<Contratante>{
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.25,
                   ),
-                  child: Center(child: botao(nomeController: nomeController,
+                  child: Center(child: botao(
+                  usuario: widget.usuario,
+                  nomeController: nomeController,
                   telefoneController: telefoneController,
                   cpfController: cpfController,)),
                 ),
@@ -339,11 +341,13 @@ class _cpfState extends State<cpf> {
 
 
 class botao extends StatefulWidget {
+  final UsuarioGeral usuario;
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
   const botao({
-    super.key, 
+    super.key,
+    required this.usuario, 
     required this.nomeController,
     required this.telefoneController,
     required this.cpfController});
@@ -358,13 +362,13 @@ class _botaoState extends State<botao> {
     return GestureDetector(
       onTap:
           (){
-            final usuario = UsuarioGeral(
-              nome: widget.nomeController.text,
-              telefone: widget.telefoneController.text,
-              cpf: widget.cpfController.text
-            );
+
+              widget.usuario.nome = widget.nomeController.text;
+              widget.usuario.telefone = widget.telefoneController.text;
+              widget.usuario.cpf = widget.cpfController.text;
+
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context)=>CEP(usuario: usuario),),
+              MaterialPageRoute(builder: (context)=>CEP(usuario: widget.usuario),),
             );
 
 

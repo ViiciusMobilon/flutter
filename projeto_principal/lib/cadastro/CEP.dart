@@ -7,6 +7,7 @@ import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/models/user.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 import 'package:projeto_principal/cadastro/dropdow.dart';
+import 'package:projeto_principal/cadastro/Contratante.dart';
 
 
 
