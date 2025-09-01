@@ -4,20 +4,25 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/cadastro/dropdow.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
 
 
 final cpfMaskFormatter = MaskTextInputFormatter(
-  mask: '###.###.###-##',
+  mask: '##.###-###',
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const CEP());
 
-class CEP extends StatelessWidget {
+class CEP extends StatefulWidget {
   const CEP({super.key});
 
+  @override
+  State<CEP> createState() => _CEPState();
+}
+
+class _CEPState extends State<CEP> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -56,6 +61,26 @@ class CEP extends StatelessWidget {
               ),
               child: const cep(),
             ),
+                 
+                  Padding(
+                  padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.1,
+                right: MediaQuery.of(context).size.width * 0.1,
+                  ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(flex: 4, child: cidade()),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
+                   // 3 partes da largura
+                  Expanded(flex: 3, child:estado() ), // 4 partes da largura
+                  
+                ],
+                
+              ),
+            ),
+
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -81,13 +106,17 @@ class CEP extends StatelessWidget {
                   ),
                   child: Center(child: adicionais()),
                 ),
+               
+                 
+           
+
            Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.25,
+                    top: MediaQuery.of(context).size.height * 0.22,
                   ),
                   child: Center(child: botao()),
                 ),
-
+          
                  
           ],
         ),
@@ -95,6 +124,7 @@ class CEP extends StatelessWidget {
     );
   }
 }
+  
 
 
 
@@ -109,7 +139,7 @@ class _cepState extends State<cep> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      maxLength:9 ,
+      maxLength:8 ,
        keyboardType: TextInputType.number,
           inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(

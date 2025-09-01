@@ -14,7 +14,6 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const Contratante());
 
 class Contratante extends StatelessWidget {
   const Contratante({super.key});

@@ -4,7 +4,6 @@ import 'package:projeto_principal/cadastro/Empresa.dart';
 import 'package:projeto_principal/cadastro/Prestador.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 
-void main() => runApp(Escolha());
 
 class Escolha extends StatelessWidget {
   const Escolha({super.key});

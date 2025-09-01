@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 
-void main()=>runApp(Cadastro());
 class Cadastro extends StatelessWidget {
   const Cadastro({super.key});
 
@@ -97,46 +96,6 @@ class Cadastro extends StatelessWidget {
   }
 }
 
-class nome extends StatefulWidget {
-  const nome({super.key});
-
-  @override
-  State<nome> createState() => _nomeState();
-}
-
-class _nomeState extends State<nome> {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: "fulano",
-        hintStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
-          fontFamily: "Poppins",
-        ),
-        labelText: "Nome de Usuario",
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
-          fontFamily: "Poppins",
-        ),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-    );
-  }
-}
 
 class email extends StatefulWidget {
   const email({super.key});

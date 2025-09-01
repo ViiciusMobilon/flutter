@@ -8,12 +8,6 @@ import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
 import 'package:projeto_principal/FeedCards/Cards.dart';
 
 // Entry point
-void main() => runApp(
-  MaterialApp(
-   debugShowCheckedModeBanner: false, 
-    home: const TelaPrincipal(), ),
-);
-
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
   const TelaPrincipal({super.key});
