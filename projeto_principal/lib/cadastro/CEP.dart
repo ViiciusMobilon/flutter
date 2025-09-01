@@ -6,29 +6,35 @@ import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/models/user.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:projeto_principal/cadastro/dropdow.dart';
 
 
 
 final cpfMaskFormatter = MaskTextInputFormatter(
-  mask: '###.###.###-##',
+  mask: '##.###-###',
   filter: { "#": RegExp(r'[0-9]') },
 );
 
 // void main() => runApp(const CEP());
 
-class CEP extends StatelessWidget {
+class CEP extends StatefulWidget {
   final UsuarioGeral usuario;
   const CEP({super.key, required this.usuario});
 
   @override
+  State<CEP> createState() => _CEPState();
+}
+
+class _CEPState extends State<CEP> {
+  @override
   Widget build(BuildContext context) {
-    print( "Email: ${usuario.email}");
-    print( "senha: ${usuario.password}");
-    print( "senhaconfirmation: ${usuario.confirmation_password}");
-    print( "Tipo: ${usuario.tipo}");
-    print( "nome: ${usuario.nome}");
-    print( "tel: ${usuario.telefone}");
-    print( "cpf: ${usuario.cpf}");
+    print( "Email: ${widget.usuario.email}");
+    print( "senha: ${widget.usuario.password}");
+    print( "senhaconfirmation: ${widget.usuario.confirmation_password}");
+    print( "Tipo: ${widget.usuario.tipo}");
+    print( "nome: ${widget.usuario.nome}");
+    print( "tel: ${widget.usuario.telefone}");
+    print( "cpf: ${widget.usuario.cpf}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -65,6 +71,26 @@ class CEP extends StatelessWidget {
               ),
               child: const cep(),
             ),
+                 
+                  Padding(
+                  padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.1,
+                right: MediaQuery.of(context).size.width * 0.1,
+                  ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(flex: 4, child: cidade()),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
+                   // 3 partes da largura
+                  Expanded(flex: 3, child:estado() ), // 4 partes da largura
+                  
+                ],
+                
+              ),
+            ),
+
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -90,13 +116,17 @@ class CEP extends StatelessWidget {
                   ),
                   child: Center(child: adicionais()),
                 ),
+               
+                 
+           
+
            Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.25,
+                    top: MediaQuery.of(context).size.height * 0.22,
                   ),
                   child: Center(child: botao()),
                 ),
-
+          
                  
           ],
         ),
@@ -104,6 +134,7 @@ class CEP extends StatelessWidget {
     );
   }
 }
+  
 
 
 
@@ -118,7 +149,7 @@ class _cepState extends State<cep> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      maxLength:9 ,
+      maxLength:8 ,
        keyboardType: TextInputType.number,
           inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(

@@ -5,7 +5,9 @@ import 'package:projeto_principal/cadastro/Prestador.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 import 'package:projeto_principal/models/user.dart';
 
+
 // void main() => runApp(Escolha());
+
 
 class Escolha extends StatelessWidget {
   final UsuarioGeral usuario;

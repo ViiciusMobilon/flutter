@@ -122,46 +122,6 @@ class _CadastroState extends State<Cadastro> {
   }
 }
 
-class nome extends StatefulWidget {
-  const nome({super.key});
-
-  @override
-  State<nome> createState() => _nomeState();
-}
-
-class _nomeState extends State<nome> {
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: "fulano",
-        hintStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
-          fontFamily: "Poppins",
-        ),
-        labelText: "Nome de Usuario",
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
-          fontFamily: "Poppins",
-        ),
-
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-    );
-  }
-}
 
 class email extends StatefulWidget {
   final TextEditingController? controller;
