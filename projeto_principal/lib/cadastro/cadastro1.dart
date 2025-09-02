@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
-import 'package:projeto_principal/models/user.dart';
+import 'package:projeto_principal/data/models/user.dart';
 
 void main()=>runApp(Cadastro());
 class Cadastro extends StatefulWidget{

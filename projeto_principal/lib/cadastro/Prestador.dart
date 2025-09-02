@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:projeto_principal/models/user.dart';
+import 'package:projeto_principal/data/models/user.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',

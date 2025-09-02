@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
-import 'package:projeto_principal/models/user.dart';
+import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 
 final maskFormatter = MaskTextInputFormatter(
