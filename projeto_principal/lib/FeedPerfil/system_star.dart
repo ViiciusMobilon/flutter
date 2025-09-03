@@ -10,7 +10,7 @@ class EstrelaRating extends StatelessWidget {
       initialRating: 5,
       minRating: 1,
       direction: Axis.horizontal,
-      allowHalfRating: false,
+      allowHalfRating: true,
       updateOnDrag: false, // ❌ não arrasta
       glow: false,         // ❌ sem sombra ao tocar
       itemCount: 5,

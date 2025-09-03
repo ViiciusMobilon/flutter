@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/cadastro/cadastro1.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -14,13 +17,34 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const Contratante());
+// void main() => runApp(const Contratante());
 
-class Contratante extends StatelessWidget {
-  const Contratante({super.key});
+class Contratante extends StatefulWidget {
+  final UsuarioGeral usuario;
+  const Contratante({super.key, required this.usuario});
 
   @override
+  State<Contratante> createState()=> _ContratanteState();
+}
+
+class _ContratanteState extends State<Contratante>{
+  final nomeController = TextEditingController();
+  final telefoneController = TextEditingController();
+  final cpfController = TextEditingController();
+  @override
+  void dispose() {
+    nomeController.dispose();
+    telefoneController.dispose();
+    cpfController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
+    // final UsuarioGeral usuario;
+    print( "Email: ${widget.usuario.email}");
+    print( "senha: ${widget.usuario.password}");
+    print( "senha-confirmation: ${widget.usuario.confirmation_password}");
+    print( "Tipo: ${widget.usuario.tipo}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -31,7 +55,7 @@ class Contratante extends StatelessWidget {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha()),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
     );
   },
 ),
@@ -63,7 +87,7 @@ class Contratante extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Nome(),
+              child: Nome(controller: nomeController,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -72,7 +96,7 @@ class Contratante extends StatelessWidget {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Telefone(),
+              child: Telefone(controller: telefoneController,),
             ),
 
             Padding(
@@ -81,7 +105,7 @@ class Contratante extends StatelessWidget {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(),
+              child: cpf(controller: cpfController,),
             ),
 
            
@@ -90,7 +114,11 @@ class Contratante extends StatelessWidget {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.25,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(
+                  usuario: widget.usuario,
+                  nomeController: nomeController,
+                  telefoneController: telefoneController,
+                  cpfController: cpfController,)),
                 ),
           ],
         ),
@@ -184,7 +212,8 @@ class _PerfilState extends State<Perfil> {
 }
 
 class Nome extends StatefulWidget {
-  const Nome({super.key});
+  final TextEditingController controller;
+  const Nome({super.key, required this.controller});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -194,6 +223,7 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Nome",
         labelStyle: TextStyle(
@@ -222,7 +252,8 @@ class _NomeState extends State<Nome> {
 }
 
 class Telefone extends StatefulWidget {
-  const Telefone({super.key});
+  final TextEditingController controller;
+  const Telefone({super.key, required this.controller});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -233,7 +264,7 @@ class _TelefoneState extends State<Telefone> {
   Widget build(BuildContext context) {
     return TextField(
       inputFormatters: [maskFormatter],
-      
+      controller: widget.controller,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: "Telefone",
@@ -264,7 +295,8 @@ class _TelefoneState extends State<Telefone> {
 }
 
 class cpf extends StatefulWidget {
-  const cpf({super.key});
+  final TextEditingController controller;
+  const cpf({super.key, required this.controller});
 
   @override
   State<cpf> createState() => _cpfState();
@@ -275,7 +307,8 @@ class _cpfState extends State<cpf> {
   Widget build(BuildContext context) {
     return TextField(
       keyboardType: TextInputType.number,
-  inputFormatters: [cpfMaskFormatter],
+      inputFormatters: [cpfMaskFormatter],
+      controller: widget.controller,
       decoration: InputDecoration(
         hintText: "000.000.000.00",
         hintStyle: TextStyle(
@@ -308,7 +341,16 @@ class _cpfState extends State<cpf> {
 
 
 class botao extends StatefulWidget {
-  const botao({super.key});
+  final UsuarioGeral usuario;
+  final TextEditingController nomeController;
+  final TextEditingController telefoneController;
+  final TextEditingController cpfController;
+  const botao({
+    super.key,
+    required this.usuario, 
+    required this.nomeController,
+    required this.telefoneController,
+    required this.cpfController});
 
   @override
   State<botao> createState() => _botaoState();
@@ -319,9 +361,18 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => CEP())),
+          (){
+
+              widget.usuario.nome = widget.nomeController.text;
+              widget.usuario.telefone = widget.telefoneController.text;
+              widget.usuario.cpf = widget.cpfController.text;
+
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context)=>CEP(usuario: widget.usuario),),
+            );
+
+
+          },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

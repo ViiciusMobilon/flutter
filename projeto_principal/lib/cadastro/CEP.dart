@@ -1,25 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/data/models/cep.dart';
+import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/repositories/cep_repository.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:projeto_principal/cadastro/dropdow.dart';
+import 'package:projeto_principal/cadastro/Contratante.dart';
+import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
 
 
 
-final cpfMaskFormatter = MaskTextInputFormatter(
-  mask: '###.###.###-##',
+final cepMaskFormatter = MaskTextInputFormatter(
+  mask: '#####-###',
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(const CEP());
+// void main() => runApp(const CEP());
 
-class CEP extends StatelessWidget {
-  const CEP({super.key});
+class CEP extends StatefulWidget {
+  final UsuarioGeral usuario;
+  const CEP({super.key, required this.usuario});
+
+  @override
+  State<CEP> createState() => _CEPState();
+}
+
+class _CEPState extends State<CEP> {
+  final cepController = TextEditingController();
+  final cidadeController = TextEditingController();
+  final estadoController = TextEditingController();
+  final ruaController = TextEditingController();
+  final numeroController = TextEditingController();
+  final infoaddController = TextEditingController();
+
+  void preencherCampos(CepModel endereco){
+    setState(() {
+        cepController.text = endereco.cep;
+        cidadeController.text = endereco.localidade;
+        estadoController.text = endereco.uf;
+        ruaController.text = endereco.logradouro;
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
+    print( "Email: ${widget.usuario.email}");
+    print( "senha: ${widget.usuario.password}");
+    print( "senhaconfirmation: ${widget.usuario.confirmation_password}");
+    print( "Tipo: ${widget.usuario.tipo}");
+    print( "nome: ${widget.usuario.nome}");
+    print( "tel: ${widget.usuario.telefone}");
+    print( "cpf: ${widget.usuario.cpf}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -30,7 +66,7 @@ class CEP extends StatelessWidget {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha()),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
     );
   },
 ),
@@ -54,8 +90,28 @@ class CEP extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const cep(),
+              child: cepWidget(controller: cepController, onCepBuscado: preencherCampos),
             ),
+                 
+                  Padding(
+                  padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.1,
+                right: MediaQuery.of(context).size.width * 0.1,
+                  ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(flex: 4, child: cidade()),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
+                   // 3 partes da largura
+                  Expanded(flex: 3, child:estado(controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
+                  
+                ],
+                
+              ),
+            ),
+
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -63,7 +119,7 @@ class CEP extends StatelessWidget {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Rua(),
+              child: RuaWidget(controller: ruaController,),
             ),
 
             Padding(
@@ -83,11 +139,11 @@ class CEP extends StatelessWidget {
                 ),
            Padding(
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.25,
+                    top: MediaQuery.of(context).size.height * 0.22,
                   ),
                   child: Center(child: botao()),
                 ),
-
+          
                  
           ],
         ),
@@ -95,23 +151,52 @@ class CEP extends StatelessWidget {
     );
   }
 }
+  
 
-
-
-class cep extends StatefulWidget {
-  const cep({super.key});
-
-  @override
-  State<cep> createState() => _cepState();
+Widget cepField({
+ required TextEditingController controller,
+  required void Function(CepModel) onCepBuscado,
+}) {
+  return cepWidget(controller: controller, onCepBuscado: onCepBuscado);
 }
 
-class _cepState extends State<cep> {
+class cepWidget extends StatefulWidget {
+  final TextEditingController controller;
+  final void Function(CepModel) onCepBuscado;
+  const cepWidget({super.key, required this.controller, required this.onCepBuscado});
+
+  @override
+  State<cepWidget> createState() => _cepState();
+}
+
+class _cepState extends State<cepWidget> {
+  late final CepRepository cepRepository;
+  @override
+  void initState() {
+    
+    super.initState();
+    cepRepository = CepRepository(client: apiHttp.HttpClient());
+  }
+  Future<void> buscarCep(String cep) async{
+    if(cep.isEmpty) return;
+    try {
+      final endereco = await cepRepository.getCep(cep);
+      widget.onCepBuscado(endereco);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao buscar CEP: $e")),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return TextField(
-      maxLength:9 ,
+      controller: widget.controller,
+      onSubmitted: buscarCep,
+      maxLength:10 ,
        keyboardType: TextInputType.number,
-          inputFormatters: [cpfMaskFormatter],
+          inputFormatters: [cepMaskFormatter],
+      
       decoration: InputDecoration(
       
         labelText: "CEP",
@@ -141,19 +226,27 @@ class _cepState extends State<cep> {
   }
 }
 
-class Rua extends StatefulWidget {
-  const Rua({super.key});
+Widget ruaField(
+  {required TextEditingController controller}
 
-  @override
-  State<Rua> createState() => _RuaState();
+){
+  return RuaWidget(controller: controller);
 }
 
-class _RuaState extends State<Rua> {
+class RuaWidget extends StatefulWidget {
+  final TextEditingController controller;
+  const RuaWidget({super.key, required this.controller});
+
+  @override
+  State<RuaWidget> createState() => _RuaState();
+}
+
+class _RuaState extends State<RuaWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
       
-      
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Rua / Avenida",
         labelStyle: TextStyle(

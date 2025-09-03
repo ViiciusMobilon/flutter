@@ -3,14 +3,21 @@ import 'package:projeto_principal/cadastro/Contratante.dart';
 import 'package:projeto_principal/cadastro/Empresa.dart';
 import 'package:projeto_principal/cadastro/Prestador.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:projeto_principal/data/models/user.dart';
 
-void main() => runApp(Escolha());
+
+// void main() => runApp(Escolha());
+
 
 class Escolha extends StatelessWidget {
-  const Escolha({super.key});
+  final UsuarioGeral usuario;
+  const Escolha({super.key, required  this.usuario});
 
   @override
   Widget build(BuildContext context) {
+    print( "Email: ${usuario.email}");
+    print( "senha: ${usuario.password}");
+    print( "senhaconfirmation: ${usuario.confirmation_password}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -74,7 +81,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: _button_contratante(),
+                    child: _button_contratante(usuario: usuario,),
                   ),
                 ),
                 //fim contratante
@@ -99,9 +106,12 @@ class _button_empresaState extends State<button_empresa> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Empresa())),
+          () {
+            final UsuarioGeral usuario = UsuarioGeral();
+            usuario.tipo = TipoUsuario.empresa;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Empresa(usuario: usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.8,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -152,9 +162,12 @@ class _button_prestadorState extends State<button_prestador> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Prestador())),
+          (){
+            final UsuarioGeral usuario = UsuarioGeral();
+            usuario.tipo = TipoUsuario.prestador;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Prestador(usuario: usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -194,7 +207,8 @@ class _button_prestadorState extends State<button_prestador> {
 }
 
 class _button_contratante extends StatefulWidget {
-  const _button_contratante({super.key});
+  final UsuarioGeral usuario;
+  const _button_contratante({super.key,  required this.usuario});
 
   @override
   State<_button_contratante> createState() => __button_contratanState();
@@ -205,9 +219,12 @@ class __button_contratanState extends State<_button_contratante> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Contratante())),
+          () {
+            // final UsuarioGeral usuario = UsuarioGeral();
+            widget.usuario.tipo = TipoUsuario.contratante;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Contratante(usuario: widget.usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,
