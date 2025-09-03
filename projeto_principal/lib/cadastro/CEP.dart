@@ -42,7 +42,7 @@ class _CEPState extends State<CEP> {
     setState(() {
         cepController.text = endereco.cep;
         cidadeController.text = endereco.localidade;
-        estadoController.text = endereco.estado;
+        estadoController.text = endereco.uf;
         ruaController.text = endereco.logradouro;
       });
   }
@@ -105,7 +105,7 @@ class _CEPState extends State<CEP> {
                   Expanded(flex: 4, child: cidade()),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                    // 3 partes da largura
-                  Expanded(flex: 3, child:estado() ), // 4 partes da largura
+                  Expanded(flex: 3, child:estado(controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
                   
                 ],
                 
@@ -137,10 +137,6 @@ class _CEPState extends State<CEP> {
                   ),
                   child: Center(child: adicionais()),
                 ),
-               
-                 
-           
-
            Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.22,
