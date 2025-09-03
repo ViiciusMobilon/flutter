@@ -73,7 +73,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   final resultado = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (ctx) => const CadastroCardPage(),
+                      builder: (ctx) => const NovoTweetPage(),
                     ),
                   );
                   if (resultado != null && mounted) {

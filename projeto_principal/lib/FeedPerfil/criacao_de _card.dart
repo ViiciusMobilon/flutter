@@ -2,25 +2,24 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CadastroCardPage extends StatefulWidget {
-  const CadastroCardPage({super.key});
+class NovoTweetPage extends StatefulWidget {
+  const NovoTweetPage({super.key});
 
   @override
-  State<CadastroCardPage> createState() => _CadastroCardPageState();
+  State<NovoTweetPage> createState() => _NovoTweetPageState();
 }
 
-class _CadastroCardPageState extends State<CadastroCardPage>
-    with WidgetsBindingObserver {
-  final TextEditingController nomeController = TextEditingController();
+class _NovoTweetPageState extends State<NovoTweetPage> {
+  final TextEditingController _tweetController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  File? imagemSelecionada;
+  File? _imagemSelecionada;
+  bool _tecladoAberto = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this as WidgetsBindingObserver);
 
-    // Forçar foco no TextField após a primeira renderização
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_focusNode);
     });
@@ -28,169 +27,168 @@ class _CadastroCardPageState extends State<CadastroCardPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this as WidgetsBindingObserver);
     _focusNode.dispose();
+    _tweetController.dispose();
     super.dispose();
   }
 
-  // Detecta quando o teclado é fechado
   @override
-void didChangeMetrics() {
-  final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
-  if (bottomInset == 0.0) {
-    // O teclado foi fechado
-    if (mounted) {
-      // Delay mínimo para evitar conflito de rebuild
-      Future.delayed(Duration(milliseconds: 100), () {
-        if (mounted) Navigator.pop(context);
-      });
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final estavaAberto = _tecladoAberto;
+    _tecladoAberto = bottomInset > 0.0;
+
+    if (estavaAberto && !_tecladoAberto) {
+      // teclado fechado
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // você pode decidir fechar ou não, aqui deixei comentado
+          // Navigator.of(context).pop();
+        });
+      }
     }
   }
-}
 
   Future<void> _selecionarImagem() async {
     final picker = ImagePicker();
     final imagem = await picker.pickImage(source: ImageSource.gallery);
     if (imagem != null) {
       setState(() {
-        imagemSelecionada = File(imagem.path);
+        _imagemSelecionada = File(imagem.path);
       });
     }
   }
 
-  void _salvar() {
-    if (nomeController.text.isEmpty) {
+  void _publicarTweet() {
+    if (_tweetController.text.isEmpty && _imagemSelecionada == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Preencha todos os campos obrigatórios"),
+          content: Text("Digite algo ou selecione uma imagem"),
           backgroundColor: Colors.red,
         ),
       );
       return;
     }
 
-    // Aqui você implementaria a lógica de salvamento
+    // Aqui você implementaria a lógica de publicação
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Card criado com sucesso!"),
+        content: Text("Tweet publicado!"),
         backgroundColor: Colors.green,
       ),
     );
 
-    Navigator.pop(context, "card_criado");
+    Navigator.pop(context, "tweet_publicado");
   }
 
   @override
   Widget build(BuildContext context) {
-    final altura = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Novo Card"),
-        backgroundColor: Colors.indigoAccent,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          "Novo Tweet",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: ElevatedButton(
+              onPressed: _publicarTweet,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text("Tweet"),
+            ),
+          )
+        ],
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _botaoGradient(
-              texto: "Selecionar Imagem",
-              onTap: _selecionarImagem,
-            ),
-            const SizedBox(height: 12),
-
-            // Imagem selecionada
-            if (imagemSelecionada != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.file(
-                    imagemSelecionada!,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    width: MediaQuery.of(context).size.height * 1,
-                    fit: BoxFit.fill,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CircleAvatar(
+                  radius: 24,
+                  backgroundImage: NetworkImage(
+                      "https://i.pravatar.cc/150?img=3"), // foto do usuário
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _tweetController,
+                    focusNode: _focusNode,
+                    maxLength: 280,
+                    maxLines: null,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      hintText: "O que está acontecendo?",
+                      border: InputBorder.none,
+                    ),
                   ),
                 ),
+              ],
+            ),
+            if (_imagemSelecionada != null) ...[
+              const SizedBox(height: 12),
+              Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      _imagemSelecionada!,
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _imagemSelecionada = null;
+                        });
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black54,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-
-            const SizedBox(height: 16),
-
-            // Input de descrição
-            _input("Descrição", nomeController, _focusNode),
-
-            const SizedBox(height: 32),
-
-            _botaoGradient(texto: "Criar Card", onTap: _salvar),
+            ],
+            const Spacer(),
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.image, color: Colors.blue),
+                  onPressed: _selecionarImagem,
+                ),
+                // Você pode adicionar outros ícones (GIF, enquete, emoji)
+              ],
+            )
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _input(String label, TextEditingController ctrl, FocusNode focusNode) {
-    return TextField(
-      controller: ctrl,
-      focusNode: focusNode,
-      autofocus: true,
-      maxLength: 255,
-      keyboardType: TextInputType.multiline,
-      minLines: 1,
-      maxLines: null,
-      style: const TextStyle(fontFamily: "Poppins"),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(fontFamily: "Poppins", color: Colors.black),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 20,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-    );
-  }
-
-  Widget _botaoGradient({required String texto, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 55,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.blue, Colors.indigoAccent],
-          ),
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
-              offset: const Offset(0, 4),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            texto,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontFamily: "Poppins",
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ),
       ),
     );
