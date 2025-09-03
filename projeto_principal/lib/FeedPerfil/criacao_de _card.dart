@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,11 +9,44 @@ class CadastroCardPage extends StatefulWidget {
   State<CadastroCardPage> createState() => _CadastroCardPageState();
 }
 
-class _CadastroCardPageState extends State<CadastroCardPage> {
+class _CadastroCardPageState extends State<CadastroCardPage>
+    with WidgetsBindingObserver {
   final TextEditingController nomeController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   File? imagemSelecionada;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
+    // Forçar foco no TextField após a primeira renderização
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  // Detecta quando o teclado é fechado
+  @override
+void didChangeMetrics() {
+  final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+  if (bottomInset == 0.0) {
+    // O teclado foi fechado
+    if (mounted) {
+      // Delay mínimo para evitar conflito de rebuild
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (mounted) Navigator.pop(context);
+      });
+    }
+  }
+}
 
   Future<void> _selecionarImagem() async {
     final picker = ImagePicker();
@@ -27,7 +59,7 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
   }
 
   void _salvar() {
-    if (nomeController.text.isEmpty ) {
+    if (nomeController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Preencha todos os campos obrigatórios"),
@@ -62,56 +94,50 @@ class _CadastroCardPageState extends State<CadastroCardPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-           
-           
-        
-          
-             _botaoGradient(
-      texto: "Selecionar Imagem",
-      onTap: _selecionarImagem,
-    ),
+            _botaoGradient(
+              texto: "Selecionar Imagem",
+              onTap: _selecionarImagem,
+            ),
+            const SizedBox(height: 12),
 
-    // Espaço
-    const SizedBox(height: 12),
+            // Imagem selecionada
+            if (imagemSelecionada != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.file(
+                    imagemSelecionada!,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.height * 1,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
 
-    // Imagem selecionada (opcional)
-    if (imagemSelecionada != null)
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: Image.file(
-            imagemSelecionada!,
-            height: MediaQuery.of(context).size.height * 0.5,
-            width: MediaQuery.of(context).size.height * 1,
-            fit: BoxFit.fill,
-          ),
-        ),
-      ),
+            const SizedBox(height: 16),
 
-    const SizedBox(height: 16),
+            // Input de descrição
+            _input("Descrição", nomeController, _focusNode),
 
-    // Input de descrição vem por último
-    _input("Descrição", nomeController
-    ),
+            const SizedBox(height: 32),
 
-    const SizedBox(height: 32),
-
-    // Botão Criar Card
-    _botaoGradient(texto: "Criar Card", onTap: _salvar),
+            _botaoGradient(texto: "Criar Card", onTap: _salvar),
           ],
         ),
       ),
     );
   }
 
-  Widget _input(String label, TextEditingController ctrl) {
+  Widget _input(String label, TextEditingController ctrl, FocusNode focusNode) {
     return TextField(
       controller: ctrl,
+      focusNode: focusNode,
+      autofocus: true,
       maxLength: 255,
-       keyboardType: TextInputType.multiline,
-       minLines: 1,       // começa com 1 linha
-       maxLines: null,    // cres
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: null,
       style: const TextStyle(fontFamily: "Poppins"),
       decoration: InputDecoration(
         labelText: label,

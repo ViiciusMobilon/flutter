@@ -13,7 +13,10 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '##.###-###',
   filter: { "#": RegExp(r'[0-9]') },
 );
-
+final numeromaskFormatter = MaskTextInputFormatter(
+  mask: '#####',
+  filter: { "#": RegExp(r'[0-9]') },
+);
 
 class CEP extends StatefulWidget {
   const CEP({super.key});
@@ -139,7 +142,7 @@ class _cepState extends State<cep> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      maxLength:8 ,
+      maxLength:10 ,
        keyboardType: TextInputType.number,
           inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
@@ -223,6 +226,8 @@ class _numeroState extends State<numero> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      inputFormatters: [numeromaskFormatter],
+      maxLength: 5,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: "1234",
