@@ -102,7 +102,7 @@ class _CEPState extends State<CEP> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(flex: 4, child: cidade()),
+                  Expanded(flex: 4, child: cidade(controller: cidadeController, onCepBuscado: preencherCampos)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                    // 3 partes da largura
                   Expanded(flex: 3, child:estado(controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura

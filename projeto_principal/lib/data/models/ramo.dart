@@ -1,11 +1,11 @@
-class ramo{
+class RamoModel{
   int? id;
   String? nome;
   String? modalidade;
 
-  ramo({this.id, this.nome, this.modalidade});
+  RamoModel({this.id, this.nome, this.modalidade});
 
-  ramo.fromJson(Map<String, dynamic> json) {
+  RamoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nome = json['nome'];
     modalidade = json['modalidade'];

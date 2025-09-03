@@ -79,14 +79,15 @@ class _estadoState extends State<estado> {
 
 
 class cidade extends StatefulWidget {
-  const cidade({super.key});
+  final TextEditingController controller;
+  final void Function(CepModel) onCepBuscado;
+  const cidade({super.key, required this.controller, required this.onCepBuscado});
 
   @override
   State<cidade> createState() => _cidadeState();
 }
 
 class _cidadeState extends State<cidade> {
-    final dropValue = ValueNotifier('');
   final dropOpcoes = [
     "Jaú",
     "Bauru",
@@ -94,19 +95,12 @@ class _cidadeState extends State<cidade> {
   ];
   @override
   Widget build(BuildContext context) {
-    return  Center(
-      child: ValueListenableBuilder(
-        valueListenable: dropValue,
-        builder: (BuildContext context, String value, _) {
-          return SizedBox(
+    return SizedBox(
             width: MediaQuery.of(context).size.width * 0.6,
             height:MediaQuery.of(context).size.height * 0.07,
             child: DropdownSearch<String>(
               items: dropOpcoes,
-              selectedItem: value.isEmpty ? null : value,
-              onChanged: (String? newValue) {
-                dropValue.value = newValue ?? '';
-              },
+              selectedItem: widget.controller.text.isEmpty ? null : widget.controller.text,
               popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
@@ -153,31 +147,46 @@ class _cidadeState extends State<cidade> {
               },
             ),
           );
-        },
-      ),
-    );
+        }
   }
-}
 
 class Area extends StatefulWidget {
   const Area({super.key});
 
   @override
   State<Area> createState() => _AreaState();
+
+   @override
+  void initState() {
+    super.initState();
+    carregarRamos();
+ }
+ void carregarRamos() async {
+    try{
+      String url = 'http://192.168.1.5:8000/api/ramo';
+
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          ramo = List<String>.from(json.decode(response.body).map((item) => item['nome'].toString()));
+        });
+      } else {
+        
+      }
+    }catch (e) {
+      print('Erro ao carregar ramos: $e');
+    }
+  }
 }
 
 class _AreaState extends State<Area> {
-   final dropValue = ValueNotifier('');
-  final dropOpcoes = [
-    "3",
-    "2",
-    "1",
-  ];
+   List<String> ramo = [];
+   ValueNotifier<String> dropValue = ValueNotifier('');
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ValueListenableBuilder(
-        valueListenable: dropValue,
+        valueListenable: ramo,
         builder: (BuildContext context, String value, _) {
           return SizedBox(
             width: MediaQuery.of(context).size.width * 0.8,
