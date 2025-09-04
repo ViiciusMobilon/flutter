@@ -64,6 +64,7 @@ class _CEPState extends State<CEP> {
     print( "nome: ${widget.usuario.nome}");
     print( "tel: ${widget.usuario.telefone}");
     print( "cpf: ${widget.usuario.cpf}");
+    print( "foto: ${widget.usuario.foto}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -136,20 +137,25 @@ class _CEPState extends State<CEP> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: numero(),
+              child: numero(controller: numeroController,),
             ),Padding(
                   padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
                   ),
-                  child: Center(child: adicionais()),
+                  child: Center(child: adicionais(controller: infoaddController,)),
                 ),
            Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.22,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(usuario: widget.usuario,
+                  cepController: cepController,
+                  cidadeController: cidadeController,
+                  infoaddController: infoaddController,
+                  numeroController: numeroController,
+                  ruaController: ruaController,)),
                 ),
           
                  
@@ -284,7 +290,8 @@ class _RuaState extends State<RuaWidget> {
 }
 
 class numero extends StatefulWidget {
-  const numero({super.key});
+  final TextEditingController controller;
+   numero({super.key, required this.controller});
 
   @override
   State<numero> createState() => _numeroState();
@@ -294,6 +301,7 @@ class _numeroState extends State<numero> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: "1234",
@@ -327,7 +335,19 @@ class _numeroState extends State<numero> {
 
 
 class botao extends StatefulWidget {
-  const botao({super.key});
+ final UsuarioGeral usuario;
+ final TextEditingController cepController;
+ final TextEditingController cidadeController;
+ final TextEditingController ruaController;
+ final TextEditingController numeroController;
+ final TextEditingController infoaddController;
+ botao({super.key, required this.usuario,
+  required this.cepController,
+  required this.cidadeController,
+  required this.ruaController,
+  required this.numeroController,
+  required this.infoaddController,
+ });
 
   @override
   State<botao> createState() => _botaoState();
@@ -338,9 +358,28 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
+          (){
+            widget.usuario.cep = widget.cepController.text;
+            widget.usuario.cidade = widget.cidadeController.text;
+            widget.usuario.rua = widget.ruaController.text;
+            widget.usuario.numero = widget.numeroController.text;
+            widget.usuario.infoadd = widget.infoaddController.text;
+            Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
+          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
+          print( "Email: ${widget.usuario.email}");
+          print( "senha: ${widget.usuario.password}");
+          print( "senhaconfirmation: ${widget.usuario.confirmation_password}");
+          print( "Tipo: ${widget.usuario.tipo}");
+          print( "nome: ${widget.usuario.nome}");
+          print( "tel: ${widget.usuario.telefone}");
+          print( "cpf: ${widget.usuario.cpf}");
+          print( "foto: ${widget.usuario.foto}");
+          print( "cep: ${widget.usuario.cep}");
+          print( "cidade: ${widget.usuario.cidade}");
+          print( "num: ${widget.usuario.numero}");
+          print( "info: ${widget.usuario.infoadd}");
+        }, 
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -389,7 +428,8 @@ class _botaoState extends State<botao> {
 }
 
 class adicionais extends StatefulWidget {
-  const adicionais({super.key});
+  final TextEditingController controller;
+   adicionais({super.key, required this.controller});
 
   @override
   State<adicionais> createState() => _adicionaisState();
@@ -399,6 +439,7 @@ class _adicionaisState extends State<adicionais> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       maxLength: 128,
       decoration: InputDecoration(
         hintText: "não sei o que não sei oque la",

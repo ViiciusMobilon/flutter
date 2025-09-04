@@ -79,7 +79,12 @@ class _ContratanteState extends State<Contratante>{
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: Perfil(usuario: widget.usuario ),
+              child: Perfil(image: foto,
+              OnImageSelected: (file){
+                setState(() {
+                foto = file;
+                });
+                            },),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -130,8 +135,9 @@ class _ContratanteState extends State<Contratante>{
 }
 
 class Perfil extends StatefulWidget {
-  final UsuarioGeral usuario;
-  const Perfil({super.key, required this.usuario});
+  final File? image;
+  final void Function(File?) OnImageSelected;
+  const Perfil({super.key, required this.image, required this.OnImageSelected });
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -144,6 +150,7 @@ class _PerfilState extends State<Perfil> {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       final file = File(pickedFile.path);
+      widget.OnImageSelected(file);
     }
   }
 
@@ -183,9 +190,9 @@ class _PerfilState extends State<Perfil> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child:widget.usuario.foto != null
+          child:widget.image != null
               ? Image.file(
-                  widget.usuario.foto!,
+                  widget.image!,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,

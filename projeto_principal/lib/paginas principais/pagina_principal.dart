@@ -6,10 +6,13 @@ import 'package:projeto_principal/FeedCards/Cards.dart';
 import 'package:projeto_principal/FeedPerfil/Perfil.dart';
 import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
 import 'package:projeto_principal/FeedCards/Cards.dart';
+import 'package:projeto_principal/data/models/user.dart';
 
 // Entry point
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
+    // UsuarioGeral usuario;
+
   const TelaPrincipal({super.key});
 
   @override
@@ -28,6 +31,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       // AppBar movido para cá - apenas na página de pesquisa
       appBar:

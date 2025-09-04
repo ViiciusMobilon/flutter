@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
 void main() async {
@@ -14,9 +15,14 @@ void main() async {
   runApp(const Main());
 }
 
-class Main extends StatelessWidget {
+class Main extends StatefulWidget {
   const Main({super.key});
 
+  @override
+  State<Main> createState() => _MainState();
+}
+
+class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -261,6 +267,7 @@ class _senhaState extends State<senha> {
 }
 
 class botao extends StatefulWidget {
+  // final UsuarioGeral usuario;
   const botao({super.key});
 
   @override

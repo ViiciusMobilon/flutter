@@ -17,6 +17,9 @@ class UsuarioGeral {
   // XFile? foto;
   String? cep;
   String? cidade;
+  String? rua;
+  String? numero;
+  String? infoadd;
   String? ramo;
   TipoUsuario? tipo;
 
@@ -40,6 +43,9 @@ class UsuarioGeral {
       "foto": foto ?? "",
       "cep": cep ?? "",
       "cidade": cidade ?? "",
+      "rua": rua ?? "",
+      "numero": numero ?? "",
+      "infoadd": infoadd ?? "",
       "ramo": ramo ?? "",
       "tipo": tipo.toString().split('.').last, // "prestador" ou "contratante"
     };
