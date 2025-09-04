@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:projeto_principal/main.dart';
 
 class NovaSenhaPage extends StatefulWidget {
   final String codigo;
@@ -85,8 +87,8 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
                 child: GestureDetector(
-                  onTap: salvarSenha,
-                  child: botao(texto: "Salvar"),
+                  onTap: ()=> Navigator.of(context).push((MaterialPageRoute(builder: (context) => Main()))),
+                  child: botao(),
                 ),
               ),
             ],
@@ -116,8 +118,7 @@ class imagem extends StatelessWidget {
 }
 
 class botao extends StatelessWidget {
-  final String texto;
-  const botao({super.key, required this.texto});
+  const botao({super.key, });
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +143,7 @@ class botao extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            texto,
+            "Salvar",
             style: TextStyle(
               color: Colors.white,
               fontSize: MediaQuery.of(context).size.width * 0.05,

@@ -117,7 +117,7 @@ class _settinspageState extends State<settinspage> {
                 ),
 
                 Padding(
-                  padding:  EdgeInsets.only(top: screenHeigth * 0.17),
+                  padding:  EdgeInsets.only(top: screenHeigth * 0.08),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 255, 17, 0),

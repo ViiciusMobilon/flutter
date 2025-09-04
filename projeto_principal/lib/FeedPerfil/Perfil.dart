@@ -30,19 +30,22 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
 
     return ListView(
       children: [
+        
         Container(
           width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height*0.4,
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.08,
             vertical: 16,
           ),
           decoration: const BoxDecoration(color: Colors.white),
-          child: Column(
+          child: 
+          
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Linha com avatar + nome + profissão + avaliação
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
@@ -51,36 +54,36 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Vinicius Mobilon",
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.06,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        Text(
-                          "profissão",
-                          style: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.width * 0.027,
-                            color: const Color.fromARGB(255, 151, 151, 151),
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        const EstrelaRating(),
-                      ],
-                    ),
-                  ),
+                  const EstrelaRating(),
                 ],
               ),
-              const SizedBox(height: 8),
+      
+              Expanded(
+                child: Column(
+                 
+                  children: [
+                    Text(
+                      "Vinicius Mobilon",
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.06,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    Text(
+                      "profissão",
+                      style: TextStyle(
+                        fontSize:
+                            MediaQuery.of(context).size.width * 0.027,
+                        color: const Color.fromARGB(255, 151, 151, 151),
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "Poppins",
+                      ),
+                    ),
+                    
+                  ],
+                ),
+              ),
 
               // Linha com descrição + botão "Mais"
               Row(

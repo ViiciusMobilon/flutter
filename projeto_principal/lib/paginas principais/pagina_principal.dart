@@ -73,8 +73,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   final resultado = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (ctx) => const NovoTweetPage(),
-                    ),
+                      builder: (ctx) => const NovoPostPage(),),
                   );
                   if (resultado != null && mounted) {
                     // Lógica para lidar com o resultado
@@ -100,23 +99,29 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(40),
-          child: BottomNavigationBar(
-            currentIndex: _paginaAtual,
-            onTap: (i) => setState(() => _paginaAtual = i),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white70,
-            type: BottomNavigationBarType.fixed,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Perfil',
-              ),
-            ],
+        child: WillPopScope(
+      onWillPop: () async {
+        // retorna false = cancela o botão voltar
+        return false; 
+      },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: BottomNavigationBar(
+              currentIndex: _paginaAtual,
+              onTap: (i) => setState(() => _paginaAtual = i),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white70,
+              type: BottomNavigationBarType.fixed,
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Perfil',
+                ),
+              ],
+            ),
           ),
         ),
       ),
