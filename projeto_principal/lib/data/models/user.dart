@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
 enum TipoUsuario { prestador, contratante, empresa }
 
 class UsuarioGeral {
@@ -9,7 +13,8 @@ class UsuarioGeral {
   String? cnpj;
   String? telefone;
   String? whatsapp;
-  String? foto;
+  File? foto;
+  // XFile? foto;
   String? cep;
   String? cidade;
   String? ramo;

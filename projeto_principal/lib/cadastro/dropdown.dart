@@ -130,20 +130,53 @@ class EstadoDropdownState extends State<estado> {
 class cidade extends StatefulWidget {
   final TextEditingController controller;
   final void Function(CepModel) onCepBuscado;
-  const cidade({super.key, required this.controller, required this.onCepBuscado});
+  cidade({super.key, required this.controller, required this.onCepBuscado});
+
+   final CidadeDropdownState state = CidadeDropdownState(); 
+   void setEstadoViaCep(String nome) {
+    state.setCidadeSelecionada(nome);
+  }
 
   @override
-  State<cidade> createState() => _cidadeState();
+  State<cidade> createState() => CidadeDropdownState();
 }
 
-class _cidadeState extends State<cidade> {
+class CidadeDropdownState extends State<cidade> {
   late final CidadeRepository cidadeRepository;
-
+  CidadeModel? cidadeSelecionada;
+  List<CidadeModel> cidades = [];
   @override
-  void initState(){
+  void initState() {
     super.initState();
     cidadeRepository = CidadeRepository(client: apiHttp.HttpClient());
+    carregarCidades();
   }
+   Future<void> carregarCidades() async {
+    final lista = await cidadeRepository.getcidade();;
+    setState(() {
+      cidades = lista;
+      // Se já tiver algo no controller (ex: ViaCEP), seleciona
+      final nome = widget.controller.text;
+        if (nome.isNotEmpty) {
+          cidadeSelecionada = cidades.firstWhere(
+            (e) => e.nome == nome,
+            orElse: () => cidades.first,
+          );
+        }
+    });
+   }
+    void setCidadeSelecionada(String nome) async {
+    final estados = await cidadeRepository.getcidade();
+
+  final encontrado = cidades.firstWhere(
+    (e) => e.nome == nome,
+    orElse: () => estados.first,
+  );
+    setState(() {
+        cidadeSelecionada = encontrado;
+        widget.controller.text = encontrado.nome;
+      });
+    }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -152,6 +185,11 @@ class _cidadeState extends State<cidade> {
             child: DropdownSearch<CidadeModel>(
               asyncItems: (String? filtro) => cidadeRepository.getcidade(),
               itemAsString: (CidadeModel cidade) => cidade.nome,
+              selectedItem: cidadeSelecionada,
+              onChanged: (cidade){
+                setState(() => cidadeSelecionada = cidade);
+                widget.controller.text = cidade?.nome ?? '';
+              },
               popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
@@ -200,8 +238,6 @@ class _cidadeState extends State<cidade> {
           );
         }
   }
-
-
 
 class Area extends StatefulWidget {
   const Area({super.key});

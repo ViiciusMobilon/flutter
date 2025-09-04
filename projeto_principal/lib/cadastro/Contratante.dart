@@ -28,6 +28,7 @@ class Contratante extends StatefulWidget {
 }
 
 class _ContratanteState extends State<Contratante>{
+  File? foto;
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
@@ -78,7 +79,7 @@ class _ContratanteState extends State<Contratante>{
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: const Perfil(),
+              child: Perfil(usuario: widget.usuario ),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -116,6 +117,7 @@ class _ContratanteState extends State<Contratante>{
                   ),
                   child: Center(child: botao(
                   usuario: widget.usuario,
+                  foto: foto,
                   nomeController: nomeController,
                   telefoneController: telefoneController,
                   cpfController: cpfController,)),
@@ -128,22 +130,20 @@ class _ContratanteState extends State<Contratante>{
 }
 
 class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+  final UsuarioGeral usuario;
+  const Perfil({super.key, required this.usuario});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
-  File? _image;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+      final file = File(pickedFile.path);
     }
   }
 
@@ -183,9 +183,9 @@ class _PerfilState extends State<Perfil> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child: _image != null
+          child:widget.usuario.foto != null
               ? Image.file(
-                  _image!,
+                  widget.usuario.foto!,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,
@@ -342,12 +342,14 @@ class _cpfState extends State<cpf> {
 
 class botao extends StatefulWidget {
   final UsuarioGeral usuario;
+  final File? foto;
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
-  const botao({
+   botao({
     super.key,
     required this.usuario, 
+    required this.foto, 
     required this.nomeController,
     required this.telefoneController,
     required this.cpfController});
@@ -366,6 +368,7 @@ class _botaoState extends State<botao> {
               widget.usuario.nome = widget.nomeController.text;
               widget.usuario.telefone = widget.telefoneController.text;
               widget.usuario.cpf = widget.cpfController.text;
+              widget.usuario.foto = widget.foto;
 
             Navigator.of(context).push(
               MaterialPageRoute(builder: (context)=>CEP(usuario: widget.usuario),),

@@ -39,6 +39,7 @@ class _CEPState extends State<CEP> {
   final numeroController = TextEditingController();
   final infoaddController = TextEditingController();
   final GlobalKey<EstadoDropdownState > estadoDropdownKey = GlobalKey<EstadoDropdownState >();
+  final GlobalKey<CidadeDropdownState> cidadeDropdownkey = GlobalKey<CidadeDropdownState>();
   
 
   void preencherCampos(CepModel endereco){
@@ -50,6 +51,7 @@ class _CEPState extends State<CEP> {
 
 
         estadoDropdownKey.currentState?.setEstadoSelecionado(endereco.uf);
+        cidadeDropdownkey.currentState?.setCidadeSelecionada(endereco.localidade);
       });
   }
 
@@ -108,7 +110,7 @@ class _CEPState extends State<CEP> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(flex: 4, child: cidade(controller: cidadeController, onCepBuscado: preencherCampos)),
+                  Expanded(flex: 4, child: cidade(key: cidadeDropdownkey,controller: cidadeController, onCepBuscado: preencherCampos)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                    // 3 partes da largura
                   Expanded(flex: 3, child:estado(key: estadoDropdownKey,controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura

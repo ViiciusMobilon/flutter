@@ -14,7 +14,7 @@ class EstadoRepository implements IEstadoRepository{
 
   @override
   Future<List<EstadoModel>> getestado() async {
-    final response = await client.get(url: 'http://192.168.1.8:8000/api/estado');
+    final response = await client.get(url: 'http://172.26.144.1:8000/api/estado');
 
     if (response.statusCode == 200){
       final List body = jsonDecode(response.body);
