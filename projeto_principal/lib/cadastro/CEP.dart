@@ -9,9 +9,10 @@ import 'package:projeto_principal/data/models/cep.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/data/repositories/cep_repository.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
-import 'package:projeto_principal/cadastro/dropdow.dart';
+import 'package:projeto_principal/cadastro/dropdown.dart';
 import 'package:projeto_principal/cadastro/Contratante.dart';
 import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
+import 'package:projeto_principal/cadastro/dropdown.dart';
 
 
 
@@ -37,6 +38,8 @@ class _CEPState extends State<CEP> {
   final ruaController = TextEditingController();
   final numeroController = TextEditingController();
   final infoaddController = TextEditingController();
+  final GlobalKey<EstadoDropdownState > estadoDropdownKey = GlobalKey<EstadoDropdownState >();
+  
 
   void preencherCampos(CepModel endereco){
     setState(() {
@@ -44,6 +47,9 @@ class _CEPState extends State<CEP> {
         cidadeController.text = endereco.localidade;
         estadoController.text = endereco.uf;
         ruaController.text = endereco.logradouro;
+
+
+        estadoDropdownKey.currentState?.setEstadoSelecionado(endereco.uf);
       });
   }
 
@@ -105,7 +111,7 @@ class _CEPState extends State<CEP> {
                   Expanded(flex: 4, child: cidade(controller: cidadeController, onCepBuscado: preencherCampos)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                    // 3 partes da largura
-                  Expanded(flex: 3, child:estado(controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
+                  Expanded(flex: 3, child:estado(key: estadoDropdownKey,controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
                   
                 ],
                 

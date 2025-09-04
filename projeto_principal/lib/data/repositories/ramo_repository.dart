@@ -1,30 +1,29 @@
+import 'dart:convert';
+
 import 'package:projeto_principal/data/models/ramo.dart';
 import 'package:projeto_principal/data/http/http_client.dart';
-import 'package:projeto_principal/data/repositories/cep_repository.dart';
 
 abstract class IRamoRepository{
-  Future<RamoModel> getRamo();
+  Future<List<RamoModel>> getRamo();
 }
 
-class RamoRepository {
+class RamoRepository implements IRamoRepository{
 
   final IHttpClient client;
 
   RamoRepository({required this.client});
 
   @override
-  Future<RamoModel> getRamo() async {
+  Future<List<RamoModel>> getRamo() async {
 
-    final response = client.get(url: 'api/ramo');
+    final response = await client.get(url: 'http://192.168.1.8:8000/api/ramo');
 
-    if (response.statusCode == 200) {
-      // final List<CepModel> ceps = [];
+    if(response.statusCode == 200){
+        final List body = jsonDecode(response.body);
 
-      final body = jsonDecode(response.body);
-
-      return RamoModel.fromJson(body);
-
+        return body.map((e)=> RamoModel.fromJson(e)).toList();
+      }else{
+        throw Exception('erro ramo');
+        }
   }
-
-
 }
