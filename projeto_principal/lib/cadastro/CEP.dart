@@ -111,7 +111,10 @@ class _CEPState extends State<CEP> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(flex: 4, child: cidade(key: cidadeDropdownkey,controller: cidadeController, onCepBuscado: preencherCampos)),
+                  Expanded(flex: 4, child: cidade(usuario: widget.usuario,
+                                                  key: cidadeDropdownkey,
+                                                  controller: cidadeController,
+                                                  onCepBuscado: preencherCampos)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
                    // 3 partes da largura
                   Expanded(flex: 3, child:estado(key: estadoDropdownKey,controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
@@ -360,13 +363,13 @@ class _botaoState extends State<botao> {
       onTap:
           (){
             widget.usuario.cep = widget.cepController.text;
-            widget.usuario.cidade = widget.cidadeController.text;
+            // widget.usuario.cidade = widget.cidadeController.text;
             widget.usuario.rua = widget.ruaController.text;
             widget.usuario.numero = widget.numeroController.text;
             widget.usuario.infoadd = widget.infoaddController.text;
             Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
+            context,);
+          // ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
           print( "Email: ${widget.usuario.email}");
           print( "senha: ${widget.usuario.password}");
           print( "senhaconfirmation: ${widget.usuario.confirmation_password}");

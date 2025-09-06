@@ -16,7 +16,7 @@ class UsuarioGeral {
   File? foto;
   // XFile? foto;
   String? cep;
-  String? cidade;
+  int? cidade;
   String? rua;
   String? numero;
   String? infoadd;

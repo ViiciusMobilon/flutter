@@ -15,7 +15,7 @@ class CidadeRepository implements ICidadeRepository{
 
   @override
   Future<List<CidadeModel>> getcidade() async{
-    final response = await client.get(url: 'http://172.26.144.1:8000/api/cidade');
+    final response = await client.get(url: 'http://192.168.1.8:8000/api/cidade');
 
 
     if(response.statusCode == 200){

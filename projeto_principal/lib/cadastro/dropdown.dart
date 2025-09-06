@@ -5,6 +5,7 @@ import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
 import 'package:projeto_principal/data/models/cidade.dart';
 import 'package:projeto_principal/data/models/estado.dart';
 import 'package:projeto_principal/data/models/ramo.dart';
+import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/data/repositories/cidade_repository.dart';
 import 'package:projeto_principal/data/repositories/estado_repository.dart';
 import 'package:projeto_principal/data/repositories/ramo_repository.dart';
@@ -128,9 +129,10 @@ class EstadoDropdownState extends State<estado> {
 
 
 class cidade extends StatefulWidget {
+  final UsuarioGeral usuario;
   final TextEditingController controller;
   final void Function(CepModel) onCepBuscado;
-  cidade({super.key, required this.controller, required this.onCepBuscado});
+  cidade({super.key, required this.usuario, required this.controller, required this.onCepBuscado});
 
    final CidadeDropdownState state = CidadeDropdownState(); 
    void setEstadoViaCep(String nome) {
@@ -152,7 +154,7 @@ class CidadeDropdownState extends State<cidade> {
     carregarCidades();
   }
    Future<void> carregarCidades() async {
-    final lista = await cidadeRepository.getcidade();;
+    final lista = await cidadeRepository.getcidade();
     setState(() {
       cidades = lista;
       // Se já tiver algo no controller (ex: ViaCEP), seleciona
@@ -175,6 +177,7 @@ class CidadeDropdownState extends State<cidade> {
     setState(() {
         cidadeSelecionada = encontrado;
         widget.controller.text = encontrado.nome;
+        widget.usuario.cidade = encontrado.id;
       });
     }
   @override
@@ -187,9 +190,13 @@ class CidadeDropdownState extends State<cidade> {
               itemAsString: (CidadeModel cidade) => cidade.nome,
               selectedItem: cidadeSelecionada,
               onChanged: (cidade){
-                setState(() => cidadeSelecionada = cidade);
+                setState((){
+                  cidadeSelecionada = cidade;
+                  widget.usuario.cidade = cidadeSelecionada!.id;
+                }
+                  );
                 widget.controller.text = cidade?.nome ?? '';
-              },
+                },
               popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
