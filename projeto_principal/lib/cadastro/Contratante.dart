@@ -33,13 +33,6 @@ class _ContratanteState extends State<Contratante>{
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
   @override
-  void dispose() {
-    nomeController.dispose();
-    telefoneController.dispose();
-    cpfController.dispose();
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
     // final UsuarioGeral usuario;
     print( "Email: ${widget.usuario.email}");
@@ -353,7 +346,7 @@ class botao extends StatefulWidget {
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
-   botao({
+    botao({
     super.key,
     required this.usuario, 
     required this.foto, 

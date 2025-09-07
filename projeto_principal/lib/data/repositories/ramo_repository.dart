@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:projeto_principal/data/config.dart';
 import 'package:projeto_principal/data/models/ramo.dart';
 import 'package:projeto_principal/data/http/http_client.dart';
 
@@ -16,7 +17,7 @@ class RamoRepository implements IRamoRepository{
   @override
   Future<List<RamoModel>> getRamo() async {
 
-    final response = await client.get(url: 'http://192.168.1.8:8000/api/ramo');
+    final response = await client.get(url: '${URLAPI}/ramo');
 
     if(response.statusCode == 200){
         final List body = jsonDecode(response.body);

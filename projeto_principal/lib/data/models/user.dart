@@ -22,7 +22,7 @@ class UsuarioGeral {
   String? rua;
   String? numero;
   String? infoadd;
-  String? ramo;
+  int? ramo;
   TipoUsuario? tipo;
 
   UsuarioGeral({this.nome, this.email, this.password, 
@@ -46,7 +46,7 @@ class UsuarioGeral {
       "cep": cep ?? "",
       "cidade": cidade ?? "",
       "estado": estado ?? "",
-      "estado": uf ?? "",
+      "uf": uf ?? "",
       "rua": rua ?? "",
       "numero": numero ?? "",
       "infoadd": infoadd ?? "",

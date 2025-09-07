@@ -11,7 +11,7 @@ class AuthController extends ChangeNotifier{
 
   AuthController(this._authService);
 
-  Future<void> cadastro(String email,
+  Future<void> cadastroContratante(String email,
       String senha,
       String senha_confirmation,
       String nome,
@@ -30,7 +30,55 @@ class AuthController extends ChangeNotifier{
           errors = null;
           notifyListeners();
 
-          final sucess = await _authService.cadastro(email, senha, senha_confirmation, nome, tel, cpf, foto, cep,rua, cidade, estado,uf, numero, info);
+          final sucess = await _authService.cadastro_Contratante(email, senha, senha_confirmation, nome, tel, cpf, foto, cep,rua, cidade, estado,uf, numero, info);
+
+          if(!sucess){
+            errors = "erro cadastro";
+          }
+        } catch (e) {
+          errors = e.toString();
+        } finally{
+          isLoading = false;
+          notifyListeners();
+        }
+  }
+  ////////////////////////////
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  ///
+  Future<void> cadastroPrestador(String email,
+      String senha,
+      String senha_confirmation,
+      String nome,
+      String tel,
+      String cpf,
+      String? zap,
+      File foto,
+      int id_ramo,
+      String cep,
+      String rua,
+      String cidade,
+      String estado,
+      String uf,
+      String numero,
+      String info) async {
+        try {
+          isLoading = true;
+          errors = null;
+          notifyListeners();
+
+          final sucess = await _authService.cadastro_Prestador(email, senha, senha_confirmation, nome, tel,zap, cpf, foto,id_ramo, cep,rua, cidade, estado,uf, numero, info);
 
           if(!sucess){
             errors = "erro cadastro";

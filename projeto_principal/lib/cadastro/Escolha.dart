@@ -57,7 +57,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: button_empresa(),
+                    child: button_empresa(usuario: usuario,),
                   ),
                 ),
                 //fim button_empresa
@@ -69,7 +69,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: button_prestador(),
+                    child: button_prestador(usuario: usuario,),
                   ),
                 ),
                 //fim prestador
@@ -95,7 +95,8 @@ class Escolha extends StatelessWidget {
 }
 
 class button_empresa extends StatefulWidget {
-  const button_empresa({super.key});
+  final UsuarioGeral usuario;
+  const button_empresa({super.key, required this.usuario});
 
   @override
   State<button_empresa> createState() => _button_empresaState();
@@ -107,9 +108,8 @@ class _button_empresaState extends State<button_empresa> {
     return GestureDetector(
       onTap:
           () {
-            final UsuarioGeral usuario = UsuarioGeral();
-            usuario.tipo = TipoUsuario.empresa;
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Empresa(usuario: usuario),),);
+            widget.usuario.tipo = TipoUsuario.empresa;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Empresa(usuario: widget.usuario),),);
             
           },
       child: Container(
@@ -151,7 +151,8 @@ class _button_empresaState extends State<button_empresa> {
 }
 
 class button_prestador extends StatefulWidget {
-  const button_prestador({super.key});
+  final UsuarioGeral usuario;
+  const button_prestador({super.key, required this.usuario});
 
   @override
   State<button_prestador> createState() => _button_prestadorState();
@@ -163,9 +164,8 @@ class _button_prestadorState extends State<button_prestador> {
     return GestureDetector(
       onTap:
           (){
-            final UsuarioGeral usuario = UsuarioGeral();
-            usuario.tipo = TipoUsuario.prestador;
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Prestador(usuario: usuario),),);
+            widget.usuario.tipo = TipoUsuario.prestador;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Prestador(usuario: widget.usuario),),);
             
           },
       child: Container(

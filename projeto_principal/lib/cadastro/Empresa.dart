@@ -21,10 +21,16 @@ final cnpjMaskFormatter = MaskTextInputFormatter(
 
 // void main() => runApp(const Empresa());
 
-class Empresa extends StatelessWidget {
+class Empresa extends StatefulWidget {
   final UsuarioGeral usuario;
-  const Empresa({super.key, required  this.usuario});
+  Empresa({super.key, required  this.usuario});
 
+  @override
+  State<Empresa> createState() => _EmpresaState();
+}
+
+class _EmpresaState extends State<Empresa> {
+  int? id_ramo;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -60,7 +66,7 @@ class Empresa extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: const Perfil(),
+              child: Perfil(),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -69,7 +75,7 @@ class Empresa extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Nome(),
+              child: Nome(),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -78,7 +84,7 @@ class Empresa extends StatelessWidget {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Telefone(),
+              child: Telefone(),
             ),
 
             Padding(
@@ -97,14 +103,20 @@ class Empresa extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Area(),
+              child: Area(usuario: widget.usuario,onRamoSelecionado: (item){
+                if(item != null){
+                setState(() {
+                  id_ramo = item.id;
+                });
+                }
+              },),
             ),
          
            Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: usuario,)),
+                  child: Center(child: botao(usuario: widget.usuario,)),
                 ),
           ],
         ),

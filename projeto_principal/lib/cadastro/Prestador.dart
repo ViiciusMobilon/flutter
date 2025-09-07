@@ -20,10 +20,20 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 
 // void main() => runApp(const Prestador());
 
-class Prestador extends StatelessWidget {
+class Prestador extends StatefulWidget {
   final UsuarioGeral usuario;
   const Prestador({super.key, required this.usuario});
 
+  @override
+  State<Prestador> createState() => _PrestadorState();
+}
+
+class _PrestadorState extends State<Prestador> {
+  File? foto;
+  int? id_ramo;
+  final nomeController = TextEditingController();
+  final telefoneController = TextEditingController();
+  final cpfController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -59,7 +69,12 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: const Perfilimagem(),
+              child: Perfilimagem(image: foto,
+              OnImageSelected: (file){
+                setState(() {
+                  foto = file;
+                });
+              },),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -68,7 +83,7 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Nome(),
+              child: Nome(controller: nomeController,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -77,7 +92,7 @@ class Prestador extends StatelessWidget {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Telefone(),
+              child: Telefone(controller: telefoneController),
             ),
 
             Padding(
@@ -86,7 +101,7 @@ class Prestador extends StatelessWidget {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(),
+              child: cpf(controller: cpfController,),
             ),
 
             Padding(
@@ -96,14 +111,27 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Area(),
+              child: Area(usuario: widget.usuario,
+              onRamoSelecionado: (item){
+                if(item != null){
+                  setState(() {
+                    id_ramo = item.id;
+                  });
+                }
+              },
+              ),
             ),
          
            Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: usuario,)),
+                  child: Center(child: botao(usuario: widget.usuario,idramo: id_ramo,
+                  cpfController: cpfController,
+                  nomeController: nomeController,
+                  telefoneController: telefoneController,
+                  foto: foto,
+                  )),
                 ),
           ],
         ),
@@ -113,22 +141,22 @@ class Prestador extends StatelessWidget {
 }
 
 class Perfilimagem extends StatefulWidget {
-  const Perfilimagem({super.key});
+  final File? image;
+  final void Function(File?) OnImageSelected;
+  Perfilimagem({super.key, required this.image, required this.OnImageSelected});
 
   @override
   State<Perfilimagem> createState() => _PerfilimagemState();
 }
 
 class _PerfilimagemState extends State<Perfilimagem> {
-  File? _image;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+      final file = File(pickedFile.path);
+      widget.OnImageSelected(file);
     }
   }
 
@@ -168,9 +196,9 @@ class _PerfilimagemState extends State<Perfilimagem> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child: _image != null
+          child: widget.image != null
               ? Image.file(
-                  _image!,
+                  widget.image!,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,
@@ -197,7 +225,8 @@ class _PerfilimagemState extends State<Perfilimagem> {
 }
 
 class Nome extends StatefulWidget {
-  const Nome({super.key});
+  final TextEditingController controller; 
+  Nome({super.key, required this.controller});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -207,6 +236,7 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Nome",
         labelStyle: TextStyle(
@@ -235,7 +265,8 @@ class _NomeState extends State<Nome> {
 }
 
 class Telefone extends StatefulWidget {
-  const Telefone({super.key});
+  final TextEditingController controller;
+  Telefone({super.key, required this.controller});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -245,6 +276,7 @@ class _TelefoneState extends State<Telefone> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       inputFormatters: [maskFormatter],
       
       keyboardType: TextInputType.phone,
@@ -277,7 +309,8 @@ class _TelefoneState extends State<Telefone> {
 }
 
 class cpf extends StatefulWidget {
-  const cpf({super.key});
+  final TextEditingController controller;
+  cpf({super.key, required this.controller});
 
   @override
   State<cpf> createState() => _cpfState();
@@ -287,6 +320,7 @@ class _cpfState extends State<cpf> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       keyboardType: TextInputType.number,
   inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
@@ -321,20 +355,42 @@ class _cpfState extends State<cpf> {
 
 class botao extends StatefulWidget {
   final UsuarioGeral usuario;
-  const botao({super.key, required this.usuario});
+  final int? idramo;
+  final File? foto;
+  final TextEditingController nomeController;
+  final TextEditingController telefoneController;
+  final TextEditingController cpfController;
+  const botao({super.key, required this.usuario, required this.idramo, required this.foto,required this.nomeController, required this.telefoneController, required this.cpfController});
 
   @override
   State<botao> createState() => _botaoState();
 }
 
 class _botaoState extends State<botao> {
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
      onTap:
-          () => Navigator.of(
+          () {
+            widget.usuario.ramo = widget.idramo;
+            widget.usuario.foto = widget.foto;
+            widget.usuario.nome = widget.nomeController.text;
+            widget.usuario.telefone = widget.telefoneController.text;
+            widget.usuario.cpf = widget.cpfController.text;
+
+            print("email:${widget.usuario.email}");
+            print("senha:${widget.usuario.password}");
+            print("senhacon:${widget.usuario.confirmation_password}");
+            print("tipo:${widget.usuario.tipo}");
+            print("foto:${widget.usuario.foto}");
+            print("nome:${widget.usuario.nome}");
+            print("tel:${widget.usuario.telefone}");
+            print("cpf:${widget.usuario.cpf}");
+            print("ramo:${widget.usuario.ramo}");
+          Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,))),
+           ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));},
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

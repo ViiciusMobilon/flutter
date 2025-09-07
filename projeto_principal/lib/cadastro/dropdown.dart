@@ -7,7 +7,9 @@ import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/data/repositories/ramo_repository.dart';
 
 class Area extends StatefulWidget {
-  const Area({super.key});
+  final UsuarioGeral usuario;
+  final void Function(RamoModel?) onRamoSelecionado;
+  Area({super.key,  required this.usuario, required this.onRamoSelecionado});
 
   @override
   State<Area> createState() => _AreaState();
@@ -16,6 +18,7 @@ class Area extends StatefulWidget {
 class _AreaState extends State<Area> {
   
   late final RamoRepository ramoRepository;
+  RamoModel? ramoselecionado;
 
   @override
   void initState(){
@@ -27,7 +30,14 @@ class _AreaState extends State<Area> {
             width: MediaQuery.of(context).size.width * 0.8,
             child: DropdownSearch<RamoModel>(
               asyncItems: (String? filtro) => ramoRepository.getRamo(),
-              itemAsString:(RamoModel ramo) => ramo.nome,
+              itemAsString:(RamoModel? ramo) => ramo?.nome ?? "",
+              onChanged: (RamoModel? ramo){
+                setState(() {
+                  ramoselecionado = ramo;
+                });
+                widget.onRamoSelecionado(ramo);
+              },
+
               popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(

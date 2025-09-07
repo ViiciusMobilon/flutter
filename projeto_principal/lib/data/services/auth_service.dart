@@ -8,7 +8,7 @@ class AuthService {
   final _storage = const FlutterSecureStorage();
   AuthService(this._authRepository);
 
-  Future<bool> cadastro(String email,
+  Future<bool> cadastro_Contratante(String email,
       String senha,
       String senha_confirmation,
       String nome,
@@ -20,9 +20,36 @@ class AuthService {
       String cidade,
       String estado,
       String uf,
-      String num,
+      String numero,
       String info) async {
-        final data = await _authRepository.registerContratante(email, senha, senha_confirmation, nome, tel, cpf, foto, cep,rua, cidade, estado,uf, num, info);
+        final data = await _authRepository.registerContratante(email, senha, senha_confirmation, nome, tel, cpf, foto, cep,rua, cidade, estado,uf, numero, info);
+
+       if (data.containsKey("token")) {
+        await _storage.write(key: "jwt", value: data['token']);
+        return true;
+      } else {
+        return false;
+      }
+
+  }
+
+  Future<bool> cadastro_Prestador(String email,
+      String senha,
+      String senha_confirmation,
+      String nome,
+      String tel,
+      String? zap,
+      String cpf,
+      File foto,
+      int id_ramo,
+      String cep,
+      String rua,
+      String cidade,
+      String estado,
+      String uf,
+      String numero,
+      String info) async {
+        final data = await _authRepository.registerPrestador(email, senha, senha_confirmation, nome, tel,zap, cpf, foto,id_ramo, cep,rua, cidade, estado,uf, numero, info);
 
        if (data.containsKey("token")) {
         await _storage.write(key: "jwt", value: data['token']);

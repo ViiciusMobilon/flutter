@@ -48,8 +48,8 @@ class _CEPState extends State<CEP> {
     setState(() {
         cepController.text = endereco.cep;
         cidadeController.text = endereco.localidade;
-        estadoController.text = endereco.uf;
-        ufController.text = endereco.estado;
+        estadoController.text = endereco.estado;
+        ufController.text = endereco.uf;
         ruaController.text = endereco.logradouro;
       });
   }
@@ -121,7 +121,7 @@ class _CEPState extends State<CEP> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.230, // menor, pq é sigla
                       child: estado(
-                        controller: estadoController,
+                        controller: ufController,
                         onCepBuscado: preencherCampos,
                       ),
                     ),
@@ -408,12 +408,13 @@ class _botaoState extends State<botao> {
           print( "uf: ${widget.usuario.uf}");
           print( "num: ${widget.usuario.numero}");
           print( "info: ${widget.usuario.infoadd}");
+          print( "ramo: ${widget.usuario.ramo}");
 
           if(widget.usuario.tipo == TipoUsuario.contratante){
             print('sou contratante');
 
-            await _authController.cadastro(
-                 widget.usuario.email!,
+            await _authController.cadastroContratante(
+                widget.usuario.email!,
                 widget.usuario.password!,
                 widget.usuario.confirmation_password!,
                 widget.usuario.nome!,
@@ -428,7 +429,31 @@ class _botaoState extends State<botao> {
                 widget.usuario.numero!,
                 widget.usuario.infoadd!,
             );            
-          }if (_authController.errors != null) {
+          }
+          if (widget.usuario.tipo == TipoUsuario.prestador) {
+            print('sou prestador');
+
+            await _authController.cadastroPrestador(
+              widget.usuario.email!,
+              widget.usuario.password!,
+              widget.usuario.confirmation_password!,
+              widget.usuario.nome!,
+              widget.usuario.telefone!,
+              widget.usuario.telefone!,
+              widget.usuario.cpf!,
+              widget.usuario.foto!,
+              widget.usuario.ramo!,
+              widget.usuario.cep!,
+              widget.usuario.rua!,
+              widget.usuario.cidade!,
+              widget.usuario.estado!,
+              widget.usuario.uf!,
+              widget.usuario.numero!,
+              widget.usuario.infoadd!,
+            );
+          }
+          
+          if (_authController.errors != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(_authController.errors!)),
         );
