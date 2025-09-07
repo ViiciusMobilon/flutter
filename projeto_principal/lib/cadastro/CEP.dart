@@ -5,9 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/cep.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/repositories/cep_repository.dart';
+import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
 import 'package:projeto_principal/cadastro/Contratante.dart';
@@ -35,6 +38,7 @@ class _CEPState extends State<CEP> {
   final cepController = TextEditingController();
   final cidadeController = TextEditingController();
   final estadoController = TextEditingController();
+  final ufController = TextEditingController();
   final ruaController = TextEditingController();
   final numeroController = TextEditingController();
   final infoaddController = TextEditingController();
@@ -45,6 +49,7 @@ class _CEPState extends State<CEP> {
         cepController.text = endereco.cep;
         cidadeController.text = endereco.localidade;
         estadoController.text = endereco.uf;
+        ufController.text = endereco.estado;
         ruaController.text = endereco.logradouro;
       });
   }
@@ -156,6 +161,8 @@ class _CEPState extends State<CEP> {
                   child: Center(child: botao(usuario: widget.usuario,
                   cepController: cepController,
                   cidadeController: cidadeController,
+                  estadoController: estadoController,
+                  ufController: ufController,
                   infoaddController: infoaddController,
                   numeroController: numeroController,
                   ruaController: ruaController,)),
@@ -341,12 +348,16 @@ class botao extends StatefulWidget {
  final UsuarioGeral usuario;
  final TextEditingController cepController;
  final TextEditingController cidadeController;
+ final TextEditingController estadoController;
+ final TextEditingController ufController;
  final TextEditingController ruaController;
  final TextEditingController numeroController;
  final TextEditingController infoaddController;
  botao({super.key, required this.usuario,
   required this.cepController,
   required this.cidadeController,
+  required this.estadoController,
+  required this.ufController,
   required this.ruaController,
   required this.numeroController,
   required this.infoaddController,
@@ -357,13 +368,25 @@ class botao extends StatefulWidget {
 }
 
 class _botaoState extends State<botao> {
+  late final AuthController _authController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // instancia o cliente HTTP
+    final authService = AuthService(AuthRepository()); // cria o repository aqui
+  _authController = AuthController(authService);
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          (){
+          () async{
             widget.usuario.cep = widget.cepController.text;
             widget.usuario.cidade = widget.cidadeController.text;
+            widget.usuario.estado = widget.estadoController.text;
+            widget.usuario.uf = widget.ufController.text;
             widget.usuario.rua = widget.ruaController.text;
             widget.usuario.numero = widget.numeroController.text;
             widget.usuario.infoadd = widget.infoaddController.text;
@@ -381,8 +404,39 @@ class _botaoState extends State<botao> {
           print( "foto: ${widget.usuario.foto}");
           print( "cep: ${widget.usuario.cep}");
           print( "cidade: ${widget.usuario.cidade}");
+          print( "estado: ${widget.usuario.estado}");
+          print( "uf: ${widget.usuario.uf}");
           print( "num: ${widget.usuario.numero}");
           print( "info: ${widget.usuario.infoadd}");
+
+          if(widget.usuario.tipo == TipoUsuario.contratante){
+            print('sou contratante');
+
+            await _authController.cadastro(
+                 widget.usuario.email!,
+                widget.usuario.password!,
+                widget.usuario.confirmation_password!,
+                widget.usuario.nome!,
+                widget.usuario.telefone!,
+                widget.usuario.cpf!,
+                widget.usuario.foto!,
+                widget.usuario.cep!,
+                widget.usuario.rua!,
+                widget.usuario.cidade!,
+                widget.usuario.estado!,
+                widget.usuario.uf!,
+                widget.usuario.numero!,
+                widget.usuario.infoadd!,
+            );            
+          }if (_authController.errors != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_authController.errors!)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        );
+      }
         }, 
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,

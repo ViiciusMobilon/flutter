@@ -17,6 +17,7 @@ class UsuarioGeral {
   // XFile? foto;
   String? cep;
   String? cidade;
+  String? uf;
   String? estado;
   String? rua;
   String? numero;
@@ -27,7 +28,7 @@ class UsuarioGeral {
   UsuarioGeral({this.nome, this.email, this.password, 
     this.confirmation_password, this.cpf, this.cnpj,
     this.telefone, this.whatsapp, 
-    this.foto, this.cep, this.cidade, this.estado,
+    this.foto, this.cep, this.cidade, this.estado,this.uf, this.rua, this.numero, this.infoadd,
     this.ramo, this.tipo
   });
 
@@ -45,6 +46,7 @@ class UsuarioGeral {
       "cep": cep ?? "",
       "cidade": cidade ?? "",
       "estado": estado ?? "",
+      "estado": uf ?? "",
       "rua": rua ?? "",
       "numero": numero ?? "",
       "infoadd": infoadd ?? "",
