@@ -38,8 +38,6 @@ class _CEPState extends State<CEP> {
   final ruaController = TextEditingController();
   final numeroController = TextEditingController();
   final infoaddController = TextEditingController();
-  final GlobalKey<EstadoDropdownState > estadoDropdownKey = GlobalKey<EstadoDropdownState >();
-  final GlobalKey<CidadeDropdownState> cidadeDropdownkey = GlobalKey<CidadeDropdownState>();
   
 
   void preencherCampos(CepModel endereco){
@@ -48,10 +46,6 @@ class _CEPState extends State<CEP> {
         cidadeController.text = endereco.localidade;
         estadoController.text = endereco.uf;
         ruaController.text = endereco.logradouro;
-
-
-        estadoDropdownKey.currentState?.setEstadoSelecionado(endereco.uf);
-        cidadeDropdownkey.currentState?.setCidadeSelecionada(endereco.localidade);
       });
   }
 
@@ -104,23 +98,29 @@ class _CEPState extends State<CEP> {
                  
                   Padding(
                   padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.1,
-                right: MediaQuery.of(context).size.width * 0.1,
+                left: MediaQuery.of(context).size.width * 0.01,
+                right: MediaQuery.of(context).size.width * 0.01,
                   ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(flex: 4, child: cidade(usuario: widget.usuario,
-                                                  key: cidadeDropdownkey,
-                                                  controller: cidadeController,
-                                                  onCepBuscado: preencherCampos)),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.07,),
-                   // 3 partes da largura
-                  Expanded(flex: 3, child:estado(key: estadoDropdownKey,controller: estadoController, onCepBuscado: preencherCampos) ), // 4 partes da largura
-                  
-                ],
-                
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.530, // igual aos outros TextFields
+                      child: cidade(
+                        controller: cidadeController,
+                        onCepBuscado: preencherCampos,
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.230, // menor, pq é sigla
+                      child: estado(
+                        controller: estadoController,
+                        onCepBuscado: preencherCampos,
+                      ),
+                    ),
+                ]
               ),
             ),
 
@@ -363,10 +363,11 @@ class _botaoState extends State<botao> {
       onTap:
           (){
             widget.usuario.cep = widget.cepController.text;
-            // widget.usuario.cidade = widget.cidadeController.text;
+            widget.usuario.cidade = widget.cidadeController.text;
             widget.usuario.rua = widget.ruaController.text;
             widget.usuario.numero = widget.numeroController.text;
             widget.usuario.infoadd = widget.infoaddController.text;
+
             Navigator.of(
             context,);
           // ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
@@ -468,6 +469,96 @@ class _adicionaisState extends State<adicionais> {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+    );
+  }
+}
+
+class cidade extends StatefulWidget {
+  final TextEditingController controller;
+  final void Function(CepModel) onCepBuscado;
+  cidade({super.key, required this.controller, required this.onCepBuscado});
+
+  @override
+  State<cidade> createState() => _CidadeState();
+}
+
+class _CidadeState extends State<cidade> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.6,
+      height: MediaQuery.of(context).size.height * 0.07,
+      child: TextField(
+        controller: widget.controller,
+        decoration: InputDecoration(
+          labelText: "Cidade",
+          hintText: "Digite o nome da cidade",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color.fromRGBO(121, 180, 217, 1),
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        style: TextStyle(
+          fontSize: MediaQuery.of(context).size.width * 0.03,
+          fontFamily: "Poppins",
+        ),
+      ),
+    );
+  }
+}
+
+
+
+class estado extends StatefulWidget {
+  final TextEditingController controller;
+  final void Function(CepModel) onCepBuscado;
+  estado({super.key, required this.controller, required this.onCepBuscado});
+
+  @override
+  State<estado> createState() => _EstadoState();
+}
+
+class _EstadoState extends State<estado> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.3,
+      height: MediaQuery.of(context).size.height * 0.07,
+      child: TextField(
+        controller: widget.controller,
+        decoration: InputDecoration(
+          labelText: "Estado",
+          hintText: "Digite a sigla do estado (ex: SP)",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: const Color.fromRGBO(121, 180, 217, 1),
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        style: TextStyle(
+          fontSize: MediaQuery.of(context).size.width * 0.03,
+          fontFamily: "Poppins",
         ),
       ),
     );
