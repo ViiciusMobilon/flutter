@@ -63,7 +63,9 @@ class _CEPState extends State<CEP> {
     print( "nome: ${widget.usuario.nome}");
     print( "tel: ${widget.usuario.telefone}");
     print( "cpf: ${widget.usuario.cpf}");
+    print( "cnpj: ${widget.usuario.cnpj}");
     print( "foto: ${widget.usuario.foto}");
+    print( "ramo: ${widget.usuario.ramo}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -403,6 +405,7 @@ class _botaoState extends State<botao> {
           print( "cpf: ${widget.usuario.cpf}");
           print( "foto: ${widget.usuario.foto}");
           print( "cep: ${widget.usuario.cep}");
+          print( "rua: ${widget.usuario.rua}");
           print( "cidade: ${widget.usuario.cidade}");
           print( "estado: ${widget.usuario.estado}");
           print( "uf: ${widget.usuario.uf}");

@@ -30,7 +30,11 @@ class Empresa extends StatefulWidget {
 }
 
 class _EmpresaState extends State<Empresa> {
+  File? foto;
   int? id_ramo;
+  final nomeController = TextEditingController();
+  final telefoneController = TextEditingController();
+  final cnpjController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -66,7 +70,12 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: Perfil(),
+              child: Perfil(image: foto,
+              OnImageSelected: (file){
+                setState(() {
+                  foto = file;
+                });
+              },),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -75,7 +84,7 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(),
+              child: Nome(controller: nomeController,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -84,7 +93,7 @@ class _EmpresaState extends State<Empresa> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(),
+              child: Telefone(controller: telefoneController,),
             ),
 
             Padding(
@@ -93,7 +102,7 @@ class _EmpresaState extends State<Empresa> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(),
+              child: cnpj(controller: cnpjController,),
             ),
 
             Padding(
@@ -116,7 +125,12 @@ class _EmpresaState extends State<Empresa> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: widget.usuario,)),
+                  child: Center(child: botao(usuario: widget.usuario,
+                  idramo: id_ramo,
+                  cnpjController: cnpjController,
+                  nomeController: nomeController,
+                  telefoneController: telefoneController,
+                  foto: foto,)),
                 ),
           ],
         ),
@@ -126,21 +140,23 @@ class _EmpresaState extends State<Empresa> {
 }
 
 class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+  final File? image;
+  final void Function(File?) OnImageSelected;
+  Perfil({super.key, required this.image, required this.OnImageSelected});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
-  File? _image;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        final file = File(pickedFile.path);
+        widget.OnImageSelected(file);
       });
     }
   }
@@ -181,9 +197,9 @@ class _PerfilState extends State<Perfil> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child: _image != null
+          child: widget.image != null
               ? Image.file(
-                  _image!,
+                  widget.image!,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,
@@ -210,7 +226,8 @@ class _PerfilState extends State<Perfil> {
 }
 
 class Nome extends StatefulWidget {
-  const Nome({super.key});
+  final TextEditingController controller;
+   Nome({super.key, required this.controller});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -220,6 +237,7 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Nome",
         labelStyle: TextStyle(
@@ -248,7 +266,8 @@ class _NomeState extends State<Nome> {
 }
 
 class Telefone extends StatefulWidget {
-  const Telefone({super.key});
+  final TextEditingController controller;
+  const Telefone({super.key, required this.controller});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -258,6 +277,7 @@ class _TelefoneState extends State<Telefone> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       inputFormatters: [maskFormatter],
       
       keyboardType: TextInputType.phone,
@@ -289,17 +309,19 @@ class _TelefoneState extends State<Telefone> {
   }
 }
 
-class cpf extends StatefulWidget {
-  const cpf({super.key});
+class cnpj extends StatefulWidget {
+  final TextEditingController controller;
+  const cnpj({super.key, required this.controller});
 
   @override
-  State<cpf> createState() => _cpfState();
+  State<cnpj> createState() => _cnpjState();
 }
 
-class _cpfState extends State<cpf> {
+class _cnpjState extends State<cnpj> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       keyboardType: TextInputType.number,
   inputFormatters: [cnpjMaskFormatter],
       decoration: InputDecoration(
@@ -335,7 +357,12 @@ class _cpfState extends State<cpf> {
 
 class botao extends StatefulWidget {
   final UsuarioGeral usuario;
-  const botao({super.key, required this.usuario});
+  final int? idramo;
+  final File? foto;
+  final TextEditingController nomeController;
+  final TextEditingController telefoneController;
+  final TextEditingController cnpjController;
+  const botao({super.key, required this.usuario, required this.idramo, required this.foto,required this.nomeController, required this.telefoneController, required this.cnpjController});
 
   @override
   State<botao> createState() => _botaoState();
@@ -346,9 +373,16 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
        onTap:
-          () => Navigator.of(
+          (){
+            widget.usuario.foto = widget.foto;
+            widget.usuario.nome  = widget.nomeController.text;
+            widget.usuario.telefone = widget.telefoneController.text;
+            widget.usuario.cnpj = widget.cnpjController.text;
+            widget.usuario.ramo = widget.idramo;
+            Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,))),
+           ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));
+          },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
