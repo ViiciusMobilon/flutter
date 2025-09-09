@@ -130,7 +130,7 @@ class AuthRepository {
     String numero,
     String info
   ) async {
-    var uri = Uri.parse("${URLAPI}/prestador/cadastro");
+    var uri = Uri.parse("${URLAPI}/empresa/cadastro");
 
     // Cria requisição multipart
     var request = http.MultipartRequest('POST', uri);
