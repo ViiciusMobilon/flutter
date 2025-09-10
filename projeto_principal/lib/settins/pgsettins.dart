@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/settins/editarperfil.dart';
 
 class settinspage extends StatefulWidget {
   const settinspage({super.key});
@@ -43,9 +43,9 @@ class _settinspageState extends State<settinspage> {
               title: Text('Conta'),
               subtitle: Text('Gerenciar sua conta'),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Ação ao clicar na opção
-              },
+              onTap: ()=> Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Editar_Perfil()),)
             ),
          
            

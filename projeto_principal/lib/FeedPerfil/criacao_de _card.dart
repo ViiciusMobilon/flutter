@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 import 'package:video_player/video_player.dart';
 
 class Midia {
@@ -131,8 +132,9 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
           elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.close),
-            onPressed: () => Navigator.pop(context),
+            onPressed:() => Navigator.pop(context),
           ),
+          
           title: const Text(
             "Novo Post",
             style: TextStyle(fontWeight: FontWeight.bold),

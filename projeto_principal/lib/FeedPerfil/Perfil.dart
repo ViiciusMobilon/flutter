@@ -105,7 +105,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                       style: TextStyle(
                         fontSize:
                             MediaQuery.of(context).size.width * 0.04,
-                        color: Colors.black,
+                        color: const Color.fromARGB(255, 87, 87, 87),
                         fontFamily: "Poppins",
                         fontWeight: FontWeight.w800
                       ),
@@ -123,7 +123,13 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                         mostrarMais = true;
                       });
                     },
-                    child: const Text("Mais"),
+                    child:  Text("Mais", style: TextStyle(
+                              color: Colors.blue, // cor de link
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.04,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w800,
+                            ),),
                   ),
                 ],
               ),
@@ -209,7 +215,7 @@ class Mais extends StatelessWidget {
                     text: descricao + " ", // texto normal
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.04,
-                      color: Colors.black,
+                      color: Color.fromARGB(255, 87, 87, 87),
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w800,
                     ),
