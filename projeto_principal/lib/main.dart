@@ -331,14 +331,6 @@ class _botaoState extends State<botao> {
             colors: [Colors.blue, Colors.indigoAccent],
           ),
           borderRadius: const BorderRadius.all(Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
-              offset: const Offset(0, 4),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

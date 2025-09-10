@@ -12,14 +12,16 @@ import 'package:projeto_principal/data/models/user.dart';
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
     // UsuarioGeral usuario;
+    // final token;
 
-  const TelaPrincipal({super.key});
+  const TelaPrincipal({super.key,});
 
   @override
   State<TelaPrincipal> createState() => _TelaPrincipalState();
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
+  
   int _paginaAtual = 0;
   late final List<Widget> _paginas;
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_principal/FeedPerfil/system_star.dart';
 
 class PerfilPrincipal extends StatefulWidget {
-  const PerfilPrincipal({super.key});
+  const PerfilPrincipal({super.key,});
 
   @override
   State<PerfilPrincipal> createState() => _PerfilPrincipalState();
