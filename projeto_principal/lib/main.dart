@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/repositories/auth_repository.dart';
+import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
+
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -12,22 +17,56 @@ void main() async {
     DeviceOrientation.portraitUp
   ]);
 
-  runApp(const Main());
+  runApp(const MainApp());
 }
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
-class Main extends StatefulWidget {
-  const Main({super.key});
-
-  @override
-  State<Main> createState() => _MainState();
-}
-
-class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      home: const Login(),
+    );
+  }
+}
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+  
+}
+
+class _LoginState extends State<Login> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  late final AuthController _authController;
+  @override
+  void initState() {
+    super.initState();
+    _authController = AuthController(AuthService(AuthRepository()));
+  }
+
+  Future<void> login()async{
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    final sucess = await _authController.login(email, password);
+
+    if(sucess){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TelaPrincipal()));
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('invalido')) );
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
@@ -74,7 +113,7 @@ class _MainState extends State<Main> {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(),
+                  child: email(controller: emailController,),
                 ),
                 //fim email
                 //textfield senha
@@ -84,7 +123,7 @@ class _MainState extends State<Main> {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: senha(),
+                  child: senha(controller: passwordController,),
                 ),
 
                 // fim senha
@@ -109,7 +148,8 @@ class _MainState extends State<Main> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(onPressed:login)
+                    ),
                 ),
 
                 //fim botao
@@ -124,9 +164,7 @@ class _MainState extends State<Main> {
             ),
           ),
         ),
-      ),
-     
-    );
+      );
   }
 }
 
@@ -172,7 +210,8 @@ class _nomeState extends State<nome> {
 }
 
 class email extends StatefulWidget {
-  const email({super.key});
+  final TextEditingController controller;
+  const email({super.key, required this.controller});
 
   @override
   State<email> createState() => _emailState();
@@ -182,6 +221,7 @@ class _emailState extends State<email> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         hintText: "xxxxx@gmail.com",
         hintStyle: TextStyle(
@@ -213,7 +253,8 @@ class _emailState extends State<email> {
 }
 
 class senha extends StatefulWidget {
-  const senha({super.key});
+  final TextEditingController controller;
+  const senha({super.key, required this.controller});
 
   @override
   _senhaState createState() => _senhaState();
@@ -231,6 +272,7 @@ class _senhaState extends State<senha> {
 
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       autofocus: false,
       obscureText: senha,
       decoration: InputDecoration(
@@ -268,7 +310,8 @@ class _senhaState extends State<senha> {
 
 class botao extends StatefulWidget {
   // final UsuarioGeral usuario;
-  const botao({super.key});
+  final VoidCallback onPressed;
+  const botao({super.key, required this.onPressed});
 
   @override
   State<botao> createState() => _botaoState();
@@ -277,11 +320,9 @@ class botao extends StatefulWidget {
 class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
+    return ElevatedButton(
+      onPressed:
+        widget.onPressed,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

@@ -375,7 +375,7 @@ class _botaoState extends State<botao> {
        onTap:
           (){
             widget.usuario.foto = widget.foto;
-            widget.usuario.nome  = widget.nomeController.text;
+            widget.usuario.razao_social = widget.nomeController.text;
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.whatsapp = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;

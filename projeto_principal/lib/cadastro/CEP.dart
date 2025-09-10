@@ -66,6 +66,7 @@ class _CEPState extends State<CEP> {
     print( "cnpj: ${widget.usuario.cnpj}");
     print( "foto: ${widget.usuario.foto}");
     print( "ramo: ${widget.usuario.ramo}");
+    print( "razao social: ${widget.usuario.razao_social}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -414,17 +415,19 @@ class _botaoState extends State<botao> {
           print( "num: ${widget.usuario.numero}");
           print( "info: ${widget.usuario.infoadd}");
           print( "ramo: ${widget.usuario.ramo}");
-           /**cadastro contratante */
-          if(widget.usuario.tipo == TipoUsuario.contratante){
-            print('sou contratante');
+          print("tipo:${widget.usuario.tipo}");
 
-            await _authController.cadastroContratante(
+            await _authController.cadastro(
                 widget.usuario.email!,
                 widget.usuario.password!,
                 widget.usuario.confirmation_password!,
-                widget.usuario.nome!,
+                widget.usuario.tipo!,
+                widget.usuario.nome ?? '',
+                widget.usuario.razao_social ?? '',
                 widget.usuario.telefone!,
-                widget.usuario.cpf!,
+                widget.usuario.cpf ?? '',
+                widget.usuario.cnpj ?? '',
+                widget.usuario.ramo ?? 0,
                 widget.usuario.foto!,
                 widget.usuario.cep!,
                 widget.usuario.rua!,
@@ -432,56 +435,8 @@ class _botaoState extends State<botao> {
                 widget.usuario.estado!,
                 widget.usuario.uf!,
                 widget.usuario.numero!,
-                widget.usuario.infoadd!,
-            );            
-          }
-          /**cadastro prestador */
-          if (widget.usuario.tipo == TipoUsuario.prestador) {
-            print('sou prestador');
-
-            await _authController.cadastroPrestador(
-              widget.usuario.email!,
-              widget.usuario.password!,
-              widget.usuario.confirmation_password!,
-              widget.usuario.nome!,
-              widget.usuario.telefone!,
-              widget.usuario.telefone!,
-              widget.usuario.cpf!,
-              widget.usuario.foto!,
-              widget.usuario.ramo!,
-              widget.usuario.cep!,
-              widget.usuario.rua!,
-              widget.usuario.cidade!,
-              widget.usuario.estado!,
-              widget.usuario.uf!,
-              widget.usuario.numero!,
-              widget.usuario.infoadd!,
-            );
-          }
-          /**cadastro empresa */
-
-          if (widget.usuario.tipo == TipoUsuario.empresa) {
-            print('sou empresa');
-
-            await _authController.cadastroEmpresa(
-              widget.usuario.email!,
-              widget.usuario.password!,
-              widget.usuario.confirmation_password!,
-              widget.usuario.nome!,
-              widget.usuario.telefone!,
-              widget.usuario.telefone!,
-              widget.usuario.cnpj!,
-              widget.usuario.foto!,
-              widget.usuario.ramo!,
-              widget.usuario.cep!,
-              widget.usuario.rua!,
-              widget.usuario.cidade!,
-              widget.usuario.estado!,
-              widget.usuario.uf!,
-              widget.usuario.numero!,
-              widget.usuario.infoadd!,
-            );
-          }
+                widget.usuario.infoadd ?? ''
+                );
           if (_authController.errors != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(_authController.errors!)),

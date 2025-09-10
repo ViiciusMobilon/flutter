@@ -11,12 +11,16 @@ class AuthController extends ChangeNotifier{
 
   AuthController(this._authService);
 /**contratante */
-  Future<void> cadastroContratante(String email,
+  Future<void> cadastro(String email,
       String senha,
       String senha_confirmation,
-      String nome,
+      String tipo,
+      String? nome,
+      String? razao_social,
       String tel,
-      String cpf,
+      String? cpf,
+      String? cnpj,
+      int? id_ramo,
       File foto,
       String cep,
       String rua,
@@ -30,41 +34,7 @@ class AuthController extends ChangeNotifier{
           errors = null;
           notifyListeners();
 
-          final sucess = await _authService.cadastro_Contratante(email, senha, senha_confirmation, nome, tel, cpf, foto, cep,rua, cidade, estado,uf, numero, info);
-
-          if(!sucess){
-            errors = "erro cadastro";
-          }
-        } catch (e) {
-          errors = e.toString();
-        } finally{
-          isLoading = false;
-          notifyListeners();
-        }
-  }
-  /**prestador */
-  Future<void> cadastroPrestador(String email,
-      String senha,
-      String senha_confirmation,
-      String nome,
-      String tel,
-      String cpf,
-      String? zap,
-      File foto,
-      int id_ramo,
-      String cep,
-      String rua,
-      String cidade,
-      String estado,
-      String uf,
-      String numero,
-      String info) async {
-        try {
-          isLoading = true;
-          errors = null;
-          notifyListeners();
-
-          final sucess = await _authService.cadastro_Prestador(email, senha, senha_confirmation, nome, tel,zap, cpf, foto,id_ramo, cep,rua, cidade, estado,uf, numero, info);
+          final sucess = await _authService.cadastro(email, senha, senha_confirmation,tipo, nome,razao_social, tel, cpf,cnpj,id_ramo, foto, cep,rua, cidade, estado,uf, numero, info);
 
           if(!sucess){
             errors = "erro cadastro";
@@ -77,41 +47,30 @@ class AuthController extends ChangeNotifier{
         }
   }
 
+  Future<bool> login(String email, String password) async{
+    print('email:${email}');
+    print('senha:${password}');
+    
+    final user = await _authService.login(email, password);
 
 
-  /**empresa */
+    if (user) {
+      print("Login bem-sucedido: ${user}");
+      return true;
+    } else {
+      print("Login inválido");
+      return false;
+    }
 
-  Future<void> cadastroEmpresa(String email,
-      String senha,
-      String senha_confirmation,
-      String nome,
-      String tel,
-      String? zap,
-      String cnpj,
-      File foto,
-      int id_ramo,
-      String cep,
-      String rua,
-      String cidade,
-      String estado,
-      String uf,
-      String numero,
-      String info) async {
-        try {
-          isLoading = true;
-          errors = null;
-          notifyListeners();
-
-          final sucess = await _authService.cadastro_Empresa(email, senha, senha_confirmation, nome, tel,zap, cnpj, foto,id_ramo, cep,rua, cidade, estado,uf, numero, info);
-
-          if(!sucess){
-            errors = "erro cadastro";
-          }
-        } catch (e) {
-          errors = e.toString();
-        } finally{
-          isLoading = false;
-          notifyListeners();
-        }
   }
+
+  Future<void> logout() async{
+    return await _authService.logout();
+  }
+
+  Future<bool> logado() async{
+    final token = await _authService.getToken();
+    return token != null;
+  }
+
 }

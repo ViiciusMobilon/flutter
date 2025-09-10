@@ -6,6 +6,7 @@ enum TipoUsuario { prestador, contratante, empresa }
 
 class UsuarioGeral {
   String? nome;
+  String? razao_social;
   String? email;
   String? password;
   String? confirmation_password;
@@ -23,7 +24,7 @@ class UsuarioGeral {
   String? numero;
   String? infoadd;
   int? ramo;
-  TipoUsuario? tipo;
+  String? tipo;
 
   UsuarioGeral({this.nome, this.email, this.password, 
     this.confirmation_password, this.cpf, this.cnpj,
@@ -35,6 +36,7 @@ class UsuarioGeral {
   Map<String, dynamic> toJson() {
     return {
       "nome": nome,
+      "razao_social": razao_social ?? "",
       "email": email,
       "password": password,
       "confirmation_password": confirmation_password,
@@ -51,7 +53,7 @@ class UsuarioGeral {
       "numero": numero ?? "",
       "infoadd": infoadd ?? "",
       "ramo": ramo ?? "",
-      "tipo": tipo.toString().split('.').last, // "prestador" ou "contratante"
+      "tipo": tipo ?? "", // "prestador" ou "contratante"
     };
   }
 }

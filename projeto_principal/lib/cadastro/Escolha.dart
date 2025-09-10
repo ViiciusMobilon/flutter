@@ -108,7 +108,9 @@ class _button_empresaState extends State<button_empresa> {
     return GestureDetector(
       onTap:
           () {
-            widget.usuario.tipo = TipoUsuario.empresa;
+            widget.usuario.tipo = TipoUsuario.empresa.name;
+            print("tipo: ${TipoUsuario.empresa.name}");
+
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Empresa(usuario: widget.usuario),),);
             
           },
@@ -164,7 +166,8 @@ class _button_prestadorState extends State<button_prestador> {
     return GestureDetector(
       onTap:
           (){
-            widget.usuario.tipo = TipoUsuario.prestador;
+            widget.usuario.tipo = TipoUsuario.prestador.name;
+            print("tipo: ${TipoUsuario.prestador.name}");
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Prestador(usuario: widget.usuario),),);
             
           },
@@ -221,7 +224,7 @@ class __button_contratanState extends State<_button_contratante> {
       onTap:
           () {
             // final UsuarioGeral usuario = UsuarioGeral();
-            widget.usuario.tipo = TipoUsuario.contratante;
+            widget.usuario.tipo = TipoUsuario.contratante.name;
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Contratante(usuario: widget.usuario),),);
             
           },
