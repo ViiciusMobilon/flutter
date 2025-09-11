@@ -130,7 +130,7 @@ class imagem extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/LOGO.png"),
+          image: AssetImage("assets/imagens/logo.png"),
           fit: BoxFit.fill,
         ),
       ),

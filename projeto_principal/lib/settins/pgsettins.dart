@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/settins/editarperfil.dart';
+import 'package:projeto_principal/settins/seguranca.dart';
 
 class settinspage extends StatefulWidget {
   const settinspage({super.key});
@@ -48,7 +49,15 @@ class _settinspageState extends State<settinspage> {
                 MaterialPageRoute(builder: (context) => Editar_Perfil()),)
             ),
          
-           
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('Acesso e segurança'),
+              subtitle: Text('Configurações de segurança'),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap:  ()=> Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ),)
+            ),
            
             ListTile(
               leading: Icon(Icons.info),
@@ -60,15 +69,7 @@ class _settinspageState extends State<settinspage> {
               },
             ),
 
-             ListTile(
-              leading: Icon(Icons.info),
-              title: Text('Acesso e segurança'),
-              subtitle: Text('Configurações de segurança'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Ação ao clicar na opção
-              },
-            ),
+            
                 ListTile(
                 leading: Icon(Icons.help),
                 title: Text('Central de ajuda'),

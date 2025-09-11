@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
-import 'package:projeto_principal/cadastro/dropdow.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
 
@@ -107,7 +103,7 @@ class _CEPState extends State<CEP> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
                   ),
-                  child: Center(child: adicionais()),
+                  child: Center(child: cidade()),
                 ),
                
                  
@@ -322,26 +318,68 @@ class _botaoState extends State<botao> {
   }
 }
 
-class adicionais extends StatefulWidget {
-  const adicionais({super.key});
+class cidade extends StatefulWidget {
+  const cidade({super.key});
 
   @override
-  State<adicionais> createState() => _adicionaisState();
+  State<cidade> createState() => _adicionaisState();
 }
 
-class _adicionaisState extends State<adicionais> {
+class _adicionaisState extends State<cidade> {
   @override
   Widget build(BuildContext context) {
     return TextField(
       maxLength: 128,
       decoration: InputDecoration(
-        hintText: "não sei o que não sei oque la",
+        hintText: "Cidade",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "informações adicionais(opcional)",
+        labelText: "Cidade",
+        labelStyle: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: const Color.fromRGBO(121, 180, 217, 1),
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
+    );
+  }
+}
+
+class estado extends StatefulWidget {
+  const estado({super.key});
+
+  @override
+  State<estado> createState() => _estadoState();
+}
+
+class _estadoState extends State<estado> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      maxLength: 128,
+      decoration: InputDecoration(
+        hintText: "Estado",
+        hintStyle: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
+        ),
+        labelText: "Estado",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
