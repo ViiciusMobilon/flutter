@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 
-class FeedPrincipal extends StatelessWidget {
-  const FeedPrincipal({super.key});
+class FeedPrincipal extends StatefulWidget {
+    final AuthController authController;
+
+  const FeedPrincipal({super.key, required this.authController});
 
   @override
+  State<FeedPrincipal> createState() => _FeedPrincipalState();
+}
+
+class _FeedPrincipalState extends State<FeedPrincipal> {
+  
+  @override
   Widget build(BuildContext context) {
+    final usuario = widget.authController.user;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -33,6 +43,12 @@ class FeedPrincipal extends StatelessWidget {
               fontFamily: "Poppins",
               color: Colors.grey[600],
             ),
+          ),
+          Text(
+            "Ola: ${usuario?['email'] ?? 'usuario'}"
+          ),
+          Text(
+            "Você é: ${usuario?['type'] ?? 'desempregado'}"
           ),
         ],
       ),

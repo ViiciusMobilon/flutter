@@ -11,7 +11,7 @@ class AuthController extends ChangeNotifier{
 
   AuthController(this._authService);
 /**contratante */
-  Future<void> cadastro(String email,
+  Future<bool> cadastro(String email,
       String senha,
       String senha_confirmation,
       String tipo,
@@ -39,8 +39,10 @@ class AuthController extends ChangeNotifier{
           if(!sucess){
             errors = "erro cadastro";
           }
+          return sucess;
         } catch (e) {
           errors = e.toString();
+          return false;
         } finally{
           isLoading = false;
           notifyListeners();
@@ -72,5 +74,10 @@ class AuthController extends ChangeNotifier{
     final token = await _authService.getToken();
     return token != null;
   }
+  Future<Map<String, dynamic>?> getUser() async {
+    return await _authService.getUser();
+  }
+
+  Map<String, dynamic>? get user => _authService.user;
 
 }

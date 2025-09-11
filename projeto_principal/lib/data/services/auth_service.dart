@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthService {
   final AuthRepository _authRepository;
   final _storage = const FlutterSecureStorage();
+  Map<String, dynamic>? user;
   AuthService(this._authRepository);
   Future<bool> cadastro(String email,
       String senha,
@@ -29,6 +31,8 @@ class AuthService {
 
        if (data.containsKey("token")) {
         await _storage.write(key: "jwt", value: data['token']);
+        await _storage.write(key: 'user', value: jsonEncode(data['user']));
+        user = data['user'];
         return true;
       } else {
         return false;
@@ -40,6 +44,8 @@ class AuthService {
 
     if(result != null && result['access_token'] != null){
       await _storage.write(key: 'token', value: result['access_token']);
+      await _storage.write(key: 'user', value: jsonEncode(result['user']));
+      user = result['user'];
       return true;
     }
     return false;
@@ -48,6 +54,17 @@ class AuthService {
   Future<String?> getToken()async {
     return await _storage.read(key: 'token');
   }
+
+  Future<Map<String, dynamic>?> getUser() async {
+  if (user != null) return user;
+
+  final userStr = await _storage.read(key: 'user');
+  if (userStr != null) {
+    user = jsonDecode(userStr);
+    return user;
+  }
+  return null;
+}
 
   Future<void> logout() async{
     return await _storage.delete(key: 'token');

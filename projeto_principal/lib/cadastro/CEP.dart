@@ -393,10 +393,6 @@ class _botaoState extends State<botao> {
             widget.usuario.rua = widget.ruaController.text;
             widget.usuario.numero = widget.numeroController.text;
             widget.usuario.infoadd = widget.infoaddController.text;
-
-            Navigator.of(
-            context,);
-          // ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
           print( "Email: ${widget.usuario.email}");
           print( "senha: ${widget.usuario.password}");
           print( "senhaconfirmation: ${widget.usuario.confirmation_password}");
@@ -417,7 +413,7 @@ class _botaoState extends State<botao> {
           print( "ramo: ${widget.usuario.ramo}");
           print("tipo:${widget.usuario.tipo}");
 
-            await _authController.cadastro(
+            final resposta = await _authController.cadastro(
                 widget.usuario.email!,
                 widget.usuario.password!,
                 widget.usuario.confirmation_password!,
@@ -437,15 +433,33 @@ class _botaoState extends State<botao> {
                 widget.usuario.numero!,
                 widget.usuario.infoadd ?? ''
                 );
-          if (_authController.errors != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(_authController.errors!)),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Cadastro realizado com sucesso!')),
-        );
-      }
+          if (resposta) {
+            // pegar token
+            final token = await _authController.logado(); // ou getUser() se quiser o usuário
+
+            if (token != null) {
+              // só redireciona se o token existe
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TelaPrincipal(authController: _authController),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Erro ao gerar token")),
+              );
+            }
+          } else if (_authController.errors != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(_authController.errors!)),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+            );
+          }
+
         }, 
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,

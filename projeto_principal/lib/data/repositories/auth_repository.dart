@@ -76,7 +76,7 @@ class AuthRepository {
     // Converte para Response para ler o body
     var response = await http.Response.fromStream(streamedResponse);
 
-    return jsonDecode(response.body) as Map<String, dynamic>;;
+    return jsonDecode(response.body) as Map<String, dynamic>;
   }
   Future<Map<String, dynamic>?> login(String email,String password) async{
     var url = Uri.parse("${URLAPI}/login");

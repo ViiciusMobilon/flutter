@@ -6,15 +6,18 @@ import 'package:projeto_principal/FeedCards/Cards.dart';
 import 'package:projeto_principal/FeedPerfil/Perfil.dart';
 import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
 import 'package:projeto_principal/FeedCards/Cards.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 
 // Entry point
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
     // UsuarioGeral usuario;
-    // final token;
+    // final usuario = auth;
+    final AuthController authController;
 
-  const TelaPrincipal({super.key,});
+
+  TelaPrincipal({super.key, required this.authController});
 
   @override
   State<TelaPrincipal> createState() => _TelaPrincipalState();
@@ -24,22 +27,23 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   
   int _paginaAtual = 0;
   late final List<Widget> _paginas;
+  
 
   @override
   void initState() {
     super.initState();
-    _paginas = [const FeedPrincipal(), const PerfilPrincipal()];
+    _paginas = [FeedPrincipal(authController: widget.authController,), PerfilPrincipal()];
   }
 
   @override
   Widget build(BuildContext context) {
-    
+    final usuario = widget.authController.user;
     return Scaffold(
       // AppBar movido para cá - apenas na página de pesquisa
       appBar:
           _paginaAtual == 0
               ? AppBar(
-                title: const Text("Pesqsa"),
+                title: const Text("Pesquisa"),
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.indigoAccent,
                 foregroundColor: Colors.white,

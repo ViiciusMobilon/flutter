@@ -58,7 +58,7 @@ class _LoginState extends State<Login> {
     final sucess = await _authController.login(email, password);
 
     if(sucess){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TelaPrincipal()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TelaPrincipal(authController: _authController,)));
     }else{
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('invalido')) );
