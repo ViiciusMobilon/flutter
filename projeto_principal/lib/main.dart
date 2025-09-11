@@ -320,8 +320,8 @@ class botao extends StatefulWidget {
 class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed:
+    return GestureDetector(
+      onTap:
         widget.onPressed,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
