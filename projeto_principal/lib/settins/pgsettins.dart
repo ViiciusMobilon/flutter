@@ -56,7 +56,7 @@ class _settinspageState extends State<settinspage> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap:  ()=> Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ),)
+                MaterialPageRoute(builder: (context) => TrocarSenha()),)
             ),
            
             ListTile(
