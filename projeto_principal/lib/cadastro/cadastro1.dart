@@ -1,7 +1,16 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/models/user.dart';
+
+
+final maskFormatter = MaskTextInputFormatter(
+  mask: '##.###-###',
+  filter: { "#": RegExp(r'[a-zA-Z0-9]') },
+);
+
 
 void main()=>runApp(Cadastro());
 class Cadastro extends StatefulWidget{
@@ -166,6 +175,8 @@ class _emailState extends State<email> {
   }
 }
 
+
+
 class senha extends StatefulWidget {
   final TextEditingController? controller;
   const senha({super.key, required this.controller});
@@ -175,22 +186,24 @@ class senha extends StatefulWidget {
 }
 
 class _senhaState extends State<senha> {
-  @override
-  bool senha = true;
+  bool senhaVisivel = true; // controla se a senha está oculta
 
-  void mudarvisao() {
+  void mudarVisao() {
     setState(() {
-      senha = !senha;
+      senhaVisivel = !senhaVisivel;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return TextField(
+      inputFormatters: [LengthLimitingTextInputFormatter(8)],
+
+      obscureText: senhaVisivel, // oculta ou mostra
       controller: widget.controller,
       autofocus: false,
-      obscureText: senha,
       decoration: InputDecoration(
-        labelText: "senha",
+        labelText: "Senha",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -201,26 +214,28 @@ class _senhaState extends State<senha> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        border: UnderlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
+        border: const UnderlineInputBorder(),
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         suffixIcon: IconButton(
-          icon: Icon(senha ? Icons.visibility_off : Icons.visibility),
-          onPressed: mudarvisao,
+          icon: Icon(senhaVisivel ? Icons.visibility_off : Icons.visibility),
+          onPressed: mudarVisao,
         ),
       ),
     );
   }
 }
+
+
 class confirmar extends StatefulWidget {
   final TextEditingController? controller;
   const confirmar({super.key, required this.controller});
@@ -352,7 +367,7 @@ class imagem extends StatelessWidget {
        height:MediaQuery.of(context).size.height *0.25,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/LOGO.png"), //fundo da imagem
+          image: AssetImage("assets/imagens/logo.png"), //fundo da imagem
           fit: BoxFit.fill,
         ),
       ),

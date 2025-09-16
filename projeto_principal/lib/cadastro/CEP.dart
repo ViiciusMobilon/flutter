@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/cep.dart';
@@ -25,6 +24,10 @@ final cepMaskFormatter = MaskTextInputFormatter(
 );
 
 // void main() => runApp(const CEP());
+final numeromaskFormatter = MaskTextInputFormatter(
+  mask: '#####',
+  filter: { "#": RegExp(r'[0-9]') },
+);
 
 class CEP extends StatefulWidget {
   final UsuarioGeral usuario;
@@ -315,6 +318,8 @@ class _numeroState extends State<numero> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.controller,
+      inputFormatters: [numeromaskFormatter],
+      maxLength: 5,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         hintText: "1234",
@@ -486,7 +491,7 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Entrar",
+                "Proximo",
                 style: TextStyle(
                   color: const Color.from(
                     alpha: 1,
@@ -511,25 +516,23 @@ class _botaoState extends State<botao> {
 class adicionais extends StatefulWidget {
   final TextEditingController controller;
    adicionais({super.key, required this.controller});
-
-  @override
-  State<adicionais> createState() => _adicionaisState();
+   @override
+  State<cidade> createState() => _adicionaisState();
 }
 
-class _adicionaisState extends State<adicionais> {
+class _adicionaisState extends State<cidade> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: widget.controller,
       maxLength: 128,
       decoration: InputDecoration(
-        hintText: "não sei o que não sei oque la",
+        hintText: "Cidade",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "informações adicionais(opcional)",
+        labelText: "Cidade",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,

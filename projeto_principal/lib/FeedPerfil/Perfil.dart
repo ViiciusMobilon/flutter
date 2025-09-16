@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/FeedPerfil/system_star.dart';
+import 'package:projeto_principal/FeedPerfil/system_star.dart'; // seu widget EstrelaRating
 
 class PerfilPrincipal extends StatefulWidget {
   const PerfilPrincipal({super.key,});
@@ -15,22 +14,39 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   @override
   Widget build(BuildContext context) {
     if (mostrarMais) {
-      return const Mais(); // mostra as especificações do Mais
+      return Mais(
+        voltar: () {
+          setState(() {
+            mostrarMais = false;
+          });
+        },
+      );
     }
+
+    // Texto de descrição de exemplo
+    String descricao =
+        "Este é um exemplo que será exibida no perfil. Ela pode ter até 255 caracteres e vai sumindo gradualmente antes de chegar no botão Mais..."
+        ;
 
     return ListView(
       children: [
+        
         Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 0.25,
-          decoration: const BoxDecoration(color: Colors.white),
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.08,
+            vertical: 16,
           ),
-          child: Stack(
+          decoration: const BoxDecoration(color: Colors.white),
+          // quadrado branco
+
+          child: 
+          //foto + estrelas
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Linha com avatar + nome + profissão + avaliação
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
@@ -39,47 +55,83 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Vinicius Mobilon",
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.06,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        Text(
-                          "profissão",
-                          style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width * 0.027,
-                            color: Color.fromARGB(255, 151, 151, 151),
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        const EstrelaRating(),
-                      ],
-                    ),
-                  ),
+                  const EstrelaRating(),
                 ],
               ),
+              // fim d foto + estrelas
+               SizedBox(
+                height: MediaQuery.of(context).size.height * 0.02,
+               ),
+              // Coluna com nome + profissão + empresa
+             Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Text(
+      "Empresa:",
+      style: TextStyle(
+        fontSize: MediaQuery.of(context).size.width * 0.035,
+        color: const Color.fromARGB(255, 99, 99, 99),
+        fontWeight: FontWeight.w800,
+        fontFamily: "Poppins",
+      ),
+    ),
+    Text(
+      "Engenheiro de Planejamento e Controle de Produção na  Indústria de Transformação de Plásticos",
+      style: TextStyle(
+        fontSize: MediaQuery.of(context).size.width * 0.027,
+        color: const Color.fromARGB(255, 151, 151, 151),
+        fontWeight: FontWeight.w800,
+        fontFamily: "Poppins",
+      ),
+    ),
+  ],
+),
 
-              // Botão "Mais" posicionado no canto inferior direito do container
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      mostrarMais = true;
-                    });
-                  },
-                  child: const Text("Mais"),
-                ),
+              // Linha com descrição + botão "Mais"
+              Row(
+                children: [
+          
+                  Expanded(
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [Colors.black, Colors.transparent],
+                        stops: const [0.85, 1.0],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ).createShader(bounds),
+                      blendMode: BlendMode.dstIn,
+                      child: Text(
+                        descricao,
+                      style: TextStyle(
+                        fontSize:
+                            MediaQuery.of(context).size.width * 0.04,
+                        color: const Color.fromARGB(255, 87, 87, 87),
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w800
+                      ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      
+                      ),
+                    ),
+                  ),
+
+                  // Botão "Mais" alinhado com o texto
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        mostrarMais = true;
+                      });
+                    },
+                    child:  Text("Mais", style: TextStyle(
+                              color: Colors.blue, // cor de link
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.04,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w800,
+                            ),),
+                  ),
+                ],
               ),
             ],
           ),
@@ -89,35 +141,20 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   }
 }
 
-class Mais extends StatefulWidget {
-  const Mais({super.key});
-
-  @override
-  State<Mais> createState() => _MaisState();
-}
-
-class _MaisState extends State<Mais> {
-  bool mostrarFechar = false;
+// Tela Mais detalhada
+class Mais extends StatelessWidget {
+  final VoidCallback voltar;
+  const Mais({super.key, required this.voltar});
 
   @override
   Widget build(BuildContext context) {
-    if (mostrarFechar) {
-      return const PerfilPrincipal(); // volta para o perfil principal
-    }
-
-    // Exemplo de descrição com limite de 255 caracteres
+    // Texto de descrição completo (SEM LIMITAR)
     String descricao =
-        "Este é um exemplo de descrição que será exibida no perfil. "
-        "Ela pode ter até 255 caracteres e o container vai se adaptar ao tamanho do texto. "
-        "Você pode colocar informações adicionais aqui para testar o comportamento do container. "
-        "Lembre-se de não ultrapassar o limite máximo para manter o layout consistente.";
-    // corta para 255 caracteres caso ultrapasse
-    if (descricao.length > 255) {
-      descricao = descricao.substring(0, 255);
-    }
+        "Este é um exemplo de descrição que será   ccccccccccccccccccashkjasdhfkjashkjshfkajsdhfdascccccccccccccccccccccccccccccccccccccccccccccccccccccccccexibida no perfil. "
+        "Ela pode ter até 255 caracteres ou até mais, e o container vai se "
+        "adaptar automaticamente ao tamanho do texto sem cortar nada.";
 
     return ListView(
-      padding: const EdgeInsets.all(0),
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
@@ -129,8 +166,8 @@ class _MaisState extends State<Mais> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Linha com avatar + estrelas
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
@@ -139,50 +176,68 @@ class _MaisState extends State<Mais> {
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Vinicius Mobilon",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        Text(
-                          "profissão",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 151, 151, 151),
-                            fontWeight: FontWeight.w800,
-                            fontFamily: "Poppins",
-                          ),
-                        ),
-                        EstrelaRating(),
-                      ],
+                  const EstrelaRating(),
+                ],
+              ),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
+              // Nome + profissão + empresa
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Empresa:",
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                      color: const Color.fromARGB(255, 99, 99, 99),
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "Poppins",
+                    ),
+                  ),
+                  Text(
+                    "Engenheiro de Planejamento e Controle de Produção na Indústria de Transformação de Plásticos",
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.027,
+                      color: const Color.fromARGB(255, 151, 151, 151),
+                      fontWeight: FontWeight.w800,
+                      fontFamily: "Poppins",
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              // Texto da descrição adaptável
-              Text(
-                descricao,
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-              // Botão "Fechar"
-              Align(
-                alignment: Alignment.bottomRight,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      mostrarFechar = true;
-                    });
-                  },
-                  child: const Text("Fechar"),
+
+              // Descrição + botão Fechar
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Text.rich(
+                  TextSpan(
+                    text: descricao + " ", // texto normal
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
+                      color: Color.fromARGB(255, 87, 87, 87),
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.w800,
+                    ),
+                    children: [
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: GestureDetector(
+                          onTap: voltar, // mesma ação do botão
+                          child: Text(
+                            "Fechar",
+                            style: TextStyle(
+                              color: Colors.blue, // cor de link
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.04,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

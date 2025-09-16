@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(const MainApp());
 }
@@ -128,18 +128,12 @@ class _LoginState extends State<Login> {
 
                 // fim senha
                 //esqueci a senha
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.08,
-                  ),
-                  child: Text(
-                    "Esqueci a senha",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: MediaQuery.of(context).size.width * 0.03,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w100,
+                GestureDetector(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.08,
                     ),
+                    child: esqueci(),
                   ),
                 ),
                 //fim esqueci a senha
@@ -367,7 +361,7 @@ class imagem extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/LOGO.png"), //fundo da imagem
+          image: AssetImage("assets/imagens/logo.png"), //fundo da imagem
           fit: BoxFit.fill,
         ),
       ),
@@ -393,6 +387,34 @@ class texcadastro extends StatelessWidget {
           fontSize: MediaQuery.of(context).size.width * 0.03,
           fontFamily: "Poppins",
           fontWeight: FontWeight.w200,
+        ),
+      ),
+    );
+  }
+}
+
+class esqueci extends StatefulWidget {
+  const esqueci({super.key});
+
+  @override
+  State<esqueci> createState() => _esqueciState();
+}
+
+class _esqueciState extends State<esqueci> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap:
+          () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => Esqueciasenha())),
+      child: Text(
+        "Esqueci a senha",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.width * 0.03,
+          fontFamily: "Poppins",
+          fontWeight: FontWeight.w100,
         ),
       ),
     );
