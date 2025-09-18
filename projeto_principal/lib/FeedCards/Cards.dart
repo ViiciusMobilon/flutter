@@ -2,19 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 
 class FeedPrincipal extends StatefulWidget {
-    final AuthController authController;
+  final AuthController authController;
 
-  const FeedPrincipal({super.key, required this.authController});
+  FeedPrincipal({super.key, required this.authController});
 
   @override
   State<FeedPrincipal> createState() => _FeedPrincipalState();
 }
 
 class _FeedPrincipalState extends State<FeedPrincipal> {
+  String? foto;
+
+  @override
+  void initState() {
+    super.initState();
+    loadFoto(); // carrega a foto do storage
+  }
+
+  void loadFoto() async {
+    final imagem = await widget.authController.getFoto(); // seu AuthService
+    setState(() {
+      foto = imagem;
+    });
+  } 
   
   @override
   Widget build(BuildContext context) {
     final usuario = widget.authController.user;
+    final foto = widget.authController.foto;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -50,6 +66,7 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
           Text(
             "Você é: ${usuario?['type'] ?? 'desempregado'}"
           ),
+          Text("foto: ${foto ?? 'não existo'}"),
         ],
       ),
     );

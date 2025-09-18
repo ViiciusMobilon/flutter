@@ -8,6 +8,7 @@ class AuthService {
   final AuthRepository _authRepository;
   final _storage = const FlutterSecureStorage();
   Map<String, dynamic>? user;
+  String? foto;
   AuthService(this._authRepository);
   Future<bool> cadastro(String email,
       String senha,
@@ -45,7 +46,8 @@ class AuthService {
     if(result != null && result['access_token'] != null){
       await _storage.write(key: 'token', value: result['access_token']);
       await _storage.write(key: 'user', value: jsonEncode(result['user']));
-      user = result['user'];
+      await _storage.write(key: 'foto', value: result['foto']);
+      // user = result['user'];
       return true;
     }
     return false;
@@ -64,7 +66,18 @@ class AuthService {
     return user;
   }
   return null;
-}
+  }
+   Future<String?> getFoto() async {
+    if (foto != null) return foto;
+
+    final fotoStr = await _storage.read(key: 'foto');
+    if (fotoStr != null && fotoStr.isNotEmpty) {
+      foto = fotoStr;
+      print(foto);
+      return foto;
+    }
+    return null;
+  }
 
   Future<void> logout() async{
     return await _storage.delete(key: 'token');

@@ -31,12 +31,13 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [FeedPrincipal(authController: widget.authController,), PerfilPrincipal()];
+    _paginas = [FeedPrincipal(authController: widget.authController,), PerfilPrincipal(authController: widget.authController,)];
   }
 
   @override
   Widget build(BuildContext context) {
     final usuario = widget.authController.user;
+    final foto = widget.authController.foto;
     return Scaffold(
       // AppBar movido para cá - apenas na página de pesquisa
       appBar:

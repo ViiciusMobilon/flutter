@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/FeedPerfil/system_star.dart'; // seu widget EstrelaRating
+import 'package:projeto_principal/FeedPerfil/system_star.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart'; // seu widget EstrelaRating
 
 class PerfilPrincipal extends StatefulWidget {
-  const PerfilPrincipal({super.key,});
+  final AuthController authController;
+
+  PerfilPrincipal({super.key, required this.authController});
 
   @override
   State<PerfilPrincipal> createState() => _PerfilPrincipalState();
 }
 
 class _PerfilPrincipalState extends State<PerfilPrincipal> {
+  String? foto;
+
+  @override
+  void initState() {
+    super.initState();
+    loadFoto(); // carrega a foto do storage
+  }
+
+  void loadFoto() async {
+    final imagem = await widget.authController.getFoto(); // seu AuthService
+    setState(() {
+      foto = imagem;
+    });
+  } 
   bool mostrarMais = false;
 
   @override
   Widget build(BuildContext context) {
+    final f = widget.authController.foto;
     if (mostrarMais) {
       return Mais(
         voltar: () {
@@ -51,7 +69,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
                     backgroundImage: const NetworkImage(
-                      "https://link-da-foto.com/foto.jpg",
+                      f! ?? null
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
