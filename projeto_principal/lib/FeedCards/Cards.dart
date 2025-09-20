@@ -12,13 +12,19 @@ class FeedPrincipal extends StatefulWidget {
 
 class _FeedPrincipalState extends State<FeedPrincipal> {
   String? foto;
+  // Map<String, dynamic>? usuario;
 
   @override
   void initState() {
     super.initState();
     loadFoto(); // carrega a foto do storage
   }
-
+  // void loadUser() async {
+  //   final user = await widget.authController.getUser();
+  //   setState(() {
+  //     usuario = user;
+  //   });
+  // }
   void loadFoto() async {
     final imagem = await widget.authController.getFoto(); // seu AuthService
     setState(() {

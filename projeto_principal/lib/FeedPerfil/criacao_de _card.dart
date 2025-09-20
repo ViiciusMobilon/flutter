@@ -13,7 +13,8 @@ class Midia {
 }
 
 class NovoPostPage extends StatefulWidget {
-  const NovoPostPage({super.key});
+  final String? foto;
+  NovoPostPage({super.key, required this.foto});
 
   @override
   State<NovoPostPage> createState() => _NovoPostPageState();
@@ -166,10 +167,15 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CircleAvatar(
+                   CircleAvatar(
                     radius: 24,
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
-                  ),
+                    backgroundImage: (widget.foto != null && widget.foto!.isNotEmpty)
+                        ? NetworkImage(widget.foto!)
+                        : null,
+                    child: (widget.foto == null || widget.foto!.isEmpty)
+                        ? const Icon(Icons.person, size: 40)
+                        : null,
+                    ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextField(

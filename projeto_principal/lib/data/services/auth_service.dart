@@ -45,9 +45,9 @@ class AuthService {
 
     if(result != null && result['access_token'] != null){
       await _storage.write(key: 'token', value: result['access_token']);
-      await _storage.write(key: 'user', value: jsonEncode(result['user']));
+      await _storage.write(key: 'logado', value: jsonEncode(result['logado']));
       await _storage.write(key: 'foto', value: result['foto']);
-      // user = result['user'];
+      user = result['logado'];
       return true;
     }
     return false;

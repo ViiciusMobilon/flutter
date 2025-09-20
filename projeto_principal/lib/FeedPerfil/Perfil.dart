@@ -30,9 +30,11 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
 
   @override
   Widget build(BuildContext context) {
+    final usuario = widget.authController.user;
     final f = widget.authController.foto;
     if (mostrarMais) {
       return Mais(
+        foto: f,
         voltar: () {
           setState(() {
             mostrarMais = false;
@@ -68,9 +70,9 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
-                    backgroundImage: const NetworkImage(
-                      f! ?? null
-                    ),
+                    backgroundImage: (
+                      f != null && f.isNotEmpty) ? NetworkImage(f) : null,
+                      child: (f == null || f.isEmpty) ? const Icon(Icons.person, size: 40,) : null,
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                   const EstrelaRating(),
@@ -85,7 +87,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
-      "Empresa:",
+      "${usuario?['type'] ?? 'desempregado'}".toUpperCase(),
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.035,
         color: const Color.fromARGB(255, 99, 99, 99),
@@ -94,7 +96,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
       ),
     ),
     Text(
-      "Engenheiro de Planejamento e Controle de Produção na  Indústria de Transformação de Plásticos",
+      "Engenheiro de Planejamento e Controle de Produção na Indústria de Transformação de Plásticos",
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.027,
         color: const Color.fromARGB(255, 151, 151, 151),
@@ -160,15 +162,26 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
 }
 
 // Tela Mais detalhada
-class Mais extends StatelessWidget {
+class Mais extends StatefulWidget {
   final VoidCallback voltar;
-  const Mais({super.key, required this.voltar});
+  final String? foto;
 
+  const Mais({
+    super.key,
+    required this.voltar,
+    required this.foto,
+  });
+
+  @override
+  State<Mais> createState() => _MaisState();
+}
+
+class _MaisState extends State<Mais> {
   @override
   Widget build(BuildContext context) {
     // Texto de descrição completo (SEM LIMITAR)
     String descricao =
-        "Este é um exemplo de descrição que será   ccccccccccccccccccashkjasdhfkjashkjshfkajsdhfdascccccccccccccccccccccccccccccccccccccccccccccccccccccccccexibida no perfil. "
+        "Este é um exemplo de descrição que será exibida no perfil. "
         "Ela pode ter até 255 caracteres ou até mais, e o container vai se "
         "adaptar automaticamente ao tamanho do texto sem cortar nada.";
 
@@ -189,9 +202,12 @@ class Mais extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: MediaQuery.of(context).size.width * 0.12,
-                    backgroundImage: const NetworkImage(
-                      "https://link-da-foto.com/foto.jpg",
-                    ),
+                    backgroundImage: (widget.foto != null && widget.foto!.isNotEmpty)
+                        ? NetworkImage(widget.foto!)
+                        : null,
+                    child: (widget.foto == null || widget.foto!.isEmpty)
+                        ? const Icon(Icons.person, size: 40)
+                        : null,
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                   const EstrelaRating(),
@@ -230,10 +246,10 @@ class Mais extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16.0),
                 child: Text.rich(
                   TextSpan(
-                    text: descricao + " ", // texto normal
+                    text: descricao + " ",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.04,
-                      color: Color.fromARGB(255, 87, 87, 87),
+                      color: const Color.fromARGB(255, 87, 87, 87),
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.w800,
                     ),
@@ -241,11 +257,11 @@ class Mais extends StatelessWidget {
                       WidgetSpan(
                         alignment: PlaceholderAlignment.middle,
                         child: GestureDetector(
-                          onTap: voltar, // mesma ação do botão
+                          onTap: widget.voltar,
                           child: Text(
                             "Fechar",
                             style: TextStyle(
-                              color: Colors.blue, // cor de link
+                              color: Colors.blue,
                               fontSize:
                                   MediaQuery.of(context).size.width * 0.04,
                               fontFamily: "Poppins",
@@ -265,3 +281,4 @@ class Mais extends StatelessWidget {
     );
   }
 }
+

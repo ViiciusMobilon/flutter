@@ -86,7 +86,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   final resultado = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (ctx) => const NovoPostPage(),),
+                      builder: (ctx) => NovoPostPage(foto: foto,),),
                   );
                   if (resultado != null && mounted) {
                     // Lógica para lidar com o resultado
