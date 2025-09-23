@@ -70,7 +70,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const settinspage(),
+                        builder: (context) =>  settinspage(authController: widget.authController,),
                       ),
                       );
                     },

@@ -8,6 +8,7 @@ class AuthService {
   final AuthRepository _authRepository;
   final _storage = const FlutterSecureStorage();
   Map<String, dynamic>? user;
+  Map<String, double>? avaliacao;
   String? foto;
   AuthService(this._authRepository);
   Future<bool> cadastro(String email,
@@ -47,6 +48,7 @@ class AuthService {
       await _storage.write(key: 'token', value: result['access_token']);
       await _storage.write(key: 'logado', value: jsonEncode(result['logado']));
       await _storage.write(key: 'foto', value: result['foto']);
+      await _storage.write(key: 'avaliacao', value: jsonEncode(result['avaliacao']));
       user = result['logado'];
       return true;
     }
@@ -67,6 +69,20 @@ class AuthService {
   }
   return null;
   }
+  Future<Map<String, double>?> getAvaliacao() async{
+    final avaliacaoStr = await _storage.read(key: 'avaliacao');
+    if(avaliacaoStr != null){
+      final Map<String, dynamic> json = jsonDecode(avaliacaoStr);
+
+      avaliacao = {
+        'media': double.parse(json['media'].toString()),
+        'total': double.parse(json['total'].toString()),
+    };
+    return avaliacao;
+    }
+    return null;
+}
+
    Future<String?> getFoto() async {
     if (foto != null) return foto;
 

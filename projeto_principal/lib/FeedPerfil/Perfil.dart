@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:projeto_principal/FeedPerfil/system_star.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart'; // seu widget EstrelaRating
@@ -13,11 +14,13 @@ class PerfilPrincipal extends StatefulWidget {
 
 class _PerfilPrincipalState extends State<PerfilPrincipal> {
   String? foto;
+  double avaliacao = 0.0;
 
   @override
   void initState() {
     super.initState();
     loadFoto(); // carrega a foto do storage
+    loadStar();
   }
 
   void loadFoto() async {
@@ -25,7 +28,15 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
     setState(() {
       foto = imagem;
     });
-  } 
+  }
+  void loadStar() async {
+    final star = await widget.authController.getAvaliacao();
+    setState(() {
+      avaliacao = star?['media'] ?? 0.0;
+    });
+  }
+
+
   bool mostrarMais = false;
 
   @override
@@ -34,6 +45,8 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
     final f = widget.authController.foto;
     if (mostrarMais) {
       return Mais(
+        avaliacao: avaliacao,
+        usuario: usuario,
         foto: f,
         voltar: () {
           setState(() {
@@ -75,7 +88,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
                       child: (f == null || f.isEmpty) ? const Icon(Icons.person, size: 40,) : null,
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                  const EstrelaRating(),
+                    EstrelaRating(estrelas: avaliacao,),
                 ],
               ),
               // fim d foto + estrelas
@@ -165,11 +178,15 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
 class Mais extends StatefulWidget {
   final VoidCallback voltar;
   final String? foto;
+  final double avaliacao;
+  final usuario;
 
   const Mais({
     super.key,
     required this.voltar,
     required this.foto,
+    required this.avaliacao,
+    required this.usuario,
   });
 
   @override
@@ -210,7 +227,7 @@ class _MaisState extends State<Mais> {
                         : null,
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-                  const EstrelaRating(),
+                   EstrelaRating(estrelas:widget.avaliacao ,),
                 ],
               ),
 
@@ -221,7 +238,7 @@ class _MaisState extends State<Mais> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Empresa:",
+                    "${widget.usuario?['type'] ?? 'desempregado'}".toUpperCase(),
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.035,
                       color: const Color.fromARGB(255, 99, 99, 99),

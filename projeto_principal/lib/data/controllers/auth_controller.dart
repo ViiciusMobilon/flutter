@@ -80,7 +80,11 @@ class AuthController extends ChangeNotifier{
   Future<String?> getFoto() async {
     return await _authService.getFoto();
   }
+  Future<Map<String, double>?> getAvaliacao() async{
+    return await _authService.getAvaliacao();
+  }
 
+  Future<Map<String, double>?> get avaliacao => _authService.getAvaliacao();
   Map<String, dynamic>? get user => _authService.user;
   String? get foto => _authService.foto;
 

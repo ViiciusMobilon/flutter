@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/settins/editarperfil.dart';
 import 'package:projeto_principal/settins/seguranca.dart';
 
 class settinspage extends StatefulWidget {
-  const settinspage({super.key});
+    final AuthController authController;
+
+  const settinspage({super.key, required this.authController});
 
   @override
   State<settinspage> createState() => _settinspageState();
@@ -46,7 +49,7 @@ class _settinspageState extends State<settinspage> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: ()=> Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Editar_Perfil()),)
+                MaterialPageRoute(builder: (context) => Editar_Perfil(authController: widget.authController,)),)
             ),
          
             ListTile(

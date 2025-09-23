@@ -3,6 +3,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -15,7 +16,9 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 );
 
 class Editar_Perfil extends StatefulWidget {
-  const Editar_Perfil({super.key});
+  final AuthController authController;
+  
+   Editar_Perfil({super.key, required this.authController});
 
   @override
   State<Editar_Perfil> createState() => _Editar_PerfilState();
@@ -36,8 +39,8 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        children: const [
-          Center(child: Perfil()),
+        children: [
+          Center(child: Perfil(authController: widget.authController,)),
           SizedBox(height: 30),
           Nome(),
           SizedBox(height: 20),
@@ -90,15 +93,22 @@ class _DescricaoState extends State<Descricao> {
 }
 
 class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+  final AuthController authController;
+   Perfil({super.key, required this.authController});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
+  String? foto;
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  @override
+  void initState(){
+    super.initState();
+    loadFoto();
+  }
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
@@ -107,6 +117,13 @@ class _PerfilState extends State<Perfil> {
         _image = File(pickedFile.path);
       });
     }
+  }
+  void loadFoto() async{
+    final imagem = await widget.authController.getFoto(); // seu AuthService
+    setState(() {
+      foto = imagem;
+    });
+
   }
 
   void _showImageSourceDialog() {
@@ -151,6 +168,8 @@ class _PerfilState extends State<Perfil> {
                 height: 150,
                 fit: BoxFit.cover,
               )
+            : (foto != null && foto!.isNotEmpty) ?
+            Image.network(foto!, width: 150, height: 150, fit: BoxFit.cover)
             : Container(
                 width: 150,
                 height: 150,
