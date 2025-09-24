@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
@@ -15,11 +16,13 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<Scaffol
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(const MainApp());
 }
 class MainApp extends StatelessWidget {
+
   const MainApp({super.key});
 
   @override
@@ -27,7 +30,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      home: const Login(),
+      home: Login(),
     );
   }
 }

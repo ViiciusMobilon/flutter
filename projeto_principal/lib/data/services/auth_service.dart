@@ -28,13 +28,15 @@ class AuthService {
       String estado,
       String uf,
       String numero,
-      String info) async {
+      String info
+      ) async {
         final data = await _authRepository.register(email, senha, senha_confirmation,tipo, nome,razao_social, tel, cpf,cnpj,id_ramo, foto, cep,rua, cidade, estado,uf, numero, info);
 
-       if (data.containsKey("token")) {
-        await _storage.write(key: "jwt", value: data['token']);
-        await _storage.write(key: 'user', value: jsonEncode(data['user']));
-        user = data['user'];
+       if (data.containsKey("access_token")) {
+        await _storage.write(key: "token", value: data['access_token']);
+        await _storage.write(key: 'logado', value: jsonEncode(data['logado']));
+        await _storage.write(key: 'foto', value: data['foto']);
+        user = data['logado'];
         return true;
       } else {
         return false;

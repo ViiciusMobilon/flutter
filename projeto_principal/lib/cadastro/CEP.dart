@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
@@ -11,10 +9,7 @@ import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/repositories/cep_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
-import 'package:projeto_principal/cadastro/dropdown.dart';
-import 'package:projeto_principal/cadastro/Contratante.dart';
 import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
-import 'package:projeto_principal/cadastro/dropdown.dart';
 
 
 
@@ -31,7 +26,7 @@ final numeromaskFormatter = MaskTextInputFormatter(
 
 class CEP extends StatefulWidget {
   final UsuarioGeral usuario;
-  const CEP({super.key, required this.usuario});
+  CEP({super.key, required this.usuario});
 
   @override
   State<CEP> createState() => _CEPState();
@@ -70,6 +65,7 @@ class _CEPState extends State<CEP> {
     print( "foto: ${widget.usuario.foto}");
     print( "ramo: ${widget.usuario.ramo}");
     print( "razao social: ${widget.usuario.razao_social}");
+    print('estou em cep');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
@@ -193,7 +189,7 @@ Widget cepField({
 class cepWidget extends StatefulWidget {
   final TextEditingController controller;
   final void Function(CepModel) onCepBuscado;
-  const cepWidget({super.key, required this.controller, required this.onCepBuscado});
+   cepWidget({super.key, required this.controller, required this.onCepBuscado});
 
   @override
   State<cepWidget> createState() => _cepState();
@@ -442,7 +438,7 @@ class _botaoState extends State<botao> {
             // pegar token
             final token = await _authController.logado(); // ou getUser() se quiser o usuário
 
-            if (token != null) {
+            if (token) {
               // só redireciona se o token existe
               Navigator.pushReplacement(
                 context,
@@ -461,7 +457,7 @@ class _botaoState extends State<botao> {
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Cadastro realizado com sucesso!')),
+               SnackBar(content: Text('Cadastro realizado com sucesso!')),
             );
           }
 
@@ -517,22 +513,23 @@ class adicionais extends StatefulWidget {
   final TextEditingController controller;
    adicionais({super.key, required this.controller});
    @override
-  State<cidade> createState() => _adicionaisState();
+  State<adicionais> createState() => _adicionaisState();
 }
 
-class _adicionaisState extends State<cidade> {
+class _adicionaisState extends State<adicionais> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       maxLength: 128,
       decoration: InputDecoration(
-        hintText: "Cidade",
+        hintText: "info",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "Cidade",
+        labelText: "informações adicionais",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,

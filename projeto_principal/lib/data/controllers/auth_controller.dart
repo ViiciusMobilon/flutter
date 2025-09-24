@@ -38,6 +38,7 @@ class AuthController extends ChangeNotifier{
 
           if(!sucess){
             errors = "erro cadastro";
+            print("sucess: ${sucess}");
           }
           return sucess;
         } catch (e) {
