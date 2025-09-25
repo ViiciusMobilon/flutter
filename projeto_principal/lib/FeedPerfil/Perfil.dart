@@ -15,12 +15,15 @@ class PerfilPrincipal extends StatefulWidget {
 class _PerfilPrincipalState extends State<PerfilPrincipal> {
   String? foto;
   double avaliacao = 0.0;
+  Map<String, dynamic>? ramos;
+
 
   @override
   void initState() {
     super.initState();
     loadFoto(); // carrega a foto do storage
     loadStar();
+    loadRamo();
   }
 
   void loadFoto() async {
@@ -35,19 +38,28 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
       avaliacao = star?['media'] ?? 0.0;
     });
   }
+  void loadRamo() async{
+    final ramo = await widget.authController.getRamo();
+    setState(() {
+      ramos = ramo;
+    });
+  } 
 
 
   bool mostrarMais = false;
 
   @override
   Widget build(BuildContext context) {
-    final usuario = widget.authController.user;
+    final conectado = widget.authController.conectado;
+    final user = widget.authController.user;
+    final ramo = widget.authController.ramo;
     final f = widget.authController.foto;
     if (mostrarMais) {
       return Mais(
         avaliacao: avaliacao,
-        usuario: usuario,
+        conectado: conectado,
         foto: f,
+        ramo: ramo,
         voltar: () {
           setState(() {
             mostrarMais = false;
@@ -100,7 +112,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
-      "${usuario?['type'] ?? 'desempregado'}".toUpperCase(),
+      "${conectado?['type'] ?? 'desempregado'}".toUpperCase(),
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.035,
         color: const Color.fromARGB(255, 99, 99, 99),
@@ -109,7 +121,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
       ),
     ),
     Text(
-      "Engenheiro de Planejamento e Controle de Produção na Indústria de Transformação de Plásticos",
+      "${ramo?['nome'] ?? 'ñ existo'}",
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.027,
         color: const Color.fromARGB(255, 151, 151, 151),
@@ -179,14 +191,16 @@ class Mais extends StatefulWidget {
   final VoidCallback voltar;
   final String? foto;
   final double avaliacao;
-  final usuario;
+  final conectado;
+  final ramo;
 
   const Mais({
     super.key,
     required this.voltar,
     required this.foto,
     required this.avaliacao,
-    required this.usuario,
+    required this.conectado,
+    required this.ramo,
   });
 
   @override
@@ -238,7 +252,7 @@ class _MaisState extends State<Mais> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.usuario?['type'] ?? 'desempregado'}".toUpperCase(),
+                    "${widget.conectado?['type'] ?? 'desempregado'}".toUpperCase(),
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.035,
                       color: const Color.fromARGB(255, 99, 99, 99),
@@ -247,7 +261,7 @@ class _MaisState extends State<Mais> {
                     ),
                   ),
                   Text(
-                    "Engenheiro de Planejamento e Controle de Produção na Indústria de Transformação de Plásticos",
+                    "${widget.ramo?['nome'] ?? 'ñ existo'}",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.027,
                       color: const Color.fromARGB(255, 151, 151, 151),

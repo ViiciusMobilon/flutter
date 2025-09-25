@@ -88,7 +88,7 @@ class AuthRepository {
     );
 
     if(response.statusCode == 200){
-      print(response.body);
+      print("Usuario logado: ${response.body}");
       return jsonDecode(response.body);
     }else{
       return null;

@@ -12,12 +12,13 @@ class FeedPrincipal extends StatefulWidget {
 
 class _FeedPrincipalState extends State<FeedPrincipal> {
   String? foto;
-  // Map<String, dynamic>? usuario;
+  Map<String, dynamic>? ramos;
 
   @override
   void initState() {
     super.initState();
     loadFoto(); // carrega a foto do storage
+    loadRamo();
   }
   // void loadUser() async {
   //   final user = await widget.authController.getUser();
@@ -30,13 +31,21 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
     setState(() {
       foto = imagem;
     });
+  }
+  void loadRamo() async{
+    final ramo = await widget.authController.getRamo();
+    setState(() {
+      ramos = ramo;
+    });
   } 
   
   @override
   Widget build(BuildContext context) {
-    final usuario = widget.authController.user;
+    final conectado = widget.authController.conectado;
+    final user = widget.authController.user;
     final foto = widget.authController.foto;
-
+    final ramo = widget.authController.ramo;
+    print("Ramo cards: ${ramo}");
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -67,12 +76,16 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
             ),
           ),
           Text(
-            "Ola: ${usuario?['email'] ?? 'usuario'}"
+            "Email: ${conectado?['email'] ?? 'usuario'}"
           ),
+          Text("nome: ${user?['nome'] ?? 'nao existo'}"),
+          Text("Localização: ${user?['localidade'] ?? 'nao existo'} ${user?['uf'] ?? 'nao existo'}"),
+          Text("uf: ${user?['uf'] ?? 'nao existo'}"),
           Text(
-            "Você é: ${usuario?['type'] ?? 'desempregado'}"
+            "Você é: ${conectado?['type'] ?? 'desempregado'}"
           ),
           Text("foto: ${foto ?? 'não existo'}"),
+          Text("ramo: ${ramo?['nome'] ?? 'não existo'}"),
         ],
       ),
     );

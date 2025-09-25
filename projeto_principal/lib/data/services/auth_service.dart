@@ -7,8 +7,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class AuthService {
   final AuthRepository _authRepository;
   final _storage = const FlutterSecureStorage();
+  Map<String, dynamic>? logado;
   Map<String, dynamic>? user;
   Map<String, double>? avaliacao;
+  Map<String, dynamic>? ramo;
   String? foto;
   AuthService(this._authRepository);
   Future<bool> cadastro(String email,
@@ -51,7 +53,10 @@ class AuthService {
       await _storage.write(key: 'logado', value: jsonEncode(result['logado']));
       await _storage.write(key: 'foto', value: result['foto']);
       await _storage.write(key: 'avaliacao', value: jsonEncode(result['avaliacao']));
-      user = result['logado'];
+      await _storage.write(key: 'ramo', value: jsonEncode(result['ramo']));
+      await _storage.write(key: 'user', value: jsonEncode(result['user']));
+      user = result['user'];
+      logado = result['logado'];
       return true;
     }
     return false;
@@ -62,14 +67,34 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>?> getUser() async {
-  if (user != null) return user;
+    if (user != null) return user;
 
-  final userStr = await _storage.read(key: 'user');
-  if (userStr != null) {
-    user = jsonDecode(userStr);
-    return user;
+    final userStr = await _storage.read(key: 'user');
+    if (userStr != null) {
+      user = jsonDecode(userStr);
+      return user;
+    }
+    return null;
   }
-  return null;
+  Future<Map<String, dynamic>?> getLogado() async {
+    if (logado != null) return logado;
+
+    final logadoStr = await _storage.read(key: 'logado');
+    if (logadoStr != null) {
+      user = jsonDecode(logadoStr);
+      return logado;
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> getRamo() async {
+    final ramoStr = await _storage.read(key: 'ramo');
+    if (ramoStr != null) {
+      ramo = jsonDecode(ramoStr);
+      print("RAMO: ${ramo}");
+      return ramo;
+    }
+    return null;
   }
   Future<Map<String, double>?> getAvaliacao() async{
     final avaliacaoStr = await _storage.read(key: 'avaliacao');
@@ -91,7 +116,7 @@ class AuthService {
     final fotoStr = await _storage.read(key: 'foto');
     if (fotoStr != null && fotoStr.isNotEmpty) {
       foto = fotoStr;
-      print(foto);
+      print("FOTO:${foto}");
       return foto;
     }
     return null;
