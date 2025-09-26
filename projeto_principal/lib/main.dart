@@ -308,7 +308,7 @@ class _senhaState extends State<senha> {
 class botao extends StatefulWidget {
   // final UsuarioGeral usuario;
   final VoidCallback onPressed;
-  const botao({super.key, required this.onPressed});
+  botao({super.key, required this.onPressed});
 
   @override
   State<botao> createState() => _botaoState();

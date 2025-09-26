@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 
 
@@ -297,7 +298,7 @@ class botao extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmationController;
-  const botao({
+   botao({
     super.key,
     required this.emailController,
     required this.passwordController,
@@ -318,6 +319,7 @@ class _botaoState extends State<botao> {
           password: widget.passwordController.text,
           confirmation_password: widget.passwordConfirmationController.text,
         );
+        final verificarController = VerificarController();
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario),
           ),
