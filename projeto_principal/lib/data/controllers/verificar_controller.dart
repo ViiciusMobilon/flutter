@@ -19,9 +19,12 @@ class VerificarController {
   Future<bool> existe(String value,  String endpoint) async {
     try {
       final resultado = await _service.verificar(value, endpoint);
-      return resultado['existe'];
+      bool existe = resultado['existe'] ?? false;
+      print('controller verificar:${existe}');
+      return existe;
     } catch (e) {
-      throw true;
+      print("erro${e}");
+      return false;
     }
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
@@ -25,6 +24,7 @@ class _CadastroState extends State<Cadastro> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmation_passwordController = TextEditingController();
+  String? erroEmail;
 
   @override
   void dispose() {
@@ -86,8 +86,9 @@ class _CadastroState extends State<Cadastro> {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(controller: emailController),
+                  child: email(controller: emailController, erroEmail: erroEmail,),
                 ),
+                
                 //fim email
                 //textfield senha
                 Padding(
@@ -115,7 +116,7 @@ class _CadastroState extends State<Cadastro> {
                   ),
                   child: Center(
                     child: 
-                    botao(
+                    botao(erroEmail: (msg) => setState(() => erroEmail = msg),
                         emailController: emailController,
                         passwordController: passwordController,
                         passwordConfirmationController: confirmation_passwordController,)
@@ -136,7 +137,8 @@ class _CadastroState extends State<Cadastro> {
 
 class email extends StatefulWidget {
   final TextEditingController? controller;
-  const email({super.key, required this.controller});
+  final String? erroEmail;
+   email({super.key, required this.controller, required this.erroEmail});
 
   @override
   State<email> createState() => _emailState();
@@ -172,6 +174,7 @@ class _emailState extends State<email> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroEmail
       ),
     );
   }
@@ -298,11 +301,13 @@ class botao extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmationController;
+  final void Function (String?) erroEmail;
    botao({
     super.key,
     required this.emailController,
     required this.passwordController,
-    required this.passwordConfirmationController
+    required this.passwordConfirmationController,
+    required this.erroEmail
   });
 
   @override
@@ -313,17 +318,24 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:(){
+      onTap:() async{
         final usuario = UsuarioGeral(
           email: widget.emailController.text,
           password: widget.passwordController.text,
           confirmation_password: widget.passwordConfirmationController.text,
         );
         final verificarController = VerificarController();
-        Navigator.of(context).push(
+        final vemail = await verificarController.existe(widget.emailController.text, 'check-email');
+        if(vemail){
+          widget.erroEmail('Email já está em usp');
+          print('email existe');
+        }else{
+          print('não existe');
+          Navigator.of(context).push(
           MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario),
           ),
         );
+        }
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
