@@ -439,7 +439,6 @@ class _botaoState extends State<botao> {
             widget.usuario.foto = widget.foto;
             widget.usuario.razao_social = widget.nomeController.text;
             widget.usuario.telefone = widget.telefoneController.text;
-            widget.usuario.whatsapp = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;
             widget.usuario.ramo = widget.idramo;
 
@@ -471,7 +470,6 @@ class _botaoState extends State<botao> {
               final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
               final vCNPJ = await verificarController.verificar(widget.cnpjController.text, 'check-cnpj');
               final vNome = await verificarController.verificar(widget.nomeController.text, 'check-razaosocial');
-              print("Sounome: ${vNome}");
 
             if((vTel['msg'] as String).isNotEmpty){
                 widget.erroTelefone(vTel['msg']);
@@ -484,22 +482,35 @@ class _botaoState extends State<botao> {
                 widget.erroTelefone(vTel['msg']);
                 return;
               }
+
             if((vCNPJ['msg'] as String).isNotEmpty){
                 widget.erroCNPJ(vCNPJ['msg']);
                 print('digite um cnpj valido');
                 return;
               }
             
-            
             if(vCNPJ['existe'] == true){
                 widget.erroCNPJ(vCNPJ['msg']);
                 return;
               }
-            if(vNome['existe'] == true){
+
+            if((vNome['msg'] as String).isNotEmpty){
                 widget.erroNome(vNome['msg']);
-                print('nome ja usado');
+                print('digite um nome valido');
                 return;
               }
+
+
+            if(vNome['existe'] == true){
+                widget.erroNome(vNome['msg']);
+
+                print(' ja usado');
+
+                print('NOME EXISTE: ${vNome['existe']}');
+                return;
+              }
+
+
               else{
                 Navigator.of(
             context,

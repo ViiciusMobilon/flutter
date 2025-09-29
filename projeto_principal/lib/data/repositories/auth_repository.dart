@@ -45,8 +45,7 @@ class AuthRepository {
     request.fields['id_ramo'] = id_ramo.toString();
   }
     request.fields['telefone'] = tel;
-    request.fields['whatsapp'] = tel;
-    request.fields['fixo'] = tel;
+
     if(cpf != null){
       request.fields['cpf'] = cpf;
     }

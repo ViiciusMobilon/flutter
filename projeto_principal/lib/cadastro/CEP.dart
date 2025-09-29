@@ -400,7 +400,6 @@ class _botaoState extends State<botao> {
           print( "Tipo: ${widget.usuario.tipo}");
           print( "nome: ${widget.usuario.nome}");
           print( "tel: ${widget.usuario.telefone}");
-          print( "zap: ${widget.usuario.whatsapp}");
           print( "cpf: ${widget.usuario.cpf}");
           print( "cnpj: ${widget.usuario.cnpj}");
           print( "foto: ${widget.usuario.foto}");

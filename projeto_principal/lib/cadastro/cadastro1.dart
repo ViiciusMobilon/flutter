@@ -342,7 +342,7 @@ class _botaoState extends State<botao> {
 
 
         if((vemail['msg'] as String).isNotEmpty){
-          widget.erroEmail('Digite um email valido');
+          widget.erroEmail(vemail['msg']);
           print('digite um email valido');
           return;
         }
@@ -350,6 +350,7 @@ class _botaoState extends State<botao> {
         
         if(vemail['existe'] == true){
           widget.erroEmail(vemail['msg']);
+          print("Existe email: ${vemail['msg']}");
           return;
         }
         else{

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:projeto_principal/FeedCards/Cards.dart';
 import 'package:projeto_principal/FeedPerfil/Perfil.dart';
 import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
+import 'package:projeto_principal/data/repositories/auth_repository.dart';
+import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pesquisa.dart';
 import 'package:projeto_principal/settins/pgsettins.dart';
 import 'package:projeto_principal/FeedCards/Cards.dart';
@@ -10,6 +12,7 @@ import 'package:projeto_principal/data/models/user.dart';
 
 // Entry point
 // Tela principal com nav bar
+
 class TelaPrincipal extends StatefulWidget {
     // UsuarioGeral usuario;
     // final usuario = auth;

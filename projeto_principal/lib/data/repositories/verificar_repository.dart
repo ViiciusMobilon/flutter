@@ -19,6 +19,7 @@ class VerificarRepository {
         final listamsg = data['message'][campo] as List<dynamic>? ?? [];
         final msg = listamsg.isNotEmpty ? listamsg[0].toString() : '';
         final existe = msg.toString().toLowerCase();
+        print("REpo:${existe}");
 
 
         return {
