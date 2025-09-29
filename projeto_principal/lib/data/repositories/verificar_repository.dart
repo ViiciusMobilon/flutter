@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:projeto_principal/data/config.dart';
 
@@ -17,12 +16,17 @@ class VerificarRepository {
         final data = jsonDecode(response.body);
 
         final campo = data['message'].keys.first;
-        final msg = data['message'][campo][0];
+        final listamsg = data['message'][campo] as List<dynamic>? ?? [];
+        final msg = listamsg.isNotEmpty ? listamsg[0].toString() : '';
+        final existe = msg.toString().toLowerCase();
+
 
         return {
-          'existe': !(data['success'] ?? false),
-          'msg': msg,
-        };
+        'existe': existe,
+        'msg': msg,
+          };
+
+
       }else{
         throw Exception('error no servidor ${response.statusCode} - ${response.body}');
       }

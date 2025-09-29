@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -6,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
 
@@ -19,7 +18,7 @@ final cnpjMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-// void main() => runApp(const Empresa());
+void main() => runApp(Empresa(usuario: UsuarioGeral(),));
 
 class Empresa extends StatefulWidget {
   final UsuarioGeral usuario;
@@ -35,6 +34,31 @@ class _EmpresaState extends State<Empresa> {
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cnpjController = TextEditingController();
+  String? erroRamo;
+  String? erroCNPJ;
+  String? erroTelefone;
+  String? erroNome;
+  void limparCNPJ(){
+    if(erroCNPJ != null){
+      setState(() => erroCNPJ = null);
+    }
+  }
+  void limparTel(){
+    if(erroTelefone != null){
+      setState(() => erroTelefone = null);
+    }
+  }
+  void limparRamo(){
+    if(erroRamo != null){
+      setState(() => erroRamo = null);
+    }
+  }
+   void limparNome(){
+    if(erroNome != null){
+      setState(() => erroNome = null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -84,7 +108,7 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(controller: nomeController,),
+              child: Nome(controller: nomeController, erroNome: erroNome, onClearerror: limparNome,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -93,7 +117,7 @@ class _EmpresaState extends State<Empresa> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController,),
+              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel,),
             ),
 
             Padding(
@@ -102,7 +126,7 @@ class _EmpresaState extends State<Empresa> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cnpj(controller: cnpjController,),
+              child: cnpj(controller: cnpjController, erroCNPJ: erroCNPJ, onClearerror: limparCNPJ,),
             ),
 
             Padding(
@@ -112,7 +136,10 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Area(usuario: widget.usuario,onRamoSelecionado: (item){
+              child: Area(usuario: widget.usuario,
+              erro: erroRamo,
+              onClearerror: limparRamo,
+              onRamoSelecionado: (item){
                 if(item != null){
                 setState(() {
                   id_ramo = item.id;
@@ -126,6 +153,10 @@ class _EmpresaState extends State<Empresa> {
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
                   child: Center(child: botao(usuario: widget.usuario,
+                  erroNome: (msg) => setState(() => erroNome = msg),
+                  erroCNPJ: (msg) => setState(() => erroCNPJ = msg),
+                  erroRamo: (msg) => setState(() => erroRamo = msg),
+                  erroTelefone: (msg) => setState(() => erroTelefone = msg),
                   idramo: id_ramo,
                   cnpjController: cnpjController,
                   nomeController: nomeController,
@@ -227,7 +258,9 @@ class _PerfilState extends State<Perfil> {
 
 class Nome extends StatefulWidget {
   final TextEditingController controller;
-   Nome({super.key, required this.controller});
+  final String? erroNome;
+  final VoidCallback onClearerror;
+  Nome({super.key, required this.controller, required this.erroNome, required this.onClearerror});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -260,14 +293,20 @@ class _NomeState extends State<Nome> {
             color: Colors.grey,
           ),
         ),
+        errorText: widget.erroNome
       ),
+      onChanged: (value) {
+        widget.onClearerror();
+      },
     );
   }
 }
 
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
-  const Telefone({super.key, required this.controller});
+  final String? erroTel;
+  final VoidCallback onClearerror;
+  Telefone({super.key, required this.controller, required this.erroTel, required this.onClearerror});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -304,14 +343,20 @@ class _TelefoneState extends State<Telefone> {
            
           ),
         ),
+        errorText: widget.erroTel
       ),
+      onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
 
 class cnpj extends StatefulWidget {
   final TextEditingController controller;
-  const cnpj({super.key, required this.controller});
+  final String? erroCNPJ;
+  final VoidCallback onClearerror;
+  const cnpj({super.key, required this.controller, required this.erroCNPJ, required this.onClearerror});
 
   @override
   State<cnpj> createState() => _cnpjState();
@@ -349,7 +394,11 @@ class _cnpjState extends State<cnpj> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroCNPJ,
       ),
+      onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -362,7 +411,20 @@ class botao extends StatefulWidget {
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cnpjController;
-  const botao({super.key, required this.usuario, required this.idramo, required this.foto,required this.nomeController, required this.telefoneController, required this.cnpjController});
+   final void Function (String?) erroTelefone;
+  final void Function (String?) erroCNPJ;
+  final void Function (String?) erroRamo;
+  final void Function (String?) erroNome;
+  botao({super.key, required this.usuario,
+    required this.idramo,
+    required this.foto,
+    required this.nomeController,
+    required this.telefoneController,
+    required this.cnpjController,
+    required this.erroCNPJ,
+    required this.erroRamo,
+    required this.erroTelefone,
+    required this.erroNome});
 
   @override
   State<botao> createState() => _botaoState();
@@ -373,16 +435,77 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
        onTap:
-          (){
+          ()async{
             widget.usuario.foto = widget.foto;
             widget.usuario.razao_social = widget.nomeController.text;
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.whatsapp = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;
             widget.usuario.ramo = widget.idramo;
-            Navigator.of(
+
+            if(widget.nomeController.text.isEmpty){
+                widget.erroNome('Digite um nome');
+                print('digite um cnpj');
+                return;
+              }
+
+            if(widget.telefoneController.text.isEmpty){
+                widget.erroTelefone('Digite um telefone');
+                print('digite um telefone');
+                return;
+              }
+
+            if(widget.cnpjController.text.isEmpty){
+                widget.erroCNPJ('Digite um cnpj');
+                print('digite um cnpj');
+                return;
+              }
+            
+            
+            if(widget.idramo == null){
+              widget.erroRamo("Selecione um ramo");
+              return;
+            }
+
+            final verificarController = VerificarController();
+              final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
+              final vCNPJ = await verificarController.verificar(widget.cnpjController.text, 'check-cnpj');
+              final vNome = await verificarController.verificar(widget.nomeController.text, 'check-razaosocial');
+              print("Sounome: ${vNome}");
+
+            if((vTel['msg'] as String).isNotEmpty){
+                widget.erroTelefone(vTel['msg']);
+                print('digite um telefone valido');
+                return;
+              }
+            
+            
+            if(vTel['existe'] == true){
+                widget.erroTelefone(vTel['msg']);
+                return;
+              }
+            if((vCNPJ['msg'] as String).isNotEmpty){
+                widget.erroCNPJ(vCNPJ['msg']);
+                print('digite um cnpj valido');
+                return;
+              }
+            
+            
+            if(vCNPJ['existe'] == true){
+                widget.erroCNPJ(vCNPJ['msg']);
+                return;
+              }
+            if(vNome['existe'] == true){
+                widget.erroNome(vNome['msg']);
+                print('nome ja usado');
+                return;
+              }
+              else{
+                Navigator.of(
             context,
            ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));
+              }
+
           },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,

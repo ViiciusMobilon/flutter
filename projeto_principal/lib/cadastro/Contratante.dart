@@ -5,8 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
-import 'package:projeto_principal/cadastro/cadastro1.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -17,11 +17,11 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-// void main() => runApp(const Contratante());
+void main() => runApp( Contratante(usuario: UsuarioGeral(),));
 
 class Contratante extends StatefulWidget {
   final UsuarioGeral usuario;
-  const Contratante({super.key, required this.usuario});
+  Contratante({super.key, required this.usuario});
 
   @override
   State<Contratante> createState()=> _ContratanteState();
@@ -32,6 +32,18 @@ class _ContratanteState extends State<Contratante>{
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
+  String? erroCPF;
+  String? erroTelefone;
+  void limparCPF(){
+    if(erroCPF != null){
+      setState(() => erroCPF = null);
+    }
+  }
+  void limparTel(){
+    if(erroTelefone != null){
+      setState(() => erroTelefone = null);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // final UsuarioGeral usuario;
@@ -95,7 +107,7 @@ class _ContratanteState extends State<Contratante>{
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController,),
+              child: Telefone(controller: telefoneController,erroTelefone: erroTelefone, onClearerror: limparTel,),
             ),
 
             Padding(
@@ -104,7 +116,7 @@ class _ContratanteState extends State<Contratante>{
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(controller: cpfController,),
+              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparCPF,),
             ),
 
            
@@ -118,7 +130,9 @@ class _ContratanteState extends State<Contratante>{
                   foto: foto,
                   nomeController: nomeController,
                   telefoneController: telefoneController,
-                  cpfController: cpfController,)),
+                  cpfController: cpfController,
+                  erroCPF: (msg) => setState(() => erroCPF = msg),
+                  erroTelefone: (msg) => setState(() => erroTelefone = msg))),
                 ),
           ],
         ),
@@ -253,7 +267,9 @@ class _NomeState extends State<Nome> {
 
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
-  const Telefone({super.key, required this.controller});
+  final String? erroTelefone;
+  final VoidCallback onClearerror;
+  Telefone({super.key, required this.controller, required this.erroTelefone, required this.onClearerror});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -289,14 +305,20 @@ class _TelefoneState extends State<Telefone> {
            
           ),
         ),
+        errorText: widget.erroTelefone
       ),
+      onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
 
 class cpf extends StatefulWidget {
   final TextEditingController controller;
-  const cpf({super.key, required this.controller});
+  final String? erroCPF;
+  final VoidCallback onClearerror;
+  cpf({super.key, required this.controller, required this.erroCPF, required this.onClearerror});
 
   @override
   State<cpf> createState() => _cpfState();
@@ -334,7 +356,11 @@ class _cpfState extends State<cpf> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroCPF
       ),
+      onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -346,13 +372,18 @@ class botao extends StatefulWidget {
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
+  final void Function (String?) erroTelefone;
+  final void Function (String?) erroCPF;
     botao({
     super.key,
     required this.usuario, 
     required this.foto, 
     required this.nomeController,
     required this.telefoneController,
-    required this.cpfController});
+    required this.cpfController,
+    required this.erroCPF,
+    required this.erroTelefone,
+    });
 
   @override
   State<botao> createState() => _botaoState();
@@ -363,16 +394,59 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          (){
+          () async{
 
               widget.usuario.nome = widget.nomeController.text;
               widget.usuario.telefone = widget.telefoneController.text;
               widget.usuario.cpf = widget.cpfController.text;
               widget.usuario.foto = widget.foto;
 
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context)=>CEP(usuario: widget.usuario),),
+              if(widget.telefoneController.text.isEmpty){
+                widget.erroTelefone('Digite um telefone');
+                print('digite um telefone');
+                return;
+              }
+              if(widget.cpfController.text.isEmpty){
+                widget.erroCPF('Digite um cpf');
+                widget.erroCPF('Digite um cpf');
+                print('digite um cpf');
+                return;
+              }
+
+
+              final verificarController = VerificarController();
+              final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
+              final vCPF = await verificarController.verificar(widget.cpfController.text, 'check-cpf');
+
+              if((vTel['msg'] as String).isNotEmpty){
+                widget.erroTelefone(vTel['msg']);
+                print('digite um telefone valido');
+                return;
+              }
+            
+            
+              if(vTel['existe'] == true){
+                widget.erroTelefone(vTel['msg']);
+                return;
+              }
+              if((vCPF['msg'] as String).isNotEmpty){
+                widget.erroCPF(vCPF['msg']);
+                print('digite um cpf valido');
+                return;
+              }
+            
+            
+              if(vCPF['existe'] == true){
+                widget.erroCPF(vCPF['msg']);
+                return;
+              }
+              else{
+                print("telefone não existe");
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context)=>CEP(usuario: widget.usuario),),
             );
+              }
+            
 
 
           },

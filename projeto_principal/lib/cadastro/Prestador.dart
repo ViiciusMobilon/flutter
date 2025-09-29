@@ -4,7 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
+// ignore: unused_import
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
 
@@ -18,11 +20,11 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 );
 
 
-// void main() => runApp(const Prestador());
+void main() => runApp(Prestador(usuario: UsuarioGeral(),));
 
 class Prestador extends StatefulWidget {
   final UsuarioGeral usuario;
-  const Prestador({super.key, required this.usuario});
+  Prestador({super.key, required this.usuario});
 
   @override
   State<Prestador> createState() => _PrestadorState();
@@ -34,6 +36,24 @@ class _PrestadorState extends State<Prestador> {
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
+  String? erroCPF;
+  String? erroTelefone;
+  String? erroRamo;
+  void limparCPF(){
+    if(erroCPF != null){
+      setState(() => erroCPF = null);
+    }
+  }
+  void limparTel(){
+    if(erroTelefone != null){
+      setState(() => erroTelefone = null);
+    }
+  }
+  void limparRamo(){
+    if(erroRamo != null){
+      setState(() => erroRamo = null);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -92,7 +112,7 @@ class _PrestadorState extends State<Prestador> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController),
+              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel),
             ),
 
             Padding(
@@ -101,7 +121,7 @@ class _PrestadorState extends State<Prestador> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(controller: cpfController,),
+              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparCPF),
             ),
 
             Padding(
@@ -112,6 +132,8 @@ class _PrestadorState extends State<Prestador> {
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
               child: Area(usuario: widget.usuario,
+              erro: erroRamo,
+              onClearerror: limparRamo,
               onRamoSelecionado: (item){
                 if(item != null){
                   setState(() {
@@ -126,11 +148,15 @@ class _PrestadorState extends State<Prestador> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: widget.usuario,idramo: id_ramo,
+                  child: Center(child: botao(usuario: widget.usuario,
+                  erroRamo: (msg) => setState(() => erroRamo = msg),
+                  idramo: id_ramo,
                   cpfController: cpfController,
                   nomeController: nomeController,
                   telefoneController: telefoneController,
                   foto: foto,
+                  erroCPF: (msg) => setState(() => erroCPF = msg),
+                  erroTelefone: (msg) => setState(() => erroTelefone = msg)
                   )),
                 ),
           ],
@@ -266,7 +292,9 @@ class _NomeState extends State<Nome> {
 
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
-  Telefone({super.key, required this.controller});
+  final String? erroTel;
+  final VoidCallback onClearerror;
+  Telefone({super.key, required this.controller, required this.erroTel, required this.onClearerror});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -303,14 +331,21 @@ class _TelefoneState extends State<Telefone> {
            
           ),
         ),
+        errorText: widget.erroTel,
       ),
+      onChanged:  (value){
+        widget.onClearerror();
+      },
     );
+    
   }
 }
 
 class cpf extends StatefulWidget {
   final TextEditingController controller;
-  cpf({super.key, required this.controller});
+  final String? erroCPF;
+  final VoidCallback onClearerror;
+  cpf({super.key, required this.controller, required this.erroCPF, required this.onClearerror});
 
   @override
   State<cpf> createState() => _cpfState();
@@ -348,7 +383,11 @@ class _cpfState extends State<cpf> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroCPF
       ),
+      onChanged:  (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -360,7 +399,18 @@ class botao extends StatefulWidget {
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
-  const botao({super.key, required this.usuario, required this.idramo, required this.foto,required this.nomeController, required this.telefoneController, required this.cpfController});
+  final void Function (String?) erroTelefone;
+  final void Function (String?) erroCPF;
+  final void Function (String?) erroRamo;
+  botao({super.key, required this.usuario,
+    required this.idramo,
+    required this.foto,
+    required this.nomeController,
+    required this.telefoneController,
+    required this.cpfController,
+    required this.erroCPF,
+    required this.erroRamo,
+    required this.erroTelefone});
 
   @override
   State<botao> createState() => _botaoState();
@@ -372,7 +422,7 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
      onTap:
-          () {
+          () async{
             widget.usuario.ramo = widget.idramo;
             widget.usuario.foto = widget.foto;
             widget.usuario.nome = widget.nomeController.text;
@@ -380,6 +430,55 @@ class _botaoState extends State<botao> {
             widget.usuario.whatsapp = widget.telefoneController.text;
             widget.usuario.cpf = widget.cpfController.text;
 
+            if(widget.telefoneController.text.isEmpty){
+                widget.erroTelefone('Digite um telefone');
+                print('digite um telefone');
+                return;
+              }
+            if(widget.cpfController.text.isEmpty){
+                widget.erroCPF('Digite um cpf');
+                widget.erroCPF('Digite um cpf');
+                print('digite um cpf');
+                return;
+              }
+            
+            if(widget.idramo == null){
+              widget.erroRamo("Selecione um ramo");
+              return;
+            }
+            
+            
+            final verificarController = VerificarController();
+              final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
+              final vCPF = await verificarController.verificar(widget.cpfController.text, 'check-cpf');
+
+            if((vTel['msg'] as String).isNotEmpty){
+                widget.erroTelefone(vTel['msg']);
+                print('digite um telefone valido');
+                return;
+              }
+            
+            
+            if(vTel['existe'] == true){
+                widget.erroTelefone(vTel['msg']);
+                return;
+              }
+            if((vCPF['msg'] as String).isNotEmpty){
+                widget.erroCPF(vCPF['msg']);
+                print('digite um cpf valido');
+                return;
+              }
+            
+            
+            if(vCPF['existe'] == true){
+                widget.erroCPF(vCPF['msg']);
+                return;
+              }else{
+                Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));
+              }
+            
             print("email:${widget.usuario.email}");
             print("senha:${widget.usuario.password}");
             print("senhacon:${widget.usuario.confirmation_password}");
@@ -389,9 +488,7 @@ class _botaoState extends State<botao> {
             print("tel:${widget.usuario.telefone}");
             print("cpf:${widget.usuario.cpf}");
             print("ramo:${widget.usuario.ramo}");
-          Navigator.of(
-            context,
-           ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));},
+      ;},
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

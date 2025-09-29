@@ -13,9 +13,9 @@ final maskFormatter = MaskTextInputFormatter(
 );
 
 
-void main()=>runApp(Cadastro());
+// void main()=>runApp(Cadastro());
 class Cadastro extends StatefulWidget{
-  const Cadastro({super.key});
+   Cadastro({super.key});
   @override
   State<Cadastro> createState() => _CadastroState();
 } 
@@ -35,7 +35,11 @@ class _CadastroState extends State<Cadastro> {
     confirmation_passwordController.dispose();
     super.dispose();
   }
-
+  void limpar(){
+    if(erroEmail != null){
+      setState(() => erroEmail = null);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
@@ -86,7 +90,7 @@ class _CadastroState extends State<Cadastro> {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(controller: emailController, erroEmail: erroEmail,),
+                  child: email(controller: emailController, erroEmail: erroEmail,onClearerror: limpar,),
                 ),
                 
                 //fim email
@@ -138,7 +142,8 @@ class _CadastroState extends State<Cadastro> {
 class email extends StatefulWidget {
   final TextEditingController? controller;
   final String? erroEmail;
-   email({super.key, required this.controller, required this.erroEmail});
+  final VoidCallback onClearerror;
+   email({super.key, required this.controller, required this.erroEmail, required this.onClearerror});
 
   @override
   State<email> createState() => _emailState();
@@ -176,6 +181,9 @@ class _emailState extends State<email> {
         ),
         errorText: widget.erroEmail
       ),
+       onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -324,12 +332,27 @@ class _botaoState extends State<botao> {
           password: widget.passwordController.text,
           confirmation_password: widget.passwordConfirmationController.text,
         );
+        if(widget.emailController.text.isEmpty){
+          widget.erroEmail("digite um email");
+          return;
+        }
+        
         final verificarController = VerificarController();
-        final vemail = await verificarController.existe(widget.emailController.text, 'check-email');
-        if(vemail){
-          widget.erroEmail('Email já está em usp');
-          print('email existe');
-        }else{
+        final vemail = await verificarController.verificar(widget.emailController.text, 'check-email');
+
+
+        if((vemail['msg'] as String).isNotEmpty){
+          widget.erroEmail('Digite um email valido');
+          print('digite um email valido');
+          return;
+        }
+        
+        
+        if(vemail['existe'] == true){
+          widget.erroEmail(vemail['msg']);
+          return;
+        }
+        else{
           print('não existe');
           Navigator.of(context).push(
           MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario),

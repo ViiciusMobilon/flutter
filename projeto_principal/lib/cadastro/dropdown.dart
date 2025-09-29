@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/data/models/cep.dart';
 import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
 import 'package:projeto_principal/data/models/ramo.dart';
 import 'package:projeto_principal/data/models/user.dart';
@@ -9,7 +8,9 @@ import 'package:projeto_principal/data/repositories/ramo_repository.dart';
 class Area extends StatefulWidget {
   final UsuarioGeral usuario;
   final void Function(RamoModel?) onRamoSelecionado;
-  Area({super.key,  required this.usuario, required this.onRamoSelecionado});
+  final String? erro;
+  final VoidCallback onClearerror;
+  Area({super.key,  required this.usuario, required this.onRamoSelecionado, required this.erro, required this.onClearerror});
 
   @override
   State<Area> createState() => _AreaState();
@@ -36,6 +37,7 @@ class _AreaState extends State<Area> {
                   ramoselecionado = ramo;
                 });
                 widget.onRamoSelecionado(ramo);
+                widget.onClearerror();
               },
 
               popupProps: PopupProps.menu(
@@ -71,8 +73,10 @@ class _AreaState extends State<Area> {
                     borderSide: BorderSide(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  errorText: widget.erro
                 ),
               ),
+              
               dropdownBuilder: (context, RamoModel? selectedItem) {
                 return Text(
                   selectedItem?.nome ?? "Escolha a área de atuação",
@@ -82,6 +86,7 @@ class _AreaState extends State<Area> {
                   ),
                 );
               },
+              
             ),
           );
   }
