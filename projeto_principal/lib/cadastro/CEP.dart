@@ -417,6 +417,8 @@ class _botaoState extends State<botao> {
           try {
             final usuariofinal = await _authController.cadastro(widget.usuario);
             if (usuariofinal.token!.isNotEmpty) {
+              
+              
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

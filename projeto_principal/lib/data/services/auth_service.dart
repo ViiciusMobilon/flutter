@@ -16,30 +16,19 @@ class AuthService {
   Map<String, double>? avaliacao;
   Map<String, dynamic>? ramo;
   String? foto;
-  UsuarioGeral? _user;
   Future<UsuarioGeral> register(Userform form) async {
     try {
-      UsuarioGeral user = await _repository.register(
-        email: form.email!,
-        senha: form.password!,
-        senha_confirmation: form.password!,
-        nome: form.nome!,
-        cpf: form.cpf,
-        cnpj: form.cnpj,
-        tel: form.telefone!,
-        cep: form.cep!,
-        cidade: form.cidade!,
-        estado: form.estado!,
-        uf: form.uf!,
-        rua: form.rua!,
-        numero: form.numero!,
-        info: form.infoadd,
-        id_ramo: form.ramo,
-        tipo: form.tipo!,
-        foto: form.foto,
-      );
+      final user = await _repository.register(form);
+      await _storage.write(key: 'token', value: user.token);
+      await _storage.write(key: 'user', value: jsonEncode(user.toJson()));
+      // salvar foto separada
+      if (user.fotoURL != null && user.fotoURL!.isNotEmpty) {
+        await _storage.write(key: 'foto', value: user.fotoURL);
+      }
+      print("Usuario cadastrado service: ${user.ramo}");
       return user;
     } catch (e) {
+      print("Erro no cadastro service: $e");
       rethrow;
     }
   }

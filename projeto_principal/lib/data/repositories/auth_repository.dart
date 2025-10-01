@@ -2,57 +2,27 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:projeto_principal/data/http/dio_client.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 class AuthRepository {
   AuthRepository();
   final Dio _dio = DioClient.dio;
 
-  Future<UsuarioGeral> register(
-    {required String email,
-    required String senha,
-    required String senha_confirmation,
-    required String tipo,
-    String? nome,
-    String? razao_social,
-    required String tel,
-    String? cpf,
-    String? cnpj,
-    int? id_ramo,
-    required foto,
-    required String cep,
-    required String rua,
-    required String cidade,
-    required String estado,
-    required String uf,
-    required String numero,
-    String? info,}
-  ) async {
-     try {
+  Future<UsuarioGeral> register(Userform form) async {
+    try {
+      final map = form.toMap();
+
       FormData formData = FormData.fromMap({
-        "email": email,
-        "password": senha,
-        "password_confirmation": senha_confirmation,
-        "type": tipo,
-        if (nome != null) "nome": nome,
-        if (tipo == 'empresa') ...{
-          "cnpj": cnpj ?? '',
-          "razao_social": razao_social ?? '',
-          "id_ramo": id_ramo?.toString(),
-        },
-        "telefone": tel,
-        if (cpf != null) "cpf": cpf,
-        "cep": cep,
-        "rua": rua,
-        "localidade": cidade,
-        "estado": estado,
-        "uf": uf,
-        "numero": numero,
-        if (info != null) "infoadd": info,
-        "foto": await MultipartFile.fromFile(foto.path, filename: foto.path.split('/').last),
+        ...map,
+        if (form.foto != null)
+          "foto": await MultipartFile.fromFile(
+            form.foto!.path,
+            filename: form.foto!.path.split('/').last,
+          ),
       });
 
       final response = await _dio.post('/usuario/cadastro', data: formData);
-
+      print('Cadastro response.data: ${response.data}');
       return UsuarioGeral.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response != null) {

@@ -50,14 +50,13 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    final conectado = widget.authController.conectado;
     final user = widget.authController.usuario;
     final ramo = widget.authController.ramo;
     final f = widget.authController.foto;
     if (mostrarMais) {
       return Mais(
+        user: user,
         avaliacao: avaliacao,
-        conectado: conectado,
         foto: f,
         ramo: ramo,
         voltar: () {
@@ -112,7 +111,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
-      "FOTO:${user!.fotoURL ?? 'foto não ta indo'}".toUpperCase(),
+      "FOTO:${user?.fotoURL ?? 'foto não ta indo'}".toUpperCase(),
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.035,
         color: const Color.fromARGB(255, 99, 99, 99),
@@ -191,7 +190,7 @@ class Mais extends StatefulWidget {
   final VoidCallback voltar;
   final String? foto;
   final double avaliacao;
-  final conectado;
+  final user;
   final ramo;
 
   const Mais({
@@ -199,7 +198,7 @@ class Mais extends StatefulWidget {
     required this.voltar,
     required this.foto,
     required this.avaliacao,
-    required this.conectado,
+    required this.user,
     required this.ramo,
   });
 
@@ -252,7 +251,7 @@ class _MaisState extends State<Mais> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${widget.conectado?['type'] ?? 'desempregado'}".toUpperCase(),
+                    "Ramo:${widget.ramo['nome'] ?? 'desempregado'}".toUpperCase(),
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.035,
                       color: const Color.fromARGB(255, 99, 99, 99),
@@ -261,7 +260,7 @@ class _MaisState extends State<Mais> {
                     ),
                   ),
                   Text(
-                    "${widget.ramo?['nome'] ?? 'ñ existo'}",
+                    "Email:${widget.user?.email ?? 'não existo'}",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.027,
                       color: const Color.fromARGB(255, 151, 151, 151),
