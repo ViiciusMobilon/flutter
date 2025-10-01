@@ -5,11 +5,12 @@ import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/cep.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/repositories/cep_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
-import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
+import 'package:projeto_principal/data/http/dio_client.dart' as apiHttp;
 
 
 
@@ -25,7 +26,7 @@ final numeromaskFormatter = MaskTextInputFormatter(
 );
 
 class CEP extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   CEP({super.key, required this.usuario});
 
   @override
@@ -76,7 +77,7 @@ class _CEPState extends State<CEP> {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: widget.usuario,)),
     );
   },
 ),
@@ -201,7 +202,7 @@ class _cepState extends State<cepWidget> {
   void initState() {
     
     super.initState();
-    cepRepository = CepRepository(client: apiHttp.HttpClient());
+    cepRepository = CepRepository(client: apiHttp.DioClient.dio);
   }
   Future<void> buscarCep(String cep) async{
     if(cep.isEmpty) return;
@@ -349,7 +350,7 @@ class _numeroState extends State<numero> {
 
 
 class botao extends StatefulWidget {
- final UsuarioGeral usuario;
+ final Userform usuario;
  final TextEditingController cepController;
  final TextEditingController cidadeController;
  final TextEditingController estadoController;
@@ -379,7 +380,7 @@ class _botaoState extends State<botao> {
     super.initState();
 
     // instancia o cliente HTTP
-    final authService = AuthService(AuthRepository()); // cria o repository aqui
+    final authService = AuthService(); // cria o repository aqui
   _authController = AuthController(authService);
   }
   @override
@@ -413,32 +414,9 @@ class _botaoState extends State<botao> {
           print( "ramo: ${widget.usuario.ramo}");
           print("tipo:${widget.usuario.tipo}");
 
-            final resposta = await _authController.cadastro(
-                widget.usuario.email!,
-                widget.usuario.password!,
-                widget.usuario.confirmation_password!,
-                widget.usuario.tipo!,
-                widget.usuario.nome ?? '',
-                widget.usuario.razao_social ?? '',
-                widget.usuario.telefone!,
-                widget.usuario.cpf ?? '',
-                widget.usuario.cnpj ?? '',
-                widget.usuario.ramo ?? 0,
-                widget.usuario.foto!,
-                widget.usuario.cep!,
-                widget.usuario.rua!,
-                widget.usuario.cidade!,
-                widget.usuario.estado!,
-                widget.usuario.uf!,
-                widget.usuario.numero!,
-                widget.usuario.infoadd ?? ''
-                );
-          if (resposta) {
-            // pegar token
-            final token = await _authController.logado(); // ou getUser() se quiser o usuário
-
-            if (token) {
-              // só redireciona se o token existe
+          try {
+            final usuariofinal = await _authController.cadastro(widget.usuario);
+            if (usuariofinal.token!.isNotEmpty) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
@@ -447,19 +425,14 @@ class _botaoState extends State<botao> {
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Erro ao gerar token")),
+                const SnackBar(content: Text("Erro: token não gerado")),
               );
             }
-          } else if (_authController.errors != null) {
+          } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(_authController.errors!)),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-               SnackBar(content: Text('Cadastro realizado com sucesso!')),
+            SnackBar(content: Text("Erro ao cadastrar: $e")),
             );
           }
-
         }, 
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,

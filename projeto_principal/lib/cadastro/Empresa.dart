@@ -8,6 +8,7 @@ import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -18,10 +19,10 @@ final cnpjMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp(Empresa(usuario: UsuarioGeral(),));
+// void main() => runApp(Empresa(usuario: Userform(),));
 
 class Empresa extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   Empresa({super.key, required  this.usuario});
 
   @override
@@ -71,7 +72,7 @@ class _EmpresaState extends State<Empresa> {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: widget.usuario,)),
     );
   },
 ),
@@ -405,7 +406,7 @@ class _cnpjState extends State<cnpj> {
 
 
 class botao extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   final int? idramo;
   final File? foto;
   final TextEditingController nomeController;

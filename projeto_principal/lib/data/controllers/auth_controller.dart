@@ -1,74 +1,59 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 
 class AuthController extends ChangeNotifier{
   final AuthService _authService;
 
-  bool isLoading = false;
-  String? errors;
+  
+  bool _loading = false;
+  bool get loading => _loading;
+
+  String? _error;
+  String? get error => _error;
+
+  UsuarioGeral? _usuario;
+  UsuarioGeral? get usuario => _usuario;
+
+  void _setLoading(bool value) {
+    _loading = value;
+    notifyListeners();
+  }
+
+  void _setError(String? msg) {
+    _error = msg;
+    notifyListeners();
+  }
+
+  void _setUsuario(UsuarioGeral user) {
+    _usuario = user;
+    notifyListeners();
+  }
 
   AuthController(this._authService);
 /**contratante */
-  Future<bool> cadastro(String email,
-      String senha,
-      String senha_confirmation,
-      String tipo,
-      String? nome,
-      String? razao_social,
-      String tel,
-      String? cpf,
-      String? cnpj,
-      int? id_ramo,
-      File foto,
-      String cep,
-      String rua,
-      String cidade,
-      String estado,
-      String uf,
-      String numero,
-      String info) async {
-        try {
-          isLoading = true;
-          errors = null;
-          notifyListeners();
-
-          final sucess = await _authService.cadastro(email, senha, senha_confirmation,tipo, nome,razao_social, tel, cpf,cnpj,id_ramo, foto, cep,rua, cidade, estado,uf, numero, info);
-
-          if(!sucess){
-            errors = "erro cadastro";
-            print("sucess: ${sucess}");
-          }
-          return sucess;
-        } catch (e) {
-          errors = e.toString();
-          return false;
-        } finally{
-          isLoading = false;
-          notifyListeners();
-        }
+  Future<UsuarioGeral> cadastro(Userform form) async {
+    return await _authService.register(form);
   }
 
-  Future<bool> login(String email, String password) async{
-    print('email:${email}');
-    print('senha:${password}');
-    
-    final user = await _authService.login(email, password);
-
-
-    if (user) {
-      print("Login bem-sucedido: ${user}");
-      return true;
-    } else {
-      print("Login inválido");
-      return false;
+  Future<UsuarioGeral?> login(String email, String password) async {
+    try {
+      final usuario = await _authService.login(email, password);
+      print("Usuario Login controller:${usuario}");
+      _usuario = usuario; // salva no Controller
+      return usuario;     // retorna para a tela
+    } catch (e) {
+      _error = e.toString();
+      return null;
     }
-
   }
 
   Future<void> logout() async{
-    return await _authService.logout();
+    await _authService.logout();
+    _setUsuario(null!);
   }
 
   Future<bool> logado() async{

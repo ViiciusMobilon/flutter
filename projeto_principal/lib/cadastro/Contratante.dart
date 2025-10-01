@@ -7,6 +7,7 @@ import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -17,10 +18,10 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-void main() => runApp( Contratante(usuario: UsuarioGeral(),));
+// void main() => runApp( Contratante(usuario: UsuarioGeral(),));
 
 class Contratante extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   Contratante({super.key, required this.usuario});
 
   @override
@@ -61,7 +62,7 @@ class _ContratanteState extends State<Contratante>{
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: widget.usuario,)),
     );
   },
 ),
@@ -367,7 +368,7 @@ class _cpfState extends State<cpf> {
 
 
 class botao extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   final File? foto;
   final TextEditingController nomeController;
   final TextEditingController telefoneController;

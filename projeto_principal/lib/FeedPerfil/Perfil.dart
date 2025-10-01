@@ -51,7 +51,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   @override
   Widget build(BuildContext context) {
     final conectado = widget.authController.conectado;
-    final user = widget.authController.user;
+    final user = widget.authController.usuario;
     final ramo = widget.authController.ramo;
     final f = widget.authController.foto;
     if (mostrarMais) {
@@ -112,7 +112,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     Text(
-      "${conectado?['type'] ?? 'desempregado'}".toUpperCase(),
+      "FOTO:${user!.fotoURL ?? 'foto não ta indo'}".toUpperCase(),
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.035,
         color: const Color.fromARGB(255, 99, 99, 99),

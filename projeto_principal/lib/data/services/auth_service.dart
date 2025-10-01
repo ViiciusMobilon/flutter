@@ -1,65 +1,64 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
-  final AuthRepository _authRepository;
+  final AuthRepository _repository = AuthRepository();
+
   final _storage = const FlutterSecureStorage();
+
   Map<String, dynamic>? logado;
   Map<String, dynamic>? user;
   Map<String, double>? avaliacao;
   Map<String, dynamic>? ramo;
   String? foto;
-  AuthService(this._authRepository);
-  Future<bool> cadastro(String email,
-      String senha,
-      String senha_confirmation,
-      String tipo,
-      String? nome,
-      String? razao_social,
-      String tel,
-      String? cpf,
-      String? cnpj,
-      int? id_ramo,
-      File foto,
-      String cep,
-      String rua,
-      String cidade,
-      String estado,
-      String uf,
-      String numero,
-      String info
-      ) async {
-        final data = await _authRepository.register(email, senha, senha_confirmation,tipo, nome,razao_social, tel, cpf,cnpj,id_ramo, foto, cep,rua, cidade, estado,uf, numero, info);
-
-       if (data.containsKey("access_token")) {
-        await _storage.write(key: "token", value: data['access_token']);
-        await _storage.write(key: 'logado', value: jsonEncode(data['logado']));
-        await _storage.write(key: 'foto', value: data['foto']);
-        user = data['logado'];
-        return true;
-      } else {
-        return false;
-      }
-
-  }
-  Future<bool> login(String email, String password) async{
-    final result = await _authRepository.login(email, password);
-
-    if(result != null && result['access_token'] != null){
-      await _storage.write(key: 'token', value: result['access_token']);
-      await _storage.write(key: 'logado', value: jsonEncode(result['logado']));
-      await _storage.write(key: 'foto', value: result['foto']);
-      await _storage.write(key: 'avaliacao', value: jsonEncode(result['avaliacao']));
-      await _storage.write(key: 'ramo', value: jsonEncode(result['ramo']));
-      await _storage.write(key: 'user', value: jsonEncode(result['user']));
-      user = result['user'];
-      logado = result['logado'];
-      return true;
+  UsuarioGeral? _user;
+  Future<UsuarioGeral> register(Userform form) async {
+    try {
+      UsuarioGeral user = await _repository.register(
+        email: form.email!,
+        senha: form.password!,
+        senha_confirmation: form.password!,
+        nome: form.nome!,
+        cpf: form.cpf,
+        cnpj: form.cnpj,
+        tel: form.telefone!,
+        cep: form.cep!,
+        cidade: form.cidade!,
+        estado: form.estado!,
+        uf: form.uf!,
+        rua: form.rua!,
+        numero: form.numero!,
+        info: form.infoadd,
+        id_ramo: form.ramo,
+        tipo: form.tipo!,
+        foto: form.foto,
+      );
+      return user;
+    } catch (e) {
+      rethrow;
     }
-    return false;
+  }
+
+  Future<UsuarioGeral> login(String email, String senha) async {
+    try {
+      UsuarioGeral user = await _repository.login(email, senha);
+      // salvar o token localmente
+      await _storage.write(key: 'token', value: user.token);
+      await _storage.write(key: 'user', value: jsonEncode(user.toJson()));
+      // salvar foto separada
+      if (user.fotoURL != null && user.fotoURL!.isNotEmpty) {
+      await _storage.write(key: 'foto', value: user.fotoURL);
+    }
+      print("Usuario Login service:${user}");
+      return user;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<String?> getToken()async {
@@ -91,7 +90,7 @@ class AuthService {
     final ramoStr = await _storage.read(key: 'ramo');
     if (ramoStr != null) {
       ramo = jsonDecode(ramoStr);
-      print("RAMO: ${ramo}");
+      print("RAMO getramo: ${ramo}");
       return ramo;
     }
     return null;

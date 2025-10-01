@@ -9,6 +9,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
 import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -20,10 +21,10 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 );
 
 
-void main() => runApp(Prestador(usuario: UsuarioGeral(),));
+// void main() => runApp(Prestador(usuario: UsuarioGeral(),));
 
 class Prestador extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   Prestador({super.key, required this.usuario});
 
   @override
@@ -66,7 +67,7 @@ class _PrestadorState extends State<Prestador> {
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha(usuario: UsuarioGeral(),)),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: widget.usuario,)),
     );
   },
 ),
@@ -393,7 +394,7 @@ class _cpfState extends State<cpf> {
 }
 
 class botao extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   final int? idramo;
   final File? foto;
   final TextEditingController nomeController;

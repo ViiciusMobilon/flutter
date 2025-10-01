@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_principal/cadastro/Escolha.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
-import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 
 final maskFormatter = MaskTextInputFormatter(
@@ -327,7 +327,7 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:() async{
-        final usuario = UsuarioGeral(
+        final usuario = Userform(
           email: widget.emailController.text,
           password: widget.passwordController.text,
           confirmation_password: widget.passwordConfirmationController.text,
@@ -356,7 +356,7 @@ class _botaoState extends State<botao> {
         else{
           print('não existe');
           Navigator.of(context).push(
-          MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario),
+          MaterialPageRoute(builder: (context)=>Escolha(usuario: usuario,),
           ),
         );
         }

@@ -1,12 +1,12 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/data/http/http_client.dart' as apiHttp;
+import 'package:projeto_principal/data/http/dio_client.dart' as apiHttp;
 import 'package:projeto_principal/data/models/ramo.dart';
-import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 import 'package:projeto_principal/data/repositories/ramo_repository.dart';
 
 class Area extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   final void Function(RamoModel?) onRamoSelecionado;
   final String? erro;
   final VoidCallback onClearerror;
@@ -24,7 +24,7 @@ class _AreaState extends State<Area> {
   @override
   void initState(){
     super.initState();
-    ramoRepository = RamoRepository(client: apiHttp.HttpClient());
+    ramoRepository = RamoRepository(client: apiHttp.DioClient.dio);
   }
   @override
   Widget build(BuildContext context) => SizedBox(

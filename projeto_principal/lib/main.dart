@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:projeto_principal/cadastro/CEP.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
-import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
-import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -51,22 +48,38 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _authController = AuthController(AuthService(AuthRepository()));
+    _authController = AuthController(AuthService());
   }
 
-  Future<void> login()async{
-    final email = emailController.text;
-    final password = passwordController.text;
+  Future<void> login() async {
+  final email = emailController.text;
+  final password = passwordController.text;
 
-    final sucess = await _authController.login(email, password);
+  try {
+      final usuarioLogado = await _authController.login(email, password);
+      print("Usuario Login tela:${usuarioLogado}"); 
 
-    if(sucess){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TelaPrincipal(authController: _authController,)));
-    }else{
+      if (usuarioLogado?.token?.isNotEmpty ?? false) {
+        // Redireciona só se token existe
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TelaPrincipal(authController: _authController),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email ou senha inválidos')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('invalido')) );
+        SnackBar(content: Text('Erro ao fazer login: $e')),
+      );
+      print('Erro ao fazer login: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

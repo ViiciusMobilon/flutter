@@ -4,13 +4,14 @@ import 'package:projeto_principal/cadastro/Empresa.dart';
 import 'package:projeto_principal/cadastro/Prestador.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 import 'package:projeto_principal/data/models/user.dart';
+import 'package:projeto_principal/data/models/userForm.dart';
 
 
 // void main() => runApp(Escolha());
 
 
 class Escolha extends StatelessWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   const Escolha({super.key, required  this.usuario});
 
   @override
@@ -95,7 +96,7 @@ class Escolha extends StatelessWidget {
 }
 
 class button_empresa extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   const button_empresa({super.key, required this.usuario});
 
   @override
@@ -153,7 +154,7 @@ class _button_empresaState extends State<button_empresa> {
 }
 
 class button_prestador extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   const button_prestador({super.key, required this.usuario});
 
   @override
@@ -210,7 +211,7 @@ class _button_prestadorState extends State<button_prestador> {
 }
 
 class _button_contratante extends StatefulWidget {
-  final UsuarioGeral usuario;
+  final Userform usuario;
   const _button_contratante({super.key,  required this.usuario});
 
   @override
@@ -223,7 +224,7 @@ class __button_contratanState extends State<_button_contratante> {
     return GestureDetector(
       onTap:
           () {
-            // final UsuarioGeral usuario = UsuarioGeral();
+            // final Userform usuario = Userform();
             widget.usuario.tipo = TipoUsuario.contratante.name;
             Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Contratante(usuario: widget.usuario),),);
             

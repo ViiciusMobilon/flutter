@@ -42,7 +42,7 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
   @override
   Widget build(BuildContext context) {
     final conectado = widget.authController.conectado;
-    final user = widget.authController.user;
+    final user = widget.authController.usuario;
     final foto = widget.authController.foto;
     final ramo = widget.authController.ramo;
     print("Ramo cards: ${ramo}");
@@ -76,16 +76,16 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
             ),
           ),
           Text(
-            "Email: ${conectado?['email'] ?? 'usuario'}"
+            "Email: ${user!.email ?? 'não existo'}"
           ),
-          Text("nome: ${user?['nome'] ?? 'nao existo'}"),
-          Text("Localização: ${user?['localidade'] ?? 'nao existo'} ${user?['uf'] ?? 'nao existo'}"),
-          Text("uf: ${user?['uf'] ?? 'nao existo'}"),
+          Text("nome: ${user.nome ?? 'nao existo'}"),
+          Text("Localização: ${user.cidade ?? 'nao existo'} ${user.estado ?? 'nao existo'}"),
+          Text("uf: ${user.estado ?? 'nao existo'}"),
           Text(
-            "Você é: ${conectado?['type'] ?? 'desempregado'}"
+            "Você é: ${user.tipo ?? 'desempregado'}"
           ),
-          Text("foto: ${foto ?? 'não existo'}"),
-          Text("ramo: ${ramo?['nome'] ?? 'não existo'}"),
+          Text("foto: ${user.fotoURL ?? 'não existo'}"),
+          Text("ramo: ${user.ramoNome ?? 'não existo'}"),
         ],
       ),
     );

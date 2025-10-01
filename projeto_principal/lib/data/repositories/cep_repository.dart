@@ -1,30 +1,27 @@
-import 'dart:convert';
+import 'package:dio/dio.dart';
+import '../models/cep.dart';
 
-import 'package:projeto_principal/data/http/http_client.dart';
-import 'package:projeto_principal/data/models/cep.dart';
-
-abstract class ICepRepository{
+abstract class ICepRepository {
   Future<CepModel> getCep(String cep);
 }
 
-class CepRepository implements ICepRepository{
-  final IHttpClient client;
+class CepRepository implements ICepRepository {
+  final Dio client;
 
   CepRepository({required this.client});
 
   @override
   Future<CepModel> getCep(String cep) async {
-    final response = await client.get(url: 'https://viacep.com.br/ws/$cep/json/');
+    try {
+      final response = await client.get('https://viacep.com.br/ws/$cep/json/');
 
-    if (response.statusCode == 200) {
-      // final List<CepModel> ceps = [];
-
-      final body = jsonDecode(response.body);
-
-      return CepModel.fromJson(body);
-    }else{
-      throw Exception('Erro ao buscra cep');
+      return CepModel.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception('Erro na API: ${e.response?.statusCode}');
+      } else {
+        throw Exception('Erro de conexão');
+      }
     }
   }
-
 }
