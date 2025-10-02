@@ -32,7 +32,7 @@ class Empresa extends StatefulWidget {
 class _EmpresaState extends State<Empresa> {
   File? foto;
   int? id_ramo;
-  final nomeController = TextEditingController();
+  final rsController = TextEditingController();
   final telefoneController = TextEditingController();
   final cnpjController = TextEditingController();
   String? erroRamo;
@@ -109,7 +109,7 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(controller: nomeController, erroNome: erroNome, onClearerror: limparNome,),
+              child: Nome(controller: rsController, erroNome: erroNome, onClearerror: limparNome,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -160,7 +160,7 @@ class _EmpresaState extends State<Empresa> {
                   erroTelefone: (msg) => setState(() => erroTelefone = msg),
                   idramo: id_ramo,
                   cnpjController: cnpjController,
-                  nomeController: nomeController,
+                  rsController: rsController,
                   telefoneController: telefoneController,
                   foto: foto,)),
                 ),
@@ -409,7 +409,7 @@ class botao extends StatefulWidget {
   final Userform usuario;
   final int? idramo;
   final File? foto;
-  final TextEditingController nomeController;
+  final TextEditingController rsController;
   final TextEditingController telefoneController;
   final TextEditingController cnpjController;
    final void Function (String?) erroTelefone;
@@ -419,7 +419,7 @@ class botao extends StatefulWidget {
   botao({super.key, required this.usuario,
     required this.idramo,
     required this.foto,
-    required this.nomeController,
+    required this.rsController,
     required this.telefoneController,
     required this.cnpjController,
     required this.erroCNPJ,
@@ -438,12 +438,12 @@ class _botaoState extends State<botao> {
        onTap:
           ()async{
             widget.usuario.foto = widget.foto;
-            widget.usuario.razao_social = widget.nomeController.text;
+            widget.usuario.razao_social = widget.rsController.text;
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;
             widget.usuario.ramo = widget.idramo;
 
-            if(widget.nomeController.text.isEmpty){
+            if(widget.rsController.text.isEmpty){
                 widget.erroNome('Digite um nome');
                 print('digite um cnpj');
                 return;
@@ -470,7 +470,7 @@ class _botaoState extends State<botao> {
             final verificarController = VerificarController();
               final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
               final vCNPJ = await verificarController.verificar(widget.cnpjController.text, 'check-cnpj');
-              final vNome = await verificarController.verificar(widget.nomeController.text, 'check-razaosocial');
+              final vNome = await verificarController.verificar(widget.rsController.text, 'check-razaosocial');
 
             if((vTel['msg'] as String).isNotEmpty){
                 widget.erroTelefone(vTel['msg']);

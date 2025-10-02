@@ -53,12 +53,12 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
     final user = widget.authController.usuario;
     final ramo = widget.authController.ramo;
     final f = widget.authController.foto;
+    print("RAMO PERFIL:${widget.authController.user}");
     if (mostrarMais) {
       return Mais(
         user: user,
         avaliacao: avaliacao,
         foto: f,
-        ramo: ramo,
         voltar: () {
           setState(() {
             mostrarMais = false;
@@ -120,7 +120,7 @@ class _PerfilPrincipalState extends State<PerfilPrincipal> {
       ),
     ),
     Text(
-      "${ramo?['nome'] ?? 'ñ existo'}",
+      "${user?.ramoNome ?? 'ñ existo'}",
       style: TextStyle(
         fontSize: MediaQuery.of(context).size.width * 0.027,
         color: const Color.fromARGB(255, 151, 151, 151),
@@ -191,7 +191,6 @@ class Mais extends StatefulWidget {
   final String? foto;
   final double avaliacao;
   final user;
-  final ramo;
 
   const Mais({
     super.key,
@@ -199,7 +198,6 @@ class Mais extends StatefulWidget {
     required this.foto,
     required this.avaliacao,
     required this.user,
-    required this.ramo,
   });
 
   @override
@@ -251,7 +249,7 @@ class _MaisState extends State<Mais> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Ramo:${widget.ramo['nome'] ?? 'desempregado'}".toUpperCase(),
+                    "Ramo:${widget.user?.ramoNome ?? 'desempregado'}".toUpperCase(),
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.035,
                       color: const Color.fromARGB(255, 99, 99, 99),

@@ -78,7 +78,7 @@ class _FeedPrincipalState extends State<FeedPrincipal> {
           Text(
             "Email: ${user?.email ?? 'não existo'}"
           ),
-          Text("nome: ${user?.nome ?? 'nao existo'}"),
+          Text("nome: ${user?.nome ?? user?.razao_social ?? 'não existo'}"),
           Text("Localização: ${user?.cidade ?? 'nao existo'} ${user?.estado ?? 'nao existo'}"),
           Text("uf: ${user?.estado ?? 'nao existo'}"),
           Text(
