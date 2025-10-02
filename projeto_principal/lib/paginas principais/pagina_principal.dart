@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/FeedCards/Cards.dart';
-import 'package:projeto_principal/FeedPerfil/Perfil.dart';
+import 'package:projeto_principal/feed_principal/Cards.dart';
+import 'package:projeto_principal/FeedPerfil/Perfilusuario.dart';
 import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
@@ -34,7 +34,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [FeedPrincipal(authController: widget.authController,), PerfilPrincipal(authController: widget.authController,)];
+    _paginas = [  AleatorioFeed(),  ProfileScreen(authController: widget.authController,)];
   }
 
   @override
@@ -42,18 +42,19 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     final usuario = widget.authController.user;
     final foto = widget.authController.foto;
     return Scaffold(
+      backgroundColor:  Color.fromARGB(255, 255, 255, 255),
       // AppBar movido para cá - apenas na página de pesquisa
       appBar:
           _paginaAtual == 0
               ? AppBar(
-    
-                title: const Text("Pesquisa"),
+                  title: const Text("Faça sua pesquisa"),
+  
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.indigoAccent,
                 foregroundColor: Colors.white,
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.search),
+                    icon:  Icon(Icons.search),
                     onPressed: () {
                       showSearch(context: context, delegate: BarraDePesquisa());
                     },
@@ -185,7 +186,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
             "Use o ícone de pesquisa no topo da tela para buscar profissionais da sua região.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: MediaQuery.of(context).size.width * 0.045,
               fontFamily: "Poppins",
               color: Colors.grey[600],
             ),

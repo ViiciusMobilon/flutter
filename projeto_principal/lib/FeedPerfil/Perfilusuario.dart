@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:projeto_principal/FeedPerfil/feed_perfil.dart';
-import 'package:projeto_principal/FeedPerfil/system_star.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
+import 'dart:async';
 
-// =============================================================
-// PERFIL ALEATÓRIO
-// =============================================================
-class PerfilAleatorio extends StatefulWidget {
-  const PerfilAleatorio({super.key});
+import 'package:projeto_principal/feed_principal/Cards.dart';
+import 'package:projeto_principal/FeedPerfil/system_star.dart';
+
+class ProfileScreen extends StatefulWidget {
+  final AuthController authController;
+  ProfileScreen({super.key, required this.authController});
 
   @override
-  State<PerfilAleatorio> createState() => _PerfilAleatorioState();
+  State<ProfileScreen> createState() => ProfileScreenState();
 }
 
-class _PerfilAleatorioState extends State<PerfilAleatorio> {
+class ProfileScreenState extends State<ProfileScreen> {
   bool isLoved = false;
   int loveCount = 1247;
+  String? foto;
+  double avaliacao = 0.0;
+
+  void loadFoto() async {
+    final imagem = await widget.authController.getFoto(); // seu AuthService
+    setState(() {
+      foto = imagem;
+    });
+  }
 
   final List<ServicePost> posts = [];
   bool isLoadingMore = false;
@@ -27,6 +35,7 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
     super.initState();
     _loadInitialPosts();
     _scrollController.addListener(_onScroll);
+    loadFoto(); 
   }
 
   @override
@@ -103,17 +112,15 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
           SliverToBoxAdapter(child: _buildDescription()),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                if (index < posts.length) {
-                  return feedperfil(post: posts[index]);
-                } else {
-                  return _buildLoadingIndicator();
-                }
-              },
-              childCount: posts.length + (isLoadingMore ? 1 : 0),
-            ),
+          SliverList.builder(
+            itemCount: posts.length + (isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < posts.length) {
+                return ServiceProviderFeed(post: posts[index]);
+              } else {
+                return _buildLoadingIndicator();
+              }
+            },
           ),
         ],
       ),
@@ -121,12 +128,15 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
   }
 
   Widget _buildProfileHeader() {
+    final user = widget.authController.usuario;
+    final ramo = widget.authController.ramo;
+    final f = widget.authController.foto;
     return SizedBox(
       height: 300,
       child: Stack(
         children: [
           Container(
-            height: 180,
+            height: MediaQuery.of(context).size.height * 0.11,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -144,12 +154,16 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.white,
-                child: const CircleAvatar(
-                  radius: 46,
-                  backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+                child: CircleAvatar(
+                    radius: 46,
+                    backgroundImage: (f != null && f.isNotEmpty)
+                        ? NetworkImage(f)
+                        : null,
+                    child: (f == null || f.isEmpty)
+                        ? const Icon(Icons.person, size: 40)
+                        : null,
                   ),
-                ),
+
               ),
             ),
           ),
@@ -159,8 +173,8 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
             right: 0,
             child: Column(
               children: [
-                const Text(
-                  'João Silva',
+                 Text(
+                  '${user?.razao_social ?? '' }',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -168,21 +182,22 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text('Desenvolvedor Mobile',
+                Text('${user?.ramoNome}',
                     style: TextStyle(color: Colors.grey[700])),
-                Text('Tech Solutions Inc.',
-                    style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
-                estrelaperfil(),
+                EstrelaRating(estrelas: 5,),
+                
                 const SizedBox(height: 12),
                 _buildLoveButton(),
               ],
             ),
           ),
         ],
-      ),
-    );
+      )
+      );
   }
+
+  
 
   Widget _buildLoveButton() {
     return GestureDetector(
@@ -257,97 +272,3 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
   }
 }
 
-// =============================================================
-// PERFIL PRINCIPAL
-// =============================================================
-class PerfilPrincipal extends StatefulWidget {
-  final AuthController authController;
-
-  const PerfilPrincipal({super.key, required this.authController});
-
-  @override
-  State<PerfilPrincipal> createState() => _PerfilPrincipalState();
-}
-
-class _PerfilPrincipalState extends State<PerfilPrincipal> {
-  String? foto;
-  double avaliacao = 0.0;
-  Map<String, dynamic>? ramos;
-
-  @override
-  void initState() {
-    super.initState();
-    loadFoto();
-    loadStar();
-    loadRamo();
-  }
-
-  void loadFoto() async {
-    final imagem = await widget.authController.getFoto();
-    setState(() {
-      foto = imagem;
-    });
-  }
-
-  void loadStar() async {
-    final star = await widget.authController.getAvaliacao();
-    setState(() {
-      avaliacao = star?['media'] ?? 0.0;
-    });
-  }
-
-  void loadRamo() async {
-    final ramo = await widget.authController.getRamo();
-    setState(() {
-      ramos = ramo;
-    });
-  }
-
-  bool mostrarMais = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        children: [
-          _buildProfileHeader(),
-          _buildDescription(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage:
-                (foto != null && foto!.isNotEmpty) ? NetworkImage(foto!) : null,
-            child: (foto == null || foto!.isEmpty)
-                ? const Icon(Icons.person, size: 40)
-                : null,
-          ),
-          const SizedBox(height: 12),
-          EstrelaRating(estrelas: avaliacao),
-          const SizedBox(height: 12),
-          Text("Ramo: ${ramos?['nome'] ?? 'Desempregado'}"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDescription() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(16),
-      child: const Text(
-        "Descrição detalhada do usuário...",
-        style: TextStyle(color: Colors.black87, height: 1.4),
-      ),
-    );
-  }
-}

@@ -19,3 +19,26 @@ class EstrelaRating extends StatelessWidget {
     );
   }
 }
+
+class estrelaperfil extends StatefulWidget {
+  const estrelaperfil({super.key});
+
+  @override
+  State<estrelaperfil> createState() => _estrelaperfilState();
+}
+
+class _estrelaperfilState extends State<estrelaperfil> {
+  @override
+  Widget build(BuildContext context) {
+    return RatingBarIndicator(
+      direction: Axis.horizontal,
+      itemCount: 5,
+      itemSize: 32,
+      itemBuilder: (context, _) => const Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      
+    );
+  }
+}
