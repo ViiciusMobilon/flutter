@@ -21,7 +21,7 @@ dependencies:
   video_player: ^2.9.2
   cupertino_icons: ^1.0.8
   flutter_otp_text_field: ^1.5.1+1
-
+  carousel_slider: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/settins/editarperfil.dart';
-import 'package:projeto_principal/settins/seguranca.dart';
+import 'package:projeto_principal/settins/seguranca/email.dart';
+import 'package:projeto_principal/settins/segurancap.dart';
 
 class settinspage extends StatefulWidget {
   const settinspage({super.key});
@@ -56,7 +56,7 @@ class _settinspageState extends State<settinspage> {
               trailing: Icon(Icons.arrow_forward_ios),
               onTap:  ()=> Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TrocarSenha()),)
+                MaterialPageRoute(builder: (context) => Seguranca()),)
             ),
            
             ListTile(
@@ -64,10 +64,11 @@ class _settinspageState extends State<settinspage> {
               title: Text('Sobre'),
               subtitle: Text('Informações sobre o aplicativo'),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Ação ao clicar na opção
-              },
+              onTap: ()=> Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TrocarEmail()),)
             ),
+        
 
             
                 ListTile(
@@ -98,15 +99,7 @@ class _settinspageState extends State<settinspage> {
                 },
                 ),
                 
-                ListTile(
-                leading: Icon(Icons.accessibility),
-                title: Text('Acessibilidade'),
-                subtitle: Text('Configurações de acessibilidade'),
-                trailing: Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Ação ao clicar na opção
-                },
-                ),
+              
                 ListTile(
                 leading: Icon(Icons.assignment),
                 title: Text('Contrato do Usuário'),

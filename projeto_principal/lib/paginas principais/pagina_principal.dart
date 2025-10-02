@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/FeedCards/Cards.dart';
-import 'package:projeto_principal/FeedPerfil/Perfil.dart';
+import 'package:projeto_principal/feed_principal/Cards.dart';
+import 'package:projeto_principal/FeedPerfil/Perfilusuario.dart';
 import 'package:projeto_principal/FeedPerfil/criacao_de%20_card.dart';
 import 'package:projeto_principal/paginas%20principais/pesquisa.dart';
 import 'package:projeto_principal/settins/pgsettins.dart';
-
 // Entry point
 // Tela principal com nav bar
 class TelaPrincipal extends StatefulWidget {
@@ -21,23 +20,24 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [const FeedPrincipal(), const PerfilPrincipal()];
+    _paginas = [  AleatorioFeed(),  ProfileScreen()];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:  Color.fromARGB(255, 255, 255, 255),
       // AppBar movido para cá - apenas na página de pesquisa
       appBar:
           _paginaAtual == 0
               ? AppBar(
-    
+                  title: const Text("Faça sua pesquisa"),
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.indigoAccent,
                 foregroundColor: Colors.white,
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.search),
+                    icon:  Icon(Icons.search),
                     onPressed: () {
                       showSearch(context: context, delegate: BarraDePesquisa());
                     },
@@ -169,7 +169,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
             "Use o ícone de pesquisa no topo da tela para buscar profissionais da sua região.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: MediaQuery.of(context).size.width * 0.045,
               fontFamily: "Poppins",
               color: Colors.grey[600],
             ),

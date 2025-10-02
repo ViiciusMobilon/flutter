@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:projeto_principal/FeedPerfil/feed_perfil.dart';
-import 'system_star.dart';
 
-class PerfilAleatorio extends StatefulWidget {
-  const PerfilAleatorio({super.key});
+import 'package:projeto_principal/feed_principal/Cards.dart';
+import 'package:projeto_principal/FeedPerfil/system_star.dart';
+
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<PerfilAleatorio> createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<PerfilAleatorio> {
+class ProfileScreenState extends State<ProfileScreen> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -99,17 +100,15 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
           SliverToBoxAdapter(child: _buildDescription()),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                if (index < posts.length) {
-                  return feedperfil(post: posts[index]);
-                } else {
-                  return _buildLoadingIndicator();
-                }
-              },
-              childCount: posts.length + (isLoadingMore ? 1 : 0),
-            ),
+          SliverList.builder(
+            itemCount: posts.length + (isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < posts.length) {
+                return ServiceProviderFeed(post: posts[index]);
+              } else {
+                return _buildLoadingIndicator();
+              }
+            },
           ),
         ],
       ),
@@ -122,7 +121,7 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
       child: Stack(
         children: [
           Container(
-            height: 180,
+            height: MediaQuery.of(context).size.height * 0.11,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -169,7 +168,8 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
                 Text('Tech Solutions Inc.',
                     style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
-                estrelaperfil(),
+                EstrelaRating(),
+                
                 const SizedBox(height: 12),
                 _buildLoveButton(),
               ],
@@ -179,6 +179,8 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
       ),
     );
   }
+
+  
 
   Widget _buildLoveButton() {
     return GestureDetector(
@@ -252,3 +254,4 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
     );
   }
 }
+

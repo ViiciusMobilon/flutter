@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
 import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
-import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
