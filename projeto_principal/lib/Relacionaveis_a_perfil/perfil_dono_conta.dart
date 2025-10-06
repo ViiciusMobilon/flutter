@@ -103,7 +103,7 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (index < posts.length) {
-                  return feedperfil(post: posts[index]);
+                  return FeedPerfil(post: posts[index]);
                 } else {
                   return _buildLoadingIndicator();
                 }

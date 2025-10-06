@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:projeto_principal/main.dart';
+import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:video_player/video_player.dart';
 
 class AleatorioFeed extends StatefulWidget {
   const AleatorioFeed({super.key});
@@ -30,18 +33,25 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 2));
 
-    List<ServicePost> newPosts = List.generate(5, (index) {
+    List<ServicePost> newPosts = List.generate(3, (index) {
       int id = _posts.length + index + 1;
+
+      // Gera até 50 imagens aleatórias do Picsum
+      List<String> imageUrls = List.generate(
+        50,
+        (imgIndex) => "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+      );
+
       return ServicePost(
         id: id.toString(),
         provider: Provider(
           name: "Prestador $id",
           company: "Empresa $id",
-          avatar: "https://via.placeholder.com/150",
+          avatar: "https://picsum.photos/100/100?random=$id",
           rating: 4.5,
           reviewCount: 50,
         ),
-        images: ["https://via.placeholder.com/300x200?text=Post+$id"],
+        images: imageUrls,
         description: "Descrição breve do serviço $id...",
         fullDescription: "Descrição completa do serviço $id...",
         category: "Categoria $id",
@@ -91,7 +101,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 class ServicePost {
   final String id;
   final Provider provider;
-  final List<String> images;
+  final List<String> images; // URLs de imagens/vídeos
   final String description;
   final String fullDescription;
   final String category;
@@ -153,27 +163,16 @@ class ServiceProviderFeed extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header com informações do prestador
+          // Cabeçalho
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Avatar
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(post.provider.avatar),
-                    radius: 28,
-                  ),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(post.provider.avatar),
+                  radius: 28,
                 ),
                 const SizedBox(width: 12),
-                // Informações
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,33 +182,20 @@ class ServiceProviderFeed extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
-                          color: Color(0xFF1A202C),
                         ),
                       ),
-                      const SizedBox(height: 2),
                       Text(
                         post.provider.company,
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Color(0xFF718096),
+                          color: Colors.grey,
                         ),
                       ),
-                      const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 14,
-                            color: Color(0xFF718096),
-                          ),
+                          const Icon(Icons.location_on, size: 14, color: Colors.grey),
                           const SizedBox(width: 4),
-                          Text(
-                            post.location,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF718096),
-                            ),
-                          ),
+                          Text(post.location, style: const TextStyle(color: Colors.grey)),
                         ],
                       ),
                     ],
@@ -219,27 +205,26 @@ class ServiceProviderFeed extends StatelessWidget {
             ),
           ),
 
-          // Imagens com Carousel
+          // Carrossel de até 50 mídias
           if (post.images.isNotEmpty)
             CarouselSlider(
               options: CarouselOptions(
                 height: 240,
-                enlargeCenterPage: false,
-                enableInfiniteScroll: false,
-                autoPlay: false,
                 viewportFraction: 1.0,
+                enableInfiniteScroll: false,
                 scrollPhysics: const BouncingScrollPhysics(),
               ),
-              items: post.images.map((img) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      img,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+              items: post.images.map((mediaUrl) {
+                // Aqui no futuro dá pra verificar se é vídeo
+                // if (mediaUrl.endsWith(".mp4")) => widget de vídeo
+                return ClipRRect(
+               
+                  child: Image.network(
+                    mediaUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Center(child: Icon(Icons.broken_image, size: 40)),
                   ),
                 );
               }).toList(),
@@ -248,84 +233,22 @@ class ServiceProviderFeed extends StatelessWidget {
           // Descrição
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
                 Text(
                   post.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4A5568),
-                    height: 1.5,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
-                const SizedBox(height: 12),
-                
-                // Footer com categoria, rating e botão
-                Row(
-                  children: [
-                    // Badge de Categoria
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0F4F8),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                     
-                    ),
-                 
-                    
-                    // Rating
-                  
-                    
-                    const Spacer(),
-                    
-                    // Botão Ver Mais
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Ação ao clicar em "Ver mais"
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A202C),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Text(
-                                'Ver mais',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                const Spacer(),
+                 GestureDetector(
+                  onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
+                   child: Material( color: Colors.transparent, child: InkWell( onTap: () {  }, borderRadius: BorderRadius.circular(20), child: Container( padding: const EdgeInsets.symmetric( horizontal: 16, vertical: 8, ), decoration: BoxDecoration( color: const Color(0xFF1A202C), borderRadius: BorderRadius.circular(20), ), child: Row( mainAxisSize: MainAxisSize.min, children: const [ Text( 'Ver mais', style: TextStyle( color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600, ), ), SizedBox(width: 4), Icon( Icons.arrow_forward, color: Colors.white, size: 16,
+                             ) ],
+                         ),
+                   ))),
+                 )
               ],
             ),
           ),
@@ -334,28 +257,3 @@ class ServiceProviderFeed extends StatelessWidget {
     );
   }
 }
-
-final List<ServicePost> servicePosts = List.generate(5, (index) {
-  return ServicePost(
-    id: "$index",
-    provider: Provider(
-      name: "Profissional $index",
-      company: "Empresa $index",
-      avatar: "https://picsum.photos/100/100?random=$index",
-      rating: 4.5,
-      reviewCount: 20 + index,
-    ),
-    images: List.generate(
-      3,
-      (imgIndex) =>
-          "https://picsum.photos/400/200?random=${index * 3 + imgIndex}",
-    ),
-    description: "Descrição curta do serviço $index...",
-    fullDescription: "Descrição detalhada do serviço $index...",
-    category: "Categoria $index",
-    location: "Cidade $index",
-    completedAt: "2025-10-01",
-    likes: index * 5,
-    isLiked: false,
-  );
-});

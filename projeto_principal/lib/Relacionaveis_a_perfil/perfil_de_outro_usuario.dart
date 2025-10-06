@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:projeto_principal/Relacionaveis_a_perfil/system_star.dart';
+import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -102,7 +103,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < posts.length) {
-                return feedperfil(post: posts[index]);
+                return FeedPerfil(post: posts[index]);
               } else {
                 return _buildLoadingIndicator();
               }
@@ -132,6 +133,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
+              
               // Gradiente overlay
               Container(
                 height: 200,
@@ -145,6 +147,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
+              ),
+              Positioned(
+                left: MediaQuery.of(context).size.width * 0.87,
+                top:  MediaQuery.of(context).size.height * 0.17,
+                child: IconButton(onPressed:   () => Navigator.of(
+                            context,
+                          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())), icon: Icon(Icons.photo_camera, color: Colors.white, size: MediaQuery.of(context).size.width*0.01,),),
               ),
             ],
           ),
