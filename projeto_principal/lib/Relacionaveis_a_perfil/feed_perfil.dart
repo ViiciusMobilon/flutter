@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:projeto_principal/main.dart' show Main;
 
 class FeedPerfil extends StatelessWidget {
   final ServicePost post;
@@ -171,40 +171,45 @@ class FeedPerfil extends StatelessWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => TelaPrincipal()),
+                        MaterialPageRoute(builder: (context) => Main()),
                       ),
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
                           onTap: () {},
                           borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Main()),
                             ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1A202C),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Text(
-                                  'Ver mais',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1A202C),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Text(
+                                    'Ver mais',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 4),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ],
+                                  SizedBox(width: 4),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

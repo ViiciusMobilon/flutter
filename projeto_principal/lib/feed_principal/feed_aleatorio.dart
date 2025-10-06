@@ -240,15 +240,12 @@ class ServiceProviderFeed extends StatelessWidget {
                   style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
                 const Spacer(),
-                 GestureDetector(
-                  onTap: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
-                   child: Material( color: Colors.transparent, child: InkWell( onTap: () {  }, borderRadius: BorderRadius.circular(20), child: Container( padding: const EdgeInsets.symmetric( horizontal: 16, vertical: 8, ), decoration: BoxDecoration( color: const Color(0xFF1A202C), borderRadius: BorderRadius.circular(20), ), child: Row( mainAxisSize: MainAxisSize.min, children: const [ Text( 'Ver mais', style: TextStyle( color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600, ), ), SizedBox(width: 4), Icon( Icons.arrow_forward, color: Colors.white, size: 16,
-                             ) ],
-                         ),
-                   ))),
-                 )
+                 Material( color: Colors.transparent, child: InkWell(  onTap: () => Navigator.of(
+                             context,
+                           ).push(MaterialPageRoute(builder: (context) =>Main())), borderRadius: BorderRadius.circular(20), child: Container( padding: const EdgeInsets.symmetric( horizontal: 16, vertical: 8, ), decoration: BoxDecoration( color: const Color(0xFF1A202C), borderRadius: BorderRadius.circular(20), ), child: Row( mainAxisSize: MainAxisSize.min, children: const [ Text( 'Ver mais', style: TextStyle( color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600, ), ), SizedBox(width: 4), Icon( Icons.arrow_forward, color: Colors.white, size: 16,
+                           ) ],
+                       ),
+                 )))
               ],
             ),
           ),
