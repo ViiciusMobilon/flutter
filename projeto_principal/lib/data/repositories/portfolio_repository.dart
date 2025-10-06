@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:projeto_principal/data/config.dart';
@@ -9,7 +11,7 @@ class PortfolioRepository {
   final _storage = FlutterSecureStorage();
 
 
-  Future<Portfolio?> getPortfolioUser({int page =1 }) async {
+  Future<List<Portfolio>> getPortfolioUser({int page =1 }) async {
     try {
       final token = await _storage.read(key: 'token');
       
@@ -23,7 +25,9 @@ class PortfolioRepository {
 
       print('Portfolio:: ${response.data}');
 
-      return Portfolio.fromJson(response.data);
+      final List data = response.data['data'];
+
+      return data.map((json) => Portfolio.fromJson(json)).toList();
 
     }    catch (e) {
       print('Error fetching portfolio: $e');

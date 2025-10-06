@@ -8,10 +8,10 @@ class PortfolioService {
 
 
 
-  Future<Portfolio?> getPortfolio({int page = 1}) async {
+  Future<List<Portfolio>> getPortfolio({int page = 1}) async {
     try{
       final post = await _repository.getPortfolioUser(page: page);
-      print('Portfolio service: ${post?.descricao}');
+      print('Portfolio service: ${post.length}');
       return post;
     } catch (e) {
       print("Erro no Portfolio service: $e");

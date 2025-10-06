@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'package:projeto_principal/data/controllers/auth_controller.dart';
+import 'package:projeto_principal/data/controllers/portfolio_controller.dart';
+import 'package:projeto_principal/data/repositories/portfolio_repository.dart';
+import 'package:projeto_principal/data/services/portfolio_service.dart';
 import 'system_star.dart';
 
-class PerfilAleatorio extends StatefulWidget {
-  const PerfilAleatorio({super.key});
+class PerfilUser extends StatefulWidget {
+  final AuthController authController;
+   PerfilUser({super.key, required this.authController});
 
   @override
-  State<PerfilAleatorio> createState() => _ProfileScreenState();
+  State<PerfilUser> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<PerfilAleatorio> {
+class _ProfileScreenState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -51,6 +56,10 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
         (index) => generateFakeServicePost(currentLength + index),
       ));
       isLoadingMore = false;
+
+      PortfolioRepository();
+      PortfolioService();
+      PortfolioController();
     });
   }
 
@@ -92,6 +101,7 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
 
   @override
   Widget build(BuildContext context) {
+  final user = widget.authController.usuario;
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -117,6 +127,7 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
   }
 
   Widget _buildProfileHeader() {
+  final user = widget.authController.usuario;
     return SizedBox(
       height: 300,
       child: Stack(
@@ -155,8 +166,8 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
             right: 0,
             child: Column(
               children: [
-                const Text(
-                  'João Silva',
+                 Text(
+                  '${user?.nome ?? user?.razao_social ?? 'não existo'}',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -164,9 +175,9 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text('Desenvolvedor Mobile',
+                Text('${user?.ramoNome ?? ''}',
                     style: TextStyle(color: Colors.grey[700])),
-                Text('Tech Solutions Inc.',
+                Text('${user?.razao_social ?? user?.tipo}',
                     style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
                 estrelaperfil(),
