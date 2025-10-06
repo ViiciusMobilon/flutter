@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:projeto_principal/FeedPerfil/feed_perfil.dart';
-import 'package:projeto_principal/FeedPerfil/system_star.dart';
-import 'package:projeto_principal/data/controllers/auth_controller.dart';
+import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'system_star.dart';
 
-// =============================================================
-// PERFIL ALEATÓRIO
-// =============================================================
 class PerfilAleatorio extends StatefulWidget {
   const PerfilAleatorio({super.key});
 
   @override
-  State<PerfilAleatorio> createState() => _PerfilAleatorioState();
+  State<PerfilAleatorio> createState() => _ProfileScreenState();
 }
 
-class _PerfilAleatorioState extends State<PerfilAleatorio> {
+class _ProfileScreenState extends State<PerfilAleatorio> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -257,97 +253,3 @@ class _PerfilAleatorioState extends State<PerfilAleatorio> {
   }
 }
 
-// =============================================================
-// PERFIL PRINCIPAL
-// =============================================================
-class PerfilPrincipal extends StatefulWidget {
-  final AuthController authController;
-
-  const PerfilPrincipal({super.key, required this.authController});
-
-  @override
-  State<PerfilPrincipal> createState() => _PerfilPrincipalState();
-}
-
-class _PerfilPrincipalState extends State<PerfilPrincipal> {
-  String? foto;
-  double avaliacao = 0.0;
-  Map<String, dynamic>? ramos;
-
-  @override
-  void initState() {
-    super.initState();
-    loadFoto();
-    loadStar();
-    loadRamo();
-  }
-
-  void loadFoto() async {
-    final imagem = await widget.authController.getFoto();
-    setState(() {
-      foto = imagem;
-    });
-  }
-
-  void loadStar() async {
-    final star = await widget.authController.getAvaliacao();
-    setState(() {
-      avaliacao = star?['media'] ?? 0.0;
-    });
-  }
-
-  void loadRamo() async {
-    final ramo = await widget.authController.getRamo();
-    setState(() {
-      ramos = ramo;
-    });
-  }
-
-  bool mostrarMais = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ListView(
-        children: [
-          _buildProfileHeader(),
-          _buildDescription(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 50,
-            backgroundImage:
-                (foto != null && foto!.isNotEmpty) ? NetworkImage(foto!) : null,
-            child: (foto == null || foto!.isEmpty)
-                ? const Icon(Icons.person, size: 40)
-                : null,
-          ),
-          const SizedBox(height: 12),
-          EstrelaRating(estrelas: avaliacao),
-          const SizedBox(height: 12),
-          Text("Ramo: ${ramos?['nome'] ?? 'Desempregado'}"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDescription() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(16),
-      child: const Text(
-        "Descrição detalhada do usuário...",
-        style: TextStyle(color: Colors.black87, height: 1.4),
-      ),
-    );
-  }
-}
