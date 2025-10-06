@@ -9,12 +9,12 @@ class PortfolioRepository {
   final _storage = FlutterSecureStorage();
 
 
-  Future<Portfolio?> getPortfolioUser() async {
+  Future<Portfolio?> getPortfolioUser({int page =1 }) async {
     try {
       final token = await _storage.read(key: 'token');
       
       final response = await _dio.post(
-        '/portfolio/user',
+        '/portfolio/user?page=$page',
         options: Options(
           headers: {
           'Authorization': 'Bearer $token',

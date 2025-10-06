@@ -7,6 +7,7 @@ import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:projeto_principal/teste_video.dart';
 
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();

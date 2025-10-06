@@ -208,7 +208,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 12),
 
                 // Rating com widget customizado
-                const EstrelaRating(),
+                EstrelaRating(estrelas: 5,),
                 const SizedBox(height: 16),
 
                 // Botão de Love

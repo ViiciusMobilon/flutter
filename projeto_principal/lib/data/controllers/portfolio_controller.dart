@@ -27,7 +27,7 @@ class PortfolioController extends ChangeNotifier {
     try {
       final newPosts = await _service.getPortfolio(page: _page);
 
-      if (newPosts.isEmpty) {
+      if (newPosts) {
         _hasMore = false;
       } else {
         _portfolios.addAll(newPosts);
