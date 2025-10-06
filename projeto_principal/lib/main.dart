@@ -16,12 +16,16 @@ void main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(const MainApp());
+  runApp(MainApp());
+  // runApp( MaterialApp(
+  //   debugShowCheckedModeBanner: false,
+  //   home: TesteVideo(),
+  // ));
 }
 class MainApp extends StatelessWidget {
 
-  const MainApp({super.key});
-
+  MainApp({super.key});
+ 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

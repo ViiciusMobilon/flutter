@@ -258,7 +258,6 @@ class confirmar extends StatefulWidget {
 }
 
 class _confirmarState extends State<confirmar> {
-  @override
   bool senha2 = true;
 
   void mudarvisao() {

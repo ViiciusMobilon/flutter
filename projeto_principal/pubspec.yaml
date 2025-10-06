@@ -25,6 +25,7 @@ dependencies:
   flutter_otp_text_field: ^1.5.1+1
   carousel_slider: ^5.0.0
   dio: ^5.9.0
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

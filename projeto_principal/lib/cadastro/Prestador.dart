@@ -7,7 +7,6 @@ import 'package:projeto_principal/cadastro/Escolha.dart';
 // ignore: unused_import
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:projeto_principal/data/controllers/verificar_controller.dart';
-import 'package:projeto_principal/data/models/user.dart';
 import 'package:projeto_principal/cadastro/dropdown.dart';
 import 'package:projeto_principal/data/models/userForm.dart';
 

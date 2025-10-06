@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
+import 'package:projeto_principal/data/controllers/portfolio_controller.dart';
+import 'package:projeto_principal/data/models/post.dart';
+import 'package:projeto_principal/data/repositories/portfolio_repository.dart';
+import 'package:projeto_principal/data/services/portfolio_service.dart';
+import 'package:projeto_principal/FeedPerfil/service_provider_feed.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 
-import 'package:projeto_principal/feed_principal/Cards.dart';
 import 'package:projeto_principal/FeedPerfil/system_star.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -18,6 +23,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   int loveCount = 1247;
   String? foto;
   double avaliacao = 0.0;
+  
 
   void loadFoto() async {
     final imagem = await widget.authController.getFoto(); // seu AuthService
@@ -26,81 +32,44 @@ class ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  final List<ServicePost> posts = [];
+  final List<Portfolio> posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _loadInitialPosts();
-    _scrollController.addListener(_onScroll);
+    PortfolioRepository().getPortfolioUser();
+    PortfolioService().getPortfolio();
+    final portfolioController = Provider.of<PortfolioController>(context, listen: false);
+    portfolioController.fetchPortfolio();
+    portfolioController.fetchPortfolio();
     loadFoto(); 
-  }
 
+     _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        portfolioController.loadMorePosts();
+      }
+    });
+    }
+
+    void _toggleLove() {
+      setState(() {
+        if (isLoved) {
+          isLoved = false;
+          loveCount--;
+        } else {
+          isLoved = true;
+          loveCount++;
+        }
+      });
+    }
+  }
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _loadInitialPosts() {
-    posts.addAll(List.generate(
-      10,
-      (index) => generateFakeServicePost(index),
-    ));
-  }
-
-  Future<void> _loadMorePosts() async {
-    if (isLoadingMore) return;
-    setState(() => isLoadingMore = true);
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      final currentLength = posts.length;
-      posts.addAll(List.generate(
-        5,
-        (index) => generateFakeServicePost(currentLength + index),
-      ));
-      isLoadingMore = false;
-    });
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      _loadMorePosts();
-    }
-  }
-
-  void _toggleLove() {
-    setState(() {
-      isLoved = !isLoved;
-      loveCount += isLoved ? 1 : -1;
-    });
-  }
-
-  // 🔹 Função para gerar posts fake
-  ServicePost generateFakeServicePost(int index) {
-    return ServicePost(
-      id: index.toString(),
-      provider: Provider(
-        name: "João Silva",
-        company: "Tech Solutions",
-        avatar: "https://via.placeholder.com/150",
-        rating: 4.5,
-        reviewCount: 10 + index,
-      ),
-      images: ["https://via.placeholder.com/300x200"],
-      description: "Conteúdo do post ${index + 1}",
-      fullDescription: "Conteúdo completo do post ${index + 1}",
-      category: "Desenvolvimento",
-      location: "Brasil",
-      completedAt: DateTime.now().toIso8601String(),
-      likes: index * 2,
-      isLiked: false,
-    );
   }
 
   @override
@@ -116,7 +85,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < posts.length) {
-                return ServiceProviderFeed(post: posts[index]);
+                return ServiceProviderFeed(post: posts[index], authController: widget.authController,);
               } else {
                 return _buildLoadingIndicator();
               }
@@ -174,7 +143,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                  Text(
-                  '${user?.razao_social ?? '' }',
+                  '${user?.razao_social ?? user?.nome ?? 'nulo'}',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
