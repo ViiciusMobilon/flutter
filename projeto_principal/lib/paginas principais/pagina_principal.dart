@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_principal/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:projeto_principal/feed_principal/feed_aleatorio.dart';
 import 'package:projeto_principal/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:projeto_principal/Relacionaveis_a_perfil/criacao_de%20_card.dart';
@@ -19,7 +20,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [AleatorioFeed(), ProfileScreen()];
+    _paginas = [AleatorioFeed(), PerfilDono()];
   }
 
   @override

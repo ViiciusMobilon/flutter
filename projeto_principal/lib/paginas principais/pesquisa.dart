@@ -319,7 +319,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(onPressed: limparTudo, child: const Text('Limpar')),
+                     
                       const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: aplicar,
@@ -327,7 +327,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
                           backgroundColor: Colors.indigoAccent,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
-                        child: const Text('Aplicar'),
+                        child: const Text('Aplicar', style: TextStyle(color: Colors.white),)
                       ),
                     ],
                   ),

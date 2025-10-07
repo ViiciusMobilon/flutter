@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 import 'system_star.dart';
 
-class PerfilAleatorio extends StatefulWidget {
-  const PerfilAleatorio({super.key});
+class PerfilDono extends StatefulWidget {
+  const PerfilDono({super.key});
 
   @override
-  State<PerfilAleatorio> createState() => _ProfileScreenState();
+  State<PerfilDono> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<PerfilAleatorio> {
+class _ProfileScreenState extends State<PerfilDono> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -61,12 +62,7 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
     }
   }
 
-  void _toggleLove() {
-    setState(() {
-      isLoved = !isLoved;
-      loveCount += isLoved ? 1 : -1;
-    });
-  }
+  
 
   // 🔹 Função para gerar posts fake
   ServicePost generateFakeServicePost(int index) {
@@ -118,11 +114,11 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
 
   Widget _buildProfileHeader() {
     return SizedBox(
-      height: 300,
+      height: MediaQuery.of(context).size.height * 0.40,
       child: Stack(
         children: [
           Container(
-            height: 180,
+            height: MediaQuery.of(context).size.height * 0.16,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -175,47 +171,51 @@ class _ProfileScreenState extends State<PerfilAleatorio> {
               ],
             ),
           ),
+           Positioned(
+                left: MediaQuery.of(context).size.width * 0.87,
+                top:  MediaQuery.of(context).size.height * 0.17,
+                child: IconButton(onPressed:   () => Navigator.of(
+                            context,
+                          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())), icon: Icon(Icons.photo_camera, color: Colors.white, size: MediaQuery.of(context).size.width*0.06,),),
+              ),
         ],
       ),
     );
   }
 
   Widget _buildLoveButton() {
-    return GestureDetector(
-      onTap: _toggleLove,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-        decoration: BoxDecoration(
-          color: isLoved ? Colors.red : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey[300]!),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isLoved ? Icons.favorite : Icons.favorite_border,
-              color: isLoved ? Colors.white : Colors.grey[700],
-              size: 18,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: BoxDecoration(
+        color:  Colors.red ,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.favorite ,
+            color:  Colors.white ,
+            size: 18,
+          ),
+          const SizedBox(width: 6),
+          Text(
+             'Curtidas',
+            style: TextStyle(
+              color:  Colors.white ,
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(width: 6),
-            Text(
-              isLoved ? 'Amei' : 'Amar',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.w600,
-              ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$loveCount',
+            style: TextStyle(
+              color:Colors.white ,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(width: 8),
-            Text(
-              '$loveCount',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

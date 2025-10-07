@@ -4,14 +4,14 @@ import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:projeto_principal/Relacionaveis_a_perfil/system_star.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class PerfilDeOutroUsuario extends StatefulWidget {
+  const PerfilDeOutroUsuario({super.key});
 
   @override
-  State<ProfileScreen> createState() => ProfileScreenState();
+  State<PerfilDeOutroUsuario> createState() => ProfileScreenState();
 }
 
-class ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -123,7 +123,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           Stack(
             children: [
               Container(
-                height: 200,
+                height:  MediaQuery.of(context).size.height * 0.20,
                 decoration: BoxDecoration(
                   image: const DecorationImage(
                     image: NetworkImage(
@@ -136,7 +136,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               
               // Gradiente overlay
               Container(
-                height: 200,
+                height:  MediaQuery.of(context).size.height * 0.10,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -148,12 +148,16 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
+              
               Positioned(
-                left: MediaQuery.of(context).size.width * 0.87,
-                top:  MediaQuery.of(context).size.height * 0.17,
-                child: IconButton(onPressed:   () => Navigator.of(
-                            context,
-                          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())), icon: Icon(Icons.photo_camera, color: Colors.white, size: MediaQuery.of(context).size.width*0.01,),),
+                top: 30,
+                left: 10,
+                child: IconButton(
+                  icon:  Icon(Icons.arrow_back, color: Colors.white, size: MediaQuery.of(context).size.width*0.08,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
             ],
           ),
