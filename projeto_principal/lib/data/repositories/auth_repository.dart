@@ -38,10 +38,11 @@ class AuthRepository {
       'email': email,
       'password': senha,
     });
+    print('responde repo login: ${response.statusCode}');
 
     if (response.statusCode == 200) {
       final data = response.data;
-      print('Login response: $data'); // depuração
+      print('Login response: ${data}'); // depuração
 
       // ⚡ Passe o JSON completo
       return UsuarioGeral.fromJson(data);

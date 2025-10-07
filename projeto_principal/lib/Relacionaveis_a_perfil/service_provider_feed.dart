@@ -12,7 +12,7 @@ class ServiceProviderFeed extends StatelessWidget {
     required this.authController,
   });
 
-  static const String _baseUrl = "http://192.168.1.8:8000";
+  static const String _baseUrl = "http://172.20.192.1:8000";
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +73,18 @@ class ServiceProviderFeed extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(width: 10),
       itemBuilder: (context, index) {
         final imageUrl = '$_baseUrl${post.fotos[index].url}';
-
+        print('url foto portfolio:${imageUrl}');
         return ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.network(
-            imageUrl,
-            width: MediaQuery.of(context).size.width *
-                0.9, // 🔹 ocupa 90% da largura da tela
-            height: 250,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 50),
+          child: Container(
+            child: Image.network(
+              imageUrl,
+              width: MediaQuery.of(context).size.width *
+                  0.83, 
+              height: 220,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 50),
+            ),
           ),
         );
       },
