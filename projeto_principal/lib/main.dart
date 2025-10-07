@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:projeto_principal/data/controllers/portfolio_controller.dart';
 import 'package:projeto_principal/esqueci_a_senha/esqueciasenha.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/repositories/auth_repository.dart';
 import 'package:projeto_principal/data/services/auth_service.dart';
 import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
 import 'package:projeto_principal/teste_video.dart';
+import 'package:provider/provider.dart';
 
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -29,10 +31,15 @@ class MainApp extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scaffoldMessengerKey: scaffoldMessengerKey,
-      home: Login(),
+    return MultiProvider(providers:   [
+      ChangeNotifierProvider(
+        create: (_) => PortfolioController()),
+    ],
+      child: MaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        home: Login(),
+      ),
     );
   }
 }

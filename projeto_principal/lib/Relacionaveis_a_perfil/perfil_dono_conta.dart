@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:projeto_principal/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'package:projeto_principal/Relacionaveis_a_perfil/service_provider_feed.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/controllers/portfolio_controller.dart';
 import 'package:projeto_principal/data/repositories/portfolio_repository.dart';
 import 'package:projeto_principal/data/services/portfolio_service.dart';
 import 'system_star.dart';
+import 'package:provider/provider.dart';
 
 class PerfilUser extends StatefulWidget {
   final AuthController authController;
@@ -22,12 +24,15 @@ class _ProfileScreenState extends State<PerfilUser> {
   final List<ServicePost> posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
+  
 
   @override
   void initState() {
     super.initState();
-    _loadInitialPosts();
     _scrollController.addListener(_onScroll);
+    Future.microtask(()  {
+      context.read<PortfolioController>().fetchPortfolio();
+      });
   }
 
   @override
@@ -36,37 +41,11 @@ class _ProfileScreenState extends State<PerfilUser> {
     super.dispose();
   }
 
-  void _loadInitialPosts() {
-    posts.addAll(List.generate(
-      10,
-      (index) => generateFakeServicePost(index),
-    ));
-  }
-
-  Future<void> _loadMorePosts() async {
-    if (isLoadingMore) return;
-    setState(() => isLoadingMore = true);
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      final currentLength = posts.length;
-      posts.addAll(List.generate(
-        5,
-        (index) => generateFakeServicePost(currentLength + index),
-      ));
-      isLoadingMore = false;
-
-      PortfolioRepository();
-      PortfolioService();
-      PortfolioController();
-    });
-  }
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      _loadMorePosts();
+        context.read<PortfolioController>().loadMorePosts();
     }
   }
 
@@ -77,31 +56,10 @@ class _ProfileScreenState extends State<PerfilUser> {
     });
   }
 
-  // 🔹 Função para gerar posts fake
-  ServicePost generateFakeServicePost(int index) {
-    return ServicePost(
-      id: index.toString(),
-      provider: Provider(
-        name: "João Silva",
-        company: "Tech Solutions",
-        avatar: "https://via.placeholder.com/150",
-        rating: 4.5,
-        reviewCount: 10 + index,
-      ),
-      images: ["https://via.placeholder.com/300x200"],
-      description: "Conteúdo do post ${index + 1}",
-      fullDescription: "Conteúdo completo do post ${index + 1}",
-      category: "Desenvolvimento",
-      location: "Brasil",
-      completedAt: DateTime.now().toIso8601String(),
-      likes: index * 2,
-      isLiked: false,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-  final user = widget.authController.usuario;
+    final _portfolioController = context.watch<PortfolioController>();
+    final user = widget.authController.usuario;
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
@@ -112,13 +70,23 @@ class _ProfileScreenState extends State<PerfilUser> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                if (index < posts.length) {
-                  return feedperfil(post: posts[index]);
-                } else {
+                print('Rebuild da lista com ${_portfolioController.portfolios.length} posts');
+                if(_portfolioController.loading && _portfolioController.portfolios.isEmpty){
                   return _buildLoadingIndicator();
                 }
+
+                if(index < _portfolioController.portfolios.length){
+                  final post = _portfolioController.portfolios[index];
+                  return Padding(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  child: ServiceProviderFeed(post: post, authController: widget.authController,));
+                } else {
+                  return const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(child: Text('No more posts')),
+                  );
+                }
               },
-              childCount: posts.length + (isLoadingMore ? 1 : 0),
+              childCount: context.watch<PortfolioController>().portfolios.length,
             ),
           ),
         ],
@@ -151,10 +119,10 @@ class _ProfileScreenState extends State<PerfilUser> {
               child: CircleAvatar(
                 radius: 50,
                 backgroundColor: Colors.white,
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 46,
                   backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+                    '${user?.fotoURL ?? 'https://www.pngall.com/wp-content/uploads/5/Profile-PNG-File.png'}',
                   ),
                 ),
               ),

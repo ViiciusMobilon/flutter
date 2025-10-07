@@ -6,7 +6,7 @@ class ServiceProviderFeed extends StatelessWidget {
   final Portfolio post;
   final AuthController authController;
 
-  const ServiceProviderFeed({
+  ServiceProviderFeed({
     super.key,
     required this.post,
     required this.authController,
@@ -18,7 +18,7 @@ class ServiceProviderFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = authController.usuario;
     final fotoUrl = user?.foto != null 
-        ? '$_baseUrl${user?.foto}'
+        ? '${user?.foto}'
         : 'https://via.placeholder.com/150';
 
     return Card(
@@ -64,28 +64,32 @@ class ServiceProviderFeed extends StatelessWidget {
 
   /// Galeria de fotos horizontal
   Widget _buildImageGallery(Portfolio post) {
-    return SizedBox(
-      height: 200,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        scrollDirection: Axis.horizontal,
-        itemCount: post.fotos.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 6),
-        itemBuilder: (context, index) {
-          final imageUrl = '$_baseUrl${post.fotos[index].url}';
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              imageUrl,
-              width: 200,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-            ),
-          );
-        },
-      ),
-    );
-  }
+  return SizedBox(
+    height: 250, // altura visível do carrossel
+    child: ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      scrollDirection: Axis.horizontal,
+      itemCount: post.fotos.length,
+      separatorBuilder: (_, __) => const SizedBox(width: 10),
+      itemBuilder: (context, index) {
+        final imageUrl = '$_baseUrl${post.fotos[index].url}';
+
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.network(
+            imageUrl,
+            width: MediaQuery.of(context).size.width *
+                0.9, // 🔹 ocupa 90% da largura da tela
+            height: 250,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 50),
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   /// Galeria de vídeos horizontal
   Widget _buildVideoGallery(Portfolio post) {
