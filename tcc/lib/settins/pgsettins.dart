@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/settins/editarperfil.dart';
-import 'package:tcc/settins/seguranca/email.dart';
+import 'package:tcc/settins/seguranca/email/email.dart';
 import 'package:tcc/settins/segurancap.dart';
 
 class settinspage extends StatefulWidget {
@@ -68,11 +68,7 @@ class _settinspageState extends State<settinspage> {
               title: Text('Sobre'),
               subtitle: Text('Informações sobre o aplicativo'),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TrocarEmail()),
-                  ),
+            
             ),
 
             ListTile(

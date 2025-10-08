@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
+import 'package:tcc/settins/seguranca/email/codigoemail.dart';
 
 void main() => runApp(TrocarEmail());
 
@@ -154,7 +155,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPage())),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageEmail())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/service_post.dart';
 
 class PerfilDeOutroUsuario extends StatefulWidget {
   const PerfilDeOutroUsuario({super.key});
@@ -33,7 +34,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   }
 
   void _loadInitialPosts() {
-    posts.addAll(List.generate(10, (index) => generateFakeServicePost(index)));
+    posts.addAll(List.generate(10, (index) => ServicePost()));
   }
 
   Future<void> _loadMorePosts() async {
@@ -47,7 +48,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
       posts.addAll(
         List.generate(
           5,
-          (index) => generateFakeServicePost(currentLength + index),
+          (index) => ServicePost(),
         ),
       );
       isLoadingMore = false;
@@ -68,26 +69,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
     });
   }
 
-  ServicePost generateFakeServicePost(int index) {
-    return ServicePost(
-      id: index.toString(),
-      provider: Provider(
-        name: "João Silva",
-        company: "Tech Solutions",
-        avatar: "https://via.placeholder.com/150",
-        rating: 4.5,
-        reviewCount: 10 + index,
-      ),
-      images: ["https://via.placeholder.com/300x200"],
-      description: "Conteúdo do post ${index + 1}",
-      fullDescription: "Conteúdo completo do post ${index + 1}",
-      category: "Desenvolvimento",
-      location: "Brasil",
-      completedAt: DateTime.now().toIso8601String(),
-      likes: index * 2,
-      isLiked: false,
-    );
-  }
+ 
 
   @override
   Widget build(BuildContext context) {

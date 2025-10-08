@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 
 class PerfilDono extends StatefulWidget {
@@ -33,7 +34,7 @@ class _ProfileScreenState extends State<PerfilDono> {
   }
 
   void _loadInitialPosts() {
-    posts.addAll(List.generate(10, (index) => generateFakeServicePost(index)));
+    posts.addAll(List.generate(10, (index) => ServicePost()));
   }
 
   Future<void> _loadMorePosts() async {
@@ -47,7 +48,7 @@ class _ProfileScreenState extends State<PerfilDono> {
       posts.addAll(
         List.generate(
           5,
-          (index) => generateFakeServicePost(currentLength + index),
+          (index) => ServicePost(),
         ),
       );
       isLoadingMore = false;
@@ -62,26 +63,7 @@ class _ProfileScreenState extends State<PerfilDono> {
   }
 
   // 🔹 Função para gerar posts fake
-  ServicePost generateFakeServicePost(int index) {
-    return ServicePost(
-      id: index.toString(),
-      provider: Provider(
-        name: "João Silva",
-        company: "Tech Solutions",
-        avatar: "https://via.placeholder.com/150",
-        rating: 4.5,
-        reviewCount: 10 + index,
-      ),
-      images: ["https://via.placeholder.com/300x200"],
-      description: "Conteúdo do post ${index + 1}",
-      fullDescription: "Conteúdo completo do post ${index + 1}",
-      category: "Desenvolvimento",
-      location: "Brasil",
-      completedAt: DateTime.now().toIso8601String(),
-      likes: index * 2,
-      isLiked: false,
-    );
-  }
+  
 
   @override
   Widget build(BuildContext context) {

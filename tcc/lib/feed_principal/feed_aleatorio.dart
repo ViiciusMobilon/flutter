@@ -4,6 +4,7 @@ import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:tcc/service_post.dart';
 
 // ------------------------ ALEATORIO FEED ------------------------
 class AleatorioFeed extends StatefulWidget {
@@ -39,7 +40,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
       int id = _posts.length + index + 1;
 
       List<String> imageUrls = List.generate(
-        50,
+        4,
         (imgIndex) =>
             "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
       );
@@ -94,31 +95,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
   }
 }
 
-class ServicePostFeed {
-  final String id;
-  final String providerName;
-  final String providerCompany;
-  final String providerAvatar;
-  final String location;
-  final String description;
-  final String fullDescription;
-  final List<String> images;
-  int likes;
-  bool isLiked;
 
-  ServicePostFeed({
-    required this.id,
-    required this.providerName,
-    required this.providerCompany,
-    required this.providerAvatar,
-    required this.location,
-    required this.description,
-    required this.fullDescription,
-    required this.images,
-    required this.likes,
-    required this.isLiked,
-  });
-}
 
 class ServiceProviderFeed extends StatelessWidget {
   final ServicePostFeed post;
@@ -302,20 +279,3 @@ class ServiceProviderFeed extends StatelessWidget {
   }
 }
 
-extension ServicePostFeedExtension on ServicePostFeed {
-  ServicePost toDetail() {
-    return ServicePost(
-      id: id,
-      serviceName: providerCompany,
-      description: fullDescription,
-      mediaUrls: images,
-      providerName: providerName,
-      providerCompany: providerCompany,
-      providerPhotoUrl: providerAvatar,
-      providerRating: null,
-      providerCity: location,
-      isLiked: isLiked,
-      likeCount: likes,
-    );
-  }
-}

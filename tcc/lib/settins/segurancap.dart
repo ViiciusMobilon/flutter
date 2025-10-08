@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
-import 'package:tcc/settins/seguranca/email.dart';
+import 'package:tcc/settins/seguranca/email/email.dart';
 
 class Seguranca extends StatefulWidget {
   const Seguranca({super.key});

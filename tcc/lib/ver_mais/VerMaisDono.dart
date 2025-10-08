@@ -6,16 +6,16 @@ import 'package:share_plus/share_plus.dart';
   import 'package:tcc/service_post.dart';
 
 // Widget principal da página de detalhes do post
-class VerMaisPage extends StatefulWidget {
+class VerMaisPageDono extends StatefulWidget {
   final ServicePost post; // Recebe os dados do post
 
-  const VerMaisPage({Key? key, required this.post}) : super(key: key);
+  const VerMaisPageDono({Key? key, required this.post}) : super(key: key);
 
   @override
-  State<VerMaisPage> createState() => _VerMaisPageState();
+  State<VerMaisPageDono> createState() => _VerMaisPageState();
 }
 
-class _VerMaisPageState extends State<VerMaisPage>
+class _VerMaisPageState extends State<VerMaisPageDono>
     with SingleTickerProviderStateMixin {
   bool isLiked = false; // Estado do like
   int likeCount = 0; // Contador de likes
@@ -350,6 +350,98 @@ class _VerMaisPageState extends State<VerMaisPage>
 
 
   // Botões de ação (like e compartilhar)
+  Widget _buildActionButtons() {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: InkWell(
+                onTap: _toggleLike,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: isLiked
+                        ? const Color(0xFF1A202C)
+                        : const Color(0xFFF5F7FA),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.white : const Color(0xFF1A202C),
+                        size: 24,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '$likeCount',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              isLiked ? Colors.white : const Color(0xFF1A202C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: InkWell(
+                onTap: _sharePost,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F7FA),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.share, color: Color(0xFF1A202C), size: 24),
+                      SizedBox(width: 8),
+                      Text(
+                        'Compartilhar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1A202C),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   // Build principal
   @override
@@ -377,7 +469,24 @@ class _VerMaisPageState extends State<VerMaisPage>
             fontWeight: FontWeight.w600,
           ),
         ),
-        
+        actions: [
+          IconButton(
+  icon: const Icon(Icons.edit, color: Colors.white),
+  onPressed: () async {
+    final updatedPost = await Navigator.of(context).push<ServicePost>(
+      MaterialPageRoute(
+        builder: (context) => EditarPostPage(post: widget.post),
+      ),
+    );
+
+    if (updatedPost != null) {
+      setState(() {
+        widget.post.updateFrom(updatedPost); // método para atualizar o post atual
+      });
+    }
+  },
+),
+        ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
