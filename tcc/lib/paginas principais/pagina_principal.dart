@@ -14,7 +14,8 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
-  int _paginaAtual = 0;
+  int paginaAtual = 0;
+  
   late final List<Widget> _paginas;
 
   @override
@@ -28,7 +29,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar:
-          _paginaAtual == 0
+          paginaAtual == 0
               ? PreferredSize(
                 preferredSize: Size.fromHeight(
                   MediaQuery.of(context).size.height * 0.085,
@@ -136,9 +137,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                 ],
               ),
-      body: IndexedStack(index: _paginaAtual, children: _paginas),
+      body: IndexedStack(index: paginaAtual, children: _paginas),
       floatingActionButton:
-          _paginaAtual == 1
+          paginaAtual == 1
               ? FloatingActionButton(
                 onPressed: () async {
                   final resultado = await Navigator.push(
@@ -179,8 +180,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(30),
             child: BottomNavigationBar(
-              currentIndex: _paginaAtual,
-              onTap: (i) => setState(() => _paginaAtual = i),
+              currentIndex: paginaAtual,
+              onTap: (i) => setState(() => paginaAtual = i),
               backgroundColor: Colors.transparent,
               elevation: 0,
               selectedItemColor: Colors.white,

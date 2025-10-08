@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/paginas%20principais/pagina_principal.dart';
 import 'package:tcc/settins/editarperfil.dart';
 import 'package:tcc/settins/seguranca/email/email.dart';
 import 'package:tcc/settins/segurancap.dart';
@@ -23,7 +24,9 @@ class _settinspageState extends State<settinspage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) =>TelaPrincipal()),
+              );
             },
           ),
           title: Text(

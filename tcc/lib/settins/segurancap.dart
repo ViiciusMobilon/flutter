@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/settins/seguranca/email/email.dart';
+import 'package:tcc/settins/seguranca/numero/numero.dart';
 
 class Seguranca extends StatefulWidget {
   const Seguranca({super.key});
@@ -56,7 +57,7 @@ class _SegurancaState extends State<Seguranca> {
             onTap:
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TrocarEmail()),
+                  MaterialPageRoute(builder: (context) => Trocarnumero()),
                 ),
           ),
           CamposSenha(),

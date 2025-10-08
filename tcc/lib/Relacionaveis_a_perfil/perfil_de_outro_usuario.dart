@@ -137,7 +137,9 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
                     size: MediaQuery.of(context).size.width * 0.08,
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => TelaPrincipal()),
+                    );
                   },
                 ),
               ),

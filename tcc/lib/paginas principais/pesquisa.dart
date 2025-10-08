@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 
 class BarraDePesquisa extends SearchDelegate<String> {
@@ -470,7 +471,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
           onTap:
               () => Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (_) => Cadastro())),
+              ).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario())),
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(

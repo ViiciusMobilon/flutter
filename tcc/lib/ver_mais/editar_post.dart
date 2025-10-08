@@ -206,6 +206,7 @@ class _EditarPostPageState extends State<EditarPostPage> {
                     ],
                   ),
                    TextField(
+                    maxLength: 280,
                     controller: _descricaoController,
                     maxLines: null,
                     decoration: const InputDecoration(

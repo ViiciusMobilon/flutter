@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:tcc/esqueci_a_senha/Novasenha.dart';
+import 'package:tcc/settins/pgsettins.dart';
 
 class CodigoPageNumero extends StatefulWidget {
   const CodigoPageNumero({super.key});
@@ -15,6 +16,17 @@ class _CodigoPageState extends State<CodigoPageNumero> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        
+        centerTitle: true,
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -98,7 +110,7 @@ class _CodigoPageState extends State<CodigoPageNumero> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => NovaSenhaPage(codigo: codigo),
+                          builder: (_) =>settinspage(),
                         ),
                       );
                     } else {
@@ -109,7 +121,7 @@ class _CodigoPageState extends State<CodigoPageNumero> {
                       );
                     }
                   },
-                  child: botao(texto: "Próximo"),
+                  child: botao(texto: "Salvar"),
                 ),
               ),
             ],
