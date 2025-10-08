@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_principal/data/config.dart';
 import 'package:projeto_principal/data/controllers/auth_controller.dart';
 import 'package:projeto_principal/data/models/post.dart';
+import 'package:video_player/video_player.dart';
 
-class ServiceProviderFeed extends StatelessWidget {
+class ServiceProviderFeed extends StatefulWidget {
   final Portfolio post;
   final AuthController authController;
 
@@ -12,14 +14,19 @@ class ServiceProviderFeed extends StatelessWidget {
     required this.authController,
   });
 
-  static const String _baseUrl = "http://172.20.192.1:8000";
+  @override
+  State<ServiceProviderFeed> createState() => _ServiceProviderFeedState();
+}
+
+class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
 
   @override
   Widget build(BuildContext context) {
-    final user = authController.usuario;
-    final fotoUrl = user?.foto != null 
-        ? '${user?.foto}'
+    final user = widget.authController.usuario;
+    final fotoUrl = user?.fotoURL != null 
+        ? '${user?.fotoURL}'
         : 'https://via.placeholder.com/150';
+    print('foto perfil card:: ${fotoUrl}');
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -29,16 +36,16 @@ class ServiceProviderFeed extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(user, fotoUrl),
-          if (post.descricao != null && post.descricao!.isNotEmpty)
+          if (widget.post.descricao != null && widget.post.descricao!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Text(
-                post.descricao!,
+                widget.post.descricao!,
                 style: const TextStyle(fontSize: 15, color: Colors.black87),
               ),
             ),
-          if (post.fotos.isNotEmpty) _buildImageGallery(post),
-          if (post.videos.isNotEmpty) _buildVideoGallery(post),
+          if (widget.post.fotos.isNotEmpty) _buildImageGallery(widget.post),
+          if (widget.post.videos.isNotEmpty) _buildVideoGallery(widget.post),
         ],
       ),
     );
@@ -72,7 +79,7 @@ class ServiceProviderFeed extends StatelessWidget {
       itemCount: post.fotos.length,
       separatorBuilder: (_, __) => const SizedBox(width: 10),
       itemBuilder: (context, index) {
-        final imageUrl = '$_baseUrl${post.fotos[index].url}';
+        final imageUrl = '${URLAPISTORAGE}${post.fotos[index].url}' ;
         print('url foto portfolio:${imageUrl}');
         return ClipRRect(
           borderRadius: BorderRadius.circular(12),
@@ -90,10 +97,8 @@ class ServiceProviderFeed extends StatelessWidget {
       },
     ),
   );
-}
-
-
-  /// Galeria de vídeos horizontal
+  }
+    /// Galeria de vídeos horizontal
   Widget _buildVideoGallery(Portfolio post) {
     return SizedBox(
       height: 200,
@@ -103,12 +108,66 @@ class ServiceProviderFeed extends StatelessWidget {
         itemCount: post.videos.length,
         separatorBuilder: (_, __) => const SizedBox(width: 6),
         itemBuilder: (context, index) {
-          final videoUrl = '$_baseUrl${post.videos[index].url}';
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-          );
+          final videoUrl = '${URLAPISTORAGE}${post.videos[index].url}';
+          print('url video portfolio:${videoUrl}');
+
+          return VideoItem(url: videoUrl);
         },
       ),
     );
   }
 }
+
+
+
+
+class VideoItem extends StatefulWidget {
+  final String url;
+  const VideoItem({required this.url, super.key});
+
+  @override
+  State<VideoItem> createState() => _VideoItemState();
+}
+
+class _VideoItemState extends State<VideoItem> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.url)
+      ..initialize().then((_) {
+        setState(() {}); // Atualiza a interface após inicialização
+        _controller.setLooping(true); // Faz o vídeo repetir
+        _controller.play(); // Se quiser autoplay
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return Container(
+        width: 200,
+        color: Colors.black12,
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    return SizedBox(
+      width: 200,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
+        ),
+      ),
+    );
+  }
+}
+

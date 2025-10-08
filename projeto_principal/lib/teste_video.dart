@@ -15,7 +15,7 @@ class _TesteVideoState extends State<TesteVideo>{
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-      'http://192.168.1.8:8000/storage/fotos/portfolio/59ywFkbo8me4bxNsG0hnPN6EasmMQVnI2CyfKKMk.mp4',
+      'http://172.17.176.1:8000/storage/fotos/portfolio/6xNC985Dg7jcwlPRb9Ll7ZJ2bUavkCYCm7nWBcF0.mp4',
     )..initialize().then((_) {
         setState(() {}); // Atualiza a interface após a inicialização do vídeo
         PortfolioService();
