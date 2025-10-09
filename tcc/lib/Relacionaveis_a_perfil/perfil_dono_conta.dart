@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_portfolio.dart';
 import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 import 'package:tcc/paginas%20principais/pagina_principal.dart';
@@ -144,7 +145,7 @@ class _PerfilUserState extends State<PerfilUser> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 6),
-                    child: ServiceProviderFeed(
+                    child: FeedPerfilPortfolio(
                       post: post,
                       authController: widget.authController,
                     ),
