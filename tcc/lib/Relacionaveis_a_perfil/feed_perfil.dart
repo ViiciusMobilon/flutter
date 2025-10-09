@@ -1,17 +1,133 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:tcc/main.dart' show Main;
-import 'package:tcc/ver_mais/VerMaisDono.dart';
+import 'package:video_player/video_player.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:tcc/service_post.dart';
 
-class FeedPerfil extends StatelessWidget {
-  final ServicePost post;
+// ------------------------ ALEATORIO FEED ------------------------
+class FeedPerfil extends StatefulWidget {
+  final ServicePostFeed post;
+   FeedPerfil({super.key, required this.post});
 
-  const FeedPerfil({super.key, required this.post});
+  @override
+  State<FeedPerfil> createState() => _FeedPerfilState();
+}
+
+class _FeedPerfilState extends State<FeedPerfil> {
+  final List<ServicePostFeed> _posts = [];
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMorePosts();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoading) {
+        _loadMorePosts();
+      }
+    });
+  }
+
+  void _loadMorePosts() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(seconds: 2));
+
+    List<ServicePostFeed> newPosts = List.generate(3, (index) {
+      int id = _posts.length + index + 1;
+
+      List<String> imageUrls = List.generate(
+        3,
+        (imgIndex) =>
+            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+      );
+
+      // Vídeo de teste
+      String? videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+
+      return ServicePostFeed(
+        id: id.toString(),
+        providerName: "Prestador $id",
+        providerCompany: "Empresa $id",
+        providerAvatar: "https://picsum.photos/100/100?random=$id",
+        location: "Cidade $id",
+        description: "Descrição breve do serviço $id...",
+        fullDescription: "Descrição completa do serviço $id...",
+        images: imageUrls,
+        videoUrl: videoUrl != null ? [videoUrl] : null,
+        likes: 0,
+        isLiked: false,
+      );
+    });
+
+    setState(() {
+      _posts.addAll(newPosts);
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final limitedMedia = (post.mediaUrls ?? []).take(50).toList(); // máximo 50 mídias
+    if (_posts.isEmpty && !_isLoading) {
+      return const Center(child: Text("Nenhum serviço encontrado."));
+    }
+
+    return Container(
+      color: const Color(0xFFF5F7FA),
+      child: ListView.builder(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: _posts.length + 1,
+        itemBuilder: (context, index) {
+          if (index < _posts.length) {
+            return ServiceProviderFeed(post: _posts[index]);
+          } else {
+            return _isLoading
+                ? const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : const SizedBox.shrink();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class ServiceProviderFeed extends StatelessWidget {
+  final ServicePostFeed post;
+
+  const ServiceProviderFeed({super.key, required this.post});
+
+  @override
+  Widget build(BuildContext context) {
+    // Combina vídeo e imagens em um único array de widgets
+    List<Widget> carouselItems = [];
+
+    if (post.videoUrl != null) {
+      carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
+    }
+
+    carouselItems.addAll(post.images!.map((url) {
+      return ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Center(
+              child: Icon(Icons.broken_image, size: 40),
+            ),
+          ),
+        ),
+      );
+    }));
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -26,177 +142,112 @@ class FeedPerfil extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Cabeçalho do prestador
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(post.providerPhotoUrl ?? ''),
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PerfilDeOutroUsuario(),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cabeçalho
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(post.providerAvatar!),
                     radius: 28,
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.providerName ?? 'Sem nome',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xFF1A202C),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        post.providerCompany ?? 'Sem empresa',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF718096),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 14,
-                            color: Color(0xFF718096),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.providerName!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            post.providerCity ?? 'Sem localização',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF718096),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          post.providerCompany!,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                post.location!,
+                                style: const TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // Carrossel de imagens/vídeos
-          if (limitedMedia.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: 260,
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: limitedMedia.length > 1,
-                    viewportFraction: 1.0,
-                    autoPlay: limitedMedia.length > 1,
-                    autoPlayInterval: const Duration(seconds: 4),
-                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  ),
-                  items: limitedMedia.map((mediaUrl) {
-                    final isVideo = mediaUrl.endsWith('.mp4') ||
-                        mediaUrl.endsWith('.mov') ||
-                        mediaUrl.endsWith('.avi');
-
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          width: double.infinity,
-                          color: Colors.grey[200],
-                          child: isVideo
-                              ? Center(
-                                  child: Icon(
-                                    Icons.play_circle_fill,
-                                    color: Colors.white.withOpacity(0.8),
-                                    size: 64,
-                                  ),
-                                )
-                              : Image.network(
-                                  mediaUrl,
-                                  fit: BoxFit.fill,
-                                  width: double.infinity,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Center(
-                                    child: Icon(
-                                      Icons.broken_image,
-                                      size: 40,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
+                ],
               ),
             ),
 
-          // Descrição e botão "Ver mais"
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  post.description ?? '',
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4A5568),
-                    height: 1.5,
-                  ),
+            // Carrossel de imagens + vídeo
+            if (carouselItems.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 240,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
                 ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Spacer(),
-                    GestureDetector(
+                items: carouselItems,
+              ),
+
+            // Descrição e botão "Ver mais"
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      post.description!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                VerMaisPageDono(post: post),
+                            builder: (context) => VerMaisPage(post: post.toDetail()),
                           ),
                         );
                       },
+                      borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A202C),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
+                          children: [
                             Text(
                               'Ver mais',
                               style: TextStyle(
@@ -215,9 +266,75 @@ class FeedPerfil extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ------------------- VIDEO WIDGET -------------------
+class _CarouselVideoItem extends StatefulWidget {
+  final String videoUrl;
+
+  const _CarouselVideoItem({required this.videoUrl});
+
+  @override
+  State<_CarouselVideoItem> createState() => _CarouselVideoItemState();
+}
+
+class _CarouselVideoItemState extends State<_CarouselVideoItem> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+              child: Center(
+                child: Icon(
+                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white70,
+                  size: 50,
                 ),
-              ],
+              ),
             ),
           ),
         ],

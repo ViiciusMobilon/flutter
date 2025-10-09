@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:tcc/service_post.dart';
 
 // ------------------------ ALEATORIO FEED ------------------------
@@ -40,10 +39,13 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
       int id = _posts.length + index + 1;
 
       List<String> imageUrls = List.generate(
-        4,
+        3,
         (imgIndex) =>
             "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
       );
+
+      // Vídeo de teste
+      String? videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
 
       return ServicePostFeed(
         id: id.toString(),
@@ -54,6 +56,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
         description: "Descrição breve do serviço $id...",
         fullDescription: "Descrição completa do serviço $id...",
         images: imageUrls,
+        videoUrl: videoUrl != null ? [videoUrl] : null,
         likes: 0,
         isLiked: false,
       );
@@ -84,9 +87,9 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
           } else {
             return _isLoading
                 ? const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
-                )
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
                 : const SizedBox.shrink();
           }
         },
@@ -95,8 +98,6 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
   }
 }
 
-
-
 class ServiceProviderFeed extends StatelessWidget {
   final ServicePostFeed post;
 
@@ -104,6 +105,29 @@ class ServiceProviderFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Combina vídeo e imagens em um único array de widgets
+    List<Widget> carouselItems = [];
+
+    if (post.videoUrl != null) {
+      carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
+    }
+
+    carouselItems.addAll(post.images!.map((url) {
+      return ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Center(
+              child: Icon(Icons.broken_image, size: 40),
+            ),
+          ),
+        ),
+      );
+    }));
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -118,12 +142,11 @@ class ServiceProviderFeed extends StatelessWidget {
         ],
       ),
       child: GestureDetector(
-        onTap:
-            () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const PerfilDeOutroUsuario(),
-              ),
-            ),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PerfilDeOutroUsuario(),
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -133,7 +156,7 @@ class ServiceProviderFeed extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(post.providerAvatar),
+                    backgroundImage: NetworkImage(post.providerAvatar!),
                     radius: 28,
                   ),
                   const SizedBox(width: 12),
@@ -142,7 +165,7 @@ class ServiceProviderFeed extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          post.providerName,
+                          post.providerName!,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -150,7 +173,7 @@ class ServiceProviderFeed extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          post.providerCompany,
+                          post.providerCompany!,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -159,15 +182,11 @@ class ServiceProviderFeed extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.location_on,
-                              size: 14,
-                              color: Colors.grey,
-                            ),
+                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                post.location,
+                                post.location!,
                                 style: const TextStyle(color: Colors.grey),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -181,33 +200,15 @@ class ServiceProviderFeed extends StatelessWidget {
               ),
             ),
 
-            // Carrossel de imagens
-            if (post.images.isNotEmpty)
+            // Carrossel de imagens + vídeo
+            if (carouselItems.isNotEmpty)
               CarouselSlider(
                 options: CarouselOptions(
                   height: 240,
                   viewportFraction: 1.0,
                   enableInfiniteScroll: false,
                 ),
-                items:
-                    post.images.map((url) {
-                      return ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.network(
-                            url,
-                            fit: BoxFit.cover,
-                            errorBuilder:
-                                (context, error, stackTrace) => const Center(
-                                  child: Icon(Icons.broken_image, size: 40),
-                                ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                items: carouselItems,
               ),
 
             // Descrição e botão "Ver mais"
@@ -217,7 +218,7 @@ class ServiceProviderFeed extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      post.description,
+                      post.description!,
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black87,
@@ -232,17 +233,13 @@ class ServiceProviderFeed extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder:
-                                (context) => VerMaisPage(post: post.toDetail()),
+                            builder: (context) => VerMaisPage(post: post.toDetail()),
                           ),
                         );
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A202C),
                           borderRadius: BorderRadius.circular(20),
@@ -279,3 +276,68 @@ class ServiceProviderFeed extends StatelessWidget {
   }
 }
 
+// ------------------- VIDEO WIDGET -------------------
+class _CarouselVideoItem extends StatefulWidget {
+  final String videoUrl;
+
+  const _CarouselVideoItem({required this.videoUrl});
+
+  @override
+  State<_CarouselVideoItem> createState() => _CarouselVideoItemState();
+}
+
+class _CarouselVideoItemState extends State<_CarouselVideoItem> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+              child: Center(
+                child: Icon(
+                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white70,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

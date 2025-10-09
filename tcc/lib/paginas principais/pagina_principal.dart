@@ -7,6 +7,7 @@ import 'package:tcc/paginas%20principais/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
 class TelaPrincipal extends StatefulWidget {
+  
   const TelaPrincipal({super.key});
 
   @override

@@ -16,7 +16,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   bool isLoved = false;
   int loveCount = 1247;
 
-  final List<ServicePost> posts = [];
+  final List<ServicePostFeed > posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
 
@@ -34,26 +34,55 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   }
 
   void _loadInitialPosts() {
-    posts.addAll(List.generate(10, (index) => ServicePost()));
-  }
+  posts.addAll(List.generate(10, (index) {
+    return ServicePostFeed(
+      id: 'post_$index',
+      providerName: 'Usuário $index',
+      providerCompany: 'Empresa $index',
+      providerAvatar: 'https://picsum.photos/seed/avatar$index/100/100',
+      location: 'São Paulo - SP',
+      description: 'Serviço inicial número $index - descrição curta',
+      fullDescription: 'Descrição completa do serviço inicial número $index.',
+      images: [
+        'https://www.youtube.com/watch?v=i2PHZ9ARdzg',
+      ],
+      likes: 0,
+      isLiked: false,
+    );
+  }));
+}
 
   Future<void> _loadMorePosts() async {
-    if (isLoadingMore) return;
-    setState(() => isLoadingMore = true);
+  if (isLoadingMore) return;
 
-    await Future.delayed(const Duration(seconds: 2));
+  setState(() => isLoadingMore = true);
 
-    setState(() {
-      final currentLength = posts.length;
-      posts.addAll(
-        List.generate(
-          5,
-          (index) => ServicePost(),
-        ),
+  await Future.delayed(const Duration(seconds: 2));
+
+  setState(() {
+    final currentLength = posts.length;
+
+    posts.addAll(List.generate(5, (index) {
+      final i = currentLength + index;
+      return ServicePostFeed(
+        id: 'post_$i',
+        providerName: 'Usuário $i',
+        providerCompany: 'Empresa $i',
+        providerAvatar: 'https://picsum.photos/seed/avatar$i/100/100',
+        location: 'São Paulo - SP',
+        description: 'Serviço número $i - descrição de teste',
+        fullDescription: 'Descrição completa do serviço número $i',
+        images: [
+          'https://www.youtube.com/watch?v=i2PHZ9ARdzg',
+        ],
+        likes: 0,
+        isLiked: false,
       );
-      isLoadingMore = false;
-    });
-  }
+    }));
+
+    isLoadingMore = false;
+  });
+}
 
   void _onScroll() {
     if (_scrollController.position.pixels >=

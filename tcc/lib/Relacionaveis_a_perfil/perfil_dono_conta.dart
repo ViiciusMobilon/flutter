@@ -6,17 +6,19 @@ import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 
 class PerfilDono extends StatefulWidget {
+
+
   const PerfilDono({super.key});
 
   @override
-  State<PerfilDono> createState() => _ProfileScreenState();
+  State<PerfilDono> createState() => _PerfilDonoState();
 }
 
-class _ProfileScreenState extends State<PerfilDono> {
+class _PerfilDonoState extends State<PerfilDono> {
   bool isLoved = false;
   int loveCount = 1247;
 
-  final List<ServicePost> posts = [];
+  final List<ServicePostFeed> posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
 
@@ -34,25 +36,47 @@ class _ProfileScreenState extends State<PerfilDono> {
   }
 
   void _loadInitialPosts() {
-    posts.addAll(List.generate(10, (index) => ServicePost()));
+    posts.addAll(List.generate(10, (index) {
+      return ServicePostFeed(
+        id: 'post_$index',
+        providerName: 'Usuário $index',
+        providerCompany: 'Empresa $index',
+        providerAvatar: 'https://picsum.photos/seed/avatar$index/100/100',
+        location: 'São Paulo - SP',
+        description: 'Serviço inicial número $index - descrição curta',
+        fullDescription: 'Descrição completa do serviço inicial número $index.',
+        images: ['https://picsum.photos/seed/$index/600/400'],
+        likes: 0,
+        isLiked: false,
+      );
+    }));
   }
 
   Future<void> _loadMorePosts() async {
     if (isLoadingMore) return;
-    setState(() => isLoadingMore = true);
 
+    setState(() => isLoadingMore = true);
     await Future.delayed(const Duration(seconds: 2));
 
-    setState(() {
-      final currentLength = posts.length;
-      posts.addAll(
-        List.generate(
-          5,
-          (index) => ServicePost(),
-        ),
+    final currentLength = posts.length;
+
+    posts.addAll(List.generate(5, (index) {
+      final i = currentLength + index;
+      return ServicePostFeed(
+        id: 'post_$i',
+        providerName: 'Usuário $i',
+        providerCompany: 'Empresa $i',
+        providerAvatar: 'https://picsum.photos/seed/avatar$i/100/100',
+        location: 'São Paulo - SP',
+        description: 'Serviço número $i - descrição de teste',
+        fullDescription: 'Descrição completa do serviço número $i',
+        images: ['https://picsum.photos/seed/$i/600/400'],
+        likes: 0,
+        isLiked: false,
       );
-      isLoadingMore = false;
-    });
+    }));
+
+    setState(() => isLoadingMore = false);
   }
 
   void _onScroll() {
@@ -61,9 +85,6 @@ class _ProfileScreenState extends State<PerfilDono> {
       _loadMorePosts();
     }
   }
-
-  // 🔹 Função para gerar posts fake
-  
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +96,16 @@ class _ProfileScreenState extends State<PerfilDono> {
           SliverToBoxAdapter(child: _buildProfileHeader()),
           SliverToBoxAdapter(child: _buildDescription()),
           SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              if (index < posts.length) {
-                return FeedPerfil(post: posts[index]);
-              } else {
-                return _buildLoadingIndicator();
-              }
-            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                if (index < posts.length) {
+                  return FeedPerfil(post: posts[index]); // Corrigido aqui
+                } else {
+                  return _buildLoadingIndicator();
+                }
+              },
+              childCount: posts.length + (isLoadingMore ? 1 : 0),
+            ),
           ),
         ],
       ),
@@ -89,12 +113,15 @@ class _ProfileScreenState extends State<PerfilDono> {
   }
 
   Widget _buildProfileHeader() {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.40,
+      height: height * 0.40,
       child: Stack(
         children: [
           Container(
-            height: MediaQuery.of(context).size.height * 0.16,
+            height: height * 0.16,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -130,10 +157,9 @@ class _ProfileScreenState extends State<PerfilDono> {
                 const Text(
                   'João Silva',
                   style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -152,17 +178,15 @@ class _ProfileScreenState extends State<PerfilDono> {
             ),
           ),
           Positioned(
-            left: MediaQuery.of(context).size.width * 0.87,
-            top: MediaQuery.of(context).size.height * 0.17,
+            left: width * 0.87,
+            top: height * 0.17,
             child: IconButton(
-              onPressed:
-                  () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TelaPrincipal()),
-                  ),
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TelaPrincipal())),
               icon: Icon(
                 Icons.photo_camera,
                 color: Colors.white,
-                size: MediaQuery.of(context).size.width * 0.06,
+                size: width * 0.06,
               ),
             ),
           ),
@@ -182,16 +206,16 @@ class _ProfileScreenState extends State<PerfilDono> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.favorite, color: Colors.white, size: 18),
+          const Icon(Icons.favorite, color: Colors.white, size: 18),
           const SizedBox(width: 6),
-          Text(
+          const Text(
             'Curtidas',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
           const SizedBox(width: 8),
           Text(
             '$loveCount',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ],
       ),
