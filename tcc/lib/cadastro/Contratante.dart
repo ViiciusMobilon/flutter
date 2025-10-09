@@ -24,7 +24,7 @@ class Contratante extends StatelessWidget {
       theme: ThemeData(),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xFFFEF7FD),
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
@@ -44,52 +44,55 @@ class Contratante extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.width * 0.1,
-                left: MediaQuery.of(context).size.width * 0.2,
-                bottom: MediaQuery.of(context).size.width * 0.01,
-                right: MediaQuery.of(context).size.width * 0.2,
+        body: Container(
+          color: const Color.fromARGB(255, 255, 255, 255),
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.1,
+                  left: MediaQuery.of(context).size.width * 0.2,
+                  bottom: MediaQuery.of(context).size.width * 0.01,
+                  right: MediaQuery.of(context).size.width * 0.2,
+                ),
+                child: const Perfil(),
               ),
-              child: const Perfil(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.width * 0.1,
-                left: MediaQuery.of(context).size.width * 0.1,
-                bottom: MediaQuery.of(context).size.width * 0.01,
-                right: MediaQuery.of(context).size.width * 0.1,
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.width * 0.1,
+                  left: MediaQuery.of(context).size.width * 0.1,
+                  bottom: MediaQuery.of(context).size.width * 0.01,
+                  right: MediaQuery.of(context).size.width * 0.1,
+                ),
+                child: const Nome(),
               ),
-              child: const Nome(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.03,
-                left: MediaQuery.of(context).size.width * 0.1,
-
-                right: MediaQuery.of(context).size.width * 0.1,
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  left: MediaQuery.of(context).size.width * 0.1,
+          
+                  right: MediaQuery.of(context).size.width * 0.1,
+                ),
+                child: const Telefone(),
               ),
-              child: const Telefone(),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.03,
-                left: MediaQuery.of(context).size.width * 0.1,
-                right: MediaQuery.of(context).size.width * 0.1,
+          
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  left: MediaQuery.of(context).size.width * 0.1,
+                  right: MediaQuery.of(context).size.width * 0.1,
+                ),
+                child: cpf(),
               ),
-              child: cpf(),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.25,
+          
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.25,
+                ),
+                child: Center(child: botao()),
               ),
-              child: Center(child: botao()),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

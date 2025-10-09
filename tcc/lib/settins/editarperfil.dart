@@ -26,7 +26,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFEF7FD),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -34,21 +34,24 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
           },
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        children: const [
-          Center(child: Perfil()),
-          SizedBox(height: 30),
-          Nome(),
-          SizedBox(height: 20),
-          Telefone(),
-          SizedBox(height: 20),
-          Descricao(),
-          SizedBox(height: 20),
-          Area(),
-          SizedBox(height: 50),
-          Center(child: botao()),
-        ],
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          children: const [
+            Center(child: Perfil()),
+            SizedBox(height: 30),
+            Nome(),
+            SizedBox(height: 20),
+            Telefone(),
+            SizedBox(height: 20),
+            Descricao(),
+            SizedBox(height: 20),
+            Area(),
+            SizedBox(height: 50),
+            Center(child: botao()),
+          ],
+        ),
       ),
     );
   }

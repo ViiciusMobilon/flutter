@@ -24,44 +24,47 @@ class _SegurancaState extends State<Seguranca> {
             fontFamily: "Poppins",
           ),
         ),
-        backgroundColor: const Color(0xFFFEF7FD),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: ListView(
-        children: [
-          ListTile(
-            leading: Icon(Icons.lock, color: Colors.indigoAccent),
-            title: Text(
-              'Alterar Email',
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.05,
-              ),
-            ),
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TrocarEmail()),
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            ListTile(
+              leading: Icon(Icons.lock, color: Colors.indigoAccent),
+              title: Text(
+                'Alterar Email',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
                 ),
-          ),
-          ListTile(
-            leading: Icon(Icons.lock, color: Colors.indigoAccent),
-            title: Text(
-              'Alterar numero',
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.05,
               ),
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TrocarEmail()),
+                  ),
             ),
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Trocarnumero()),
+            ListTile(
+              leading: Icon(Icons.lock, color: Colors.indigoAccent),
+              title: Text(
+                'Alterar numero',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
                 ),
-          ),
-          CamposSenha(),
-        ],
+              ),
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Trocarnumero()),
+                  ),
+            ),
+            CamposSenha(),
+          ],
+        ),
       ),
     );
   }
@@ -136,7 +139,7 @@ class _CamposSenhaState extends State<CamposSenha> {
                 hintText: 'Digite sua senha atual',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
+        
                 ),
                 filled: true,
                 fillColor: Colors.white,
@@ -198,7 +201,6 @@ class _CamposSenhaState extends State<CamposSenha> {
                 hintText: 'Digite sua nova senha',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: Colors.white,
@@ -246,7 +248,6 @@ class _CamposSenhaState extends State<CamposSenha> {
                 hintText: 'Confirme sua nova senha',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: Colors.white,

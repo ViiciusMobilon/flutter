@@ -126,6 +126,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
@@ -160,106 +161,108 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // Campo de texto
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 24,
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: _postController,
-                      focusNode: _focusNode,
-                      maxLength: 280,
-                      maxLines: null,
-                      autofocus: true,
-                      decoration: const InputDecoration(
-                        hintText: "O que está acontecendo?",
-                        hintStyle: TextStyle(),
-                        border: InputBorder.none,
+          child: Container(color: Colors.white,
+            child: Column(
+              children: [
+                // Campo de texto
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 24,
+                      backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=3"),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        controller: _postController,
+                        focusNode: _focusNode,
+                        maxLength: 280,
+                        maxLines: null,
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          hintText: "O que está acontecendo?",
+                          hintStyle: TextStyle(),
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // Carrossel de mídias
-              if (_midias.isNotEmpty)
-                SizedBox(
-                  height: 250,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _midias.length,
-                    itemBuilder: (context, index) {
-                      final midia = _midias[index];
-                      return Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: midia.isVideo
-                                ? midia.controller != null && midia.controller!.value.isInitialized
-                                    ? AspectRatio(
-                                        aspectRatio: midia.controller!.value.aspectRatio,
-                                        child: VideoPlayer(midia.controller!),
-                                      )
-                                    : const Center(child: CircularProgressIndicator())
-                                : Image.file(
-                                    midia.arquivo,
-                                    width: double.infinity,
-                                    height: 250,
-                                    fit: BoxFit.cover,
+                  ],
+                ),
+                const SizedBox(height: 12),
+                // Carrossel de mídias
+                if (_midias.isNotEmpty)
+                  SizedBox(
+                    height: 250,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: _midias.length,
+                      itemBuilder: (context, index) {
+                        final midia = _midias[index];
+                        return Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: midia.isVideo
+                                  ? midia.controller != null && midia.controller!.value.isInitialized
+                                      ? AspectRatio(
+                                          aspectRatio: midia.controller!.value.aspectRatio,
+                                          child: VideoPlayer(midia.controller!),
+                                        )
+                                      : const Center(child: CircularProgressIndicator())
+                                  : Image.file(
+                                      midia.arquivo,
+                                      width: double.infinity,
+                                      height: 250,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: GestureDetector(
+                                onTap: () => _removerMidia(index),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black54,
                                   ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            right: 8,
-                            child: GestureDetector(
-                              onTap: () => _removerMidia(index),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black54,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.white
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    ),
                   ),
+                const SizedBox(height: 12),
+                // Botões de adicionar mídia
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.image, color: Colors.blue),
+                      onPressed: _adicionarImagem,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.videocam, color: Colors.blue),
+                      onPressed: _adicionarVideo,
+                    ),
+            
+                    Text("Role para o lado para ver as mídias",
+                     style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.03,
+                          color: const Color.fromARGB(255, 8, 8, 8),
+                          fontFamily: "Poppins",
+                        ),
+                    )
+                  ],
                 ),
-              const SizedBox(height: 12),
-              // Botões de adicionar mídia
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.image, color: Colors.blue),
-                    onPressed: _adicionarImagem,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.videocam, color: Colors.blue),
-                    onPressed: _adicionarVideo,
-                  ),
-
-                  Text("Role para o lado para ver as mídias",
-                   style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 0.03,
-                        color: const Color.fromARGB(255, 8, 8, 8),
-                        fontFamily: "Poppins",
-                      ),
-                  )
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
