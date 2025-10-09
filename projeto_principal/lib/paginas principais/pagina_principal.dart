@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
@@ -6,6 +7,13 @@ import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/FeedCards/Cards.dart';
 import 'package:tcc/paginas principais/pesquisa.dart';
+=======
+import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
+import 'package:tcc/feed_principal/feed_aleatorio.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
+import 'package:tcc/paginas%20principais/pesquisa.dart';
+>>>>>>> frontend
 import 'package:tcc/settins/pgsettins.dart';
 
 /// Tela principal com barra de navegação inferior
@@ -25,10 +33,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     _paginas = [
       AleatorioFeed(),
       PerfilUser(authController: widget.authController,),
     ];
+=======
+    _paginas = [AleatorioFeed(), PerfilDono()];
+>>>>>>> frontend
   }
 
   @override
@@ -37,6 +49,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
+<<<<<<< HEAD
       appBar: _buildAppBar(context),
       body: IndexedStack(index: _paginaAtual, children: _paginas),
       floatingActionButton: _paginaAtual == 1
@@ -120,6 +133,180 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                 ],
               ),
+=======
+      appBar:
+          _paginaAtual == 0
+              ? PreferredSize(
+                preferredSize: Size.fromHeight(
+                  MediaQuery.of(context).size.height * 0.085,
+                ),
+                child: AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.05,
+                          vertical: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Barra de pesquisa moderna
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.045,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: TextField(
+                                style: const TextStyle(color: Colors.white),
+                                cursorColor: Colors.white,
+                                readOnly: true,
+                                onTap: () {
+                                  showSearch(
+                                    context: context,
+                                    delegate: BarraDePesquisa(),
+                                  );
+                                },
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                  ),
+                                  hintText: "Pesquisar serviços...",
+                                  hintStyle: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.height *
+                                        0.012,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              : AppBar(
+                title: const Text(
+                  "Perfil",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.more_vert_outlined),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const settinspage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+      body: IndexedStack(index: _paginaAtual, children: _paginas),
+      floatingActionButton:
+          _paginaAtual == 1
+              ? FloatingActionButton(
+                onPressed: () async {
+                  final resultado = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
+                  );
+                  if (resultado != null && mounted) {
+                    // Lógica para lidar com o resultado
+                  }
+                },
+                backgroundColor: const Color(0xFF5E35B1),
+                elevation: 4,
+                child: const Icon(Icons.add, color: Colors.white),
+              )
+              : null,
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2196F3), Color(0xFF5E35B1)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF2196F3).withOpacity(0.4),
+              offset: const Offset(0, 4),
+              blurRadius: 12,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: BottomNavigationBar(
+              currentIndex: _paginaAtual,
+              onTap: (i) => setState(() => _paginaAtual = i),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white60,
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 12,
+              unselectedFontSize: 11,
+              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_rounded),
+                  label: 'Início',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_rounded),
+                  label: 'Perfil',
+                ),
+              ],
+>>>>>>> frontend
             ),
           ),
         ),
@@ -248,6 +435,10 @@ class PesquisaWidget extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
+<<<<<<< HEAD
+=======
+              // Título
+>>>>>>> frontend
               const Text(
                 "Encontre Profissionais",
                 style: TextStyle(
@@ -259,6 +450,10 @@ class PesquisaWidget extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
+<<<<<<< HEAD
+=======
+              // Descrição
+>>>>>>> frontend
               Text(
                 "Use a barra de pesquisa no topo da tela para encontrar os melhores profissionais da sua região.",
                 textAlign: TextAlign.center,
@@ -270,7 +465,11 @@ class PesquisaWidget extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
+<<<<<<< HEAD
               // Botão decorativo
+=======
+              // Botão de exemplo (opcional)
+>>>>>>> frontend
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

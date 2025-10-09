@@ -10,11 +10,11 @@ import 'package:tcc/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 
 // void main() => runApp( Contratante(usuario: UsuarioGeral(),));
@@ -67,11 +67,12 @@ class _ContratanteState extends State<Contratante>{
 ),
           title:  Text(
             "Cadastro",
-            style: TextStyle(color: Colors.black,
-            fontSize: MediaQuery.of(context).size.width*0.07,
-            fontWeight: FontWeight.w800,
-            fontFamily: "Poppins",),
-             
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: MediaQuery.of(context).size.width * 0.07,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins",
+            ),
           ),
           centerTitle: true,
         ),
@@ -104,7 +105,7 @@ class _ContratanteState extends State<Contratante>{
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
-               
+
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
               child: Telefone(controller: telefoneController,erroTelefone: erroTelefone, onClearerror: limparTel,),
@@ -242,23 +243,21 @@ class _NomeState extends State<Nome> {
         labelText: "Nome",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "Fulano de Tal",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
-        focusedBorder:OutlineInputBorder(
-           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
@@ -286,24 +285,21 @@ class _TelefoneState extends State<Telefone> {
         labelText: "Telefone",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "(14)999999999",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-           
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
         errorText: widget.erroTelefone
       ),
@@ -364,7 +360,6 @@ class _cpfState extends State<cpf> {
     );
   }
 }
-
 
 class botao extends StatefulWidget {
   final Userform usuario;
@@ -466,7 +461,7 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
-      
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -496,4 +491,3 @@ class _botaoState extends State<botao> {
     );
   }
 }
-

@@ -20,7 +20,7 @@ final cepMaskFormatter = MaskTextInputFormatter(
 // void main() => runApp(const CEP());
 final numeromaskFormatter = MaskTextInputFormatter(
   mask: '#####',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 
 class CEP extends StatefulWidget {
@@ -81,17 +81,17 @@ class _CEPState extends State<CEP> {
 ),
           title:  Text(
             "Endereço",
-            style: TextStyle(color: Colors.black,
-            fontSize: MediaQuery.of(context).size.width*0.07,
-            fontWeight: FontWeight.w800,
-            fontFamily: "Poppins",),
-             
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: MediaQuery.of(context).size.width * 0.07,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins",
+            ),
           ),
           centerTitle: true,
         ),
         body: ListView(
           children: <Widget>[
-            
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.width * 0.1,
@@ -134,7 +134,7 @@ class _CEPState extends State<CEP> {
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
-               
+
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
               child: RuaWidget(controller: ruaController,),
@@ -223,28 +223,25 @@ class _cepState extends State<cepWidget> {
           inputFormatters: [cepMaskFormatter],
       
       decoration: InputDecoration(
-      
         labelText: "CEP",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
-        
+
         hintText: "99999-999",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
-        focusedBorder:OutlineInputBorder(
-           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
@@ -276,24 +273,21 @@ class _RuaState extends State<RuaWidget> {
         labelText: "Rua / Avenida",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "Avenida sei la",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-           
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
@@ -345,7 +339,6 @@ class _numeroState extends State<numero> {
     );
   }
 }
-
 
 class botao extends StatefulWidget {
  final Userform usuario;
@@ -450,7 +443,7 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
-      
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

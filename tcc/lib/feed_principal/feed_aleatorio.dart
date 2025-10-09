@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:video_player/video_player.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/ver_mais/VerMais.dart';
+import 'package:tcc/service_post.dart';
 
+// ------------------------ ALEATORIO FEED ------------------------
 class AleatorioFeed extends StatefulWidget {
   const AleatorioFeed({super.key});
 
@@ -9,7 +14,7 @@ class AleatorioFeed extends StatefulWidget {
 }
 
 class _AleatorioFeedState extends State<AleatorioFeed> {
-  final List<ServicePost> _posts = [];
+  final List<ServicePostFeed> _posts = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
 
@@ -30,23 +35,28 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 2));
 
-    List<ServicePost> newPosts = List.generate(5, (index) {
+    List<ServicePostFeed> newPosts = List.generate(3, (index) {
       int id = _posts.length + index + 1;
-      return ServicePost(
+
+      List<String> imageUrls = List.generate(
+        3,
+        (imgIndex) =>
+            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+      );
+
+      // Vídeo de teste
+      String? videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+
+      return ServicePostFeed(
         id: id.toString(),
-        provider: Provider(
-          name: "Prestador $id",
-          company: "Empresa $id",
-          avatar: "https://via.placeholder.com/150",
-          rating: 4.5,
-          reviewCount: 50,
-        ),
-        images: ["https://via.placeholder.com/300x200?text=Post+$id"],
-        description: "Descrição breve do serviço $id...",
-        fullDescription: "Descrição completa do serviço $id...",
-        category: "Categoria $id",
+        providerName: "Prestador $id",
+        providerCompany: "Empresa $id",
+        providerAvatar: "https://picsum.photos/100/100?random=$id",
         location: "Cidade $id",
-        completedAt: "2025-01-0$id",
+        description: "Descrição breve do serviço $id...",
+        fullDescription: "Descrição completa do serviço qr$id...",
+        images: imageUrls,
+        videoUrl: videoUrl != null ? [videoUrl] : null,
         likes: 0,
         isLiked: false,
       );
@@ -88,55 +98,36 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
   }
 }
 
-class ServicePost {
-  final String id;
-  final Provider provider;
-  final List<String> images;
-  final String description;
-  final String fullDescription;
-  final String category;
-  final String location;
-  final String completedAt;
-  int likes;
-  bool isLiked;
-
-  ServicePost({
-    required this.id,
-    required this.provider,
-    required this.images,
-    required this.description,
-    required this.fullDescription,
-    required this.category,
-    required this.location,
-    required this.completedAt,
-    required this.likes,
-    required this.isLiked,
-  });
-}
-
-class Provider {
-  final String name;
-  final String company;
-  final String avatar;
-  final double rating;
-  final int reviewCount;
-
-  Provider({
-    required this.name,
-    required this.company,
-    required this.avatar,
-    required this.rating,
-    required this.reviewCount,
-  });
-}
-
 class ServiceProviderFeed extends StatelessWidget {
-  final ServicePost post;
+  final ServicePostFeed post;
 
   const ServiceProviderFeed({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
+    // Combina vídeo e imagens em um único array de widgets
+    List<Widget> carouselItems = [];
+
+    if (post.videoUrl != null) {
+      carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
+    }
+
+    carouselItems.addAll(post.images!.map((url) {
+      return ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Image.network(
+            url,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => const Center(
+              child: Icon(Icons.broken_image, size: 40),
+            ),
+          ),
+        ),
+      );
+    }));
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -150,183 +141,199 @@ class ServiceProviderFeed extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header com informações do prestador
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // Avatar
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(post.provider.avatar),
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PerfilDeOutroUsuario(),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cabeçalho
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(post.providerAvatar!),
                     radius: 28,
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Informações
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.provider.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xFF1A202C),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        post.provider.company,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF718096),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 14,
-                            color: Color(0xFF718096),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.providerName!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            post.location,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF718096),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          post.providerCompany!,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                post.location!,
+                                style: const TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // Imagens com Carousel
-          if (post.images.isNotEmpty)
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 240,
-                enlargeCenterPage: false,
-                enableInfiniteScroll: false,
-                autoPlay: false,
-                viewportFraction: 1.0,
-                scrollPhysics: const BouncingScrollPhysics(),
+                ],
               ),
-              items: post.images.map((img) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      img,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              }).toList(),
             ),
 
-          // Descrição
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  post.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4A5568),
-                    height: 1.5,
-                  ),
+            // Carrossel de imagens + vídeo
+            if (carouselItems.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 240,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
                 ),
-                const SizedBox(height: 12),
-                
-                // Footer com categoria, rating e botão
-                Row(
-                  children: [
-                    // Badge de Categoria
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                items: carouselItems,
+              ),
+
+            // Descrição e botão "Ver mais"
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      post.description!,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
                       ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0F4F8),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                     
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                 
-                    
-                    // Rating
-                  
-                    
-                    const Spacer(),
-                    
-                    // Botão Ver Mais
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Ação ao clicar em "Ver mais"
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => VerMaisPage(post: post.toDetail()),
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A202C),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Text(
-                                'Ver mais',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward,
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1A202C),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Ver mais',
+                              style: TextStyle(
                                 color: Colors.white,
-                                size: 16,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ------------------- VIDEO WIDGET -------------------
+class _CarouselVideoItem extends StatefulWidget {
+  final String videoUrl;
+
+  const _CarouselVideoItem({required this.videoUrl});
+
+  @override
+  State<_CarouselVideoItem> createState() => _CarouselVideoItemState();
+}
+
+class _CarouselVideoItemState extends State<_CarouselVideoItem> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          ),
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+              child: Center(
+                child: Icon(
+                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white70,
+                  size: 50,
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -334,28 +341,3 @@ class ServiceProviderFeed extends StatelessWidget {
     );
   }
 }
-
-final List<ServicePost> servicePosts = List.generate(5, (index) {
-  return ServicePost(
-    id: "$index",
-    provider: Provider(
-      name: "Profissional $index",
-      company: "Empresa $index",
-      avatar: "https://picsum.photos/100/100?random=$index",
-      rating: 4.5,
-      reviewCount: 20 + index,
-    ),
-    images: List.generate(
-      3,
-      (imgIndex) =>
-          "https://picsum.photos/400/200?random=${index * 3 + imgIndex}",
-    ),
-    description: "Descrição curta do serviço $index...",
-    fullDescription: "Descrição detalhada do serviço $index...",
-    category: "Categoria $index",
-    location: "Cidade $index",
-    completedAt: "2025-10-01",
-    likes: index * 5,
-    isLiked: false,
-  );
-});

@@ -35,23 +35,29 @@ class _SegurancaState extends State<Seguranca> {
             leading: Icon(Icons.lock, color: Colors.indigoAccent),
             title: Text(
               'Alterar Email',
-              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+              ),
             ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TrocarEmail()),
-            ),
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TrocarEmail()),
+                ),
           ),
           ListTile(
             leading: Icon(Icons.lock, color: Colors.indigoAccent),
             title: Text(
               'Alterar numero',
-              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+              ),
             ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TrocarEmail()),
-            ),
+            onTap:
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TrocarEmail()),
+                ),
           ),
           CamposSenha(),
         ],
@@ -71,7 +77,8 @@ class _CamposSenhaState extends State<CamposSenha> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _senhaAtualController = TextEditingController();
   final TextEditingController _novaSenhaController = TextEditingController();
-  final TextEditingController _confirmarSenhaController = TextEditingController();
+  final TextEditingController _confirmarSenhaController =
+      TextEditingController();
 
   bool _obscureSenhaAtual = true;
   bool _obscureNovaSenha = true;
@@ -138,7 +145,9 @@ class _CamposSenhaState extends State<CamposSenha> {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureSenhaAtual ? Icons.visibility_off : Icons.visibility,
+                    _obscureSenhaAtual
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: Colors.grey,
                   ),
                   onPressed: () {
@@ -149,14 +158,16 @@ class _CamposSenhaState extends State<CamposSenha> {
                 ),
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) return "Digite a senha atual";
+                if (value == null || value.isEmpty)
+                  return "Digite a senha atual";
                 return null;
               },
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => Esqueciasenha()),
-              ),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => Esqueciasenha()),
+                  ),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.indigoAccent,
                 textStyle: TextStyle(
@@ -207,8 +218,10 @@ class _CamposSenhaState extends State<CamposSenha> {
                 ),
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) return "Digite a nova senha";
-                if (value.length < 6) return "Senha deve ter ao menos 6 caracteres";
+                if (value == null || value.isEmpty)
+                  return "Digite a nova senha";
+                if (value.length < 6)
+                  return "Senha deve ter ao menos 6 caracteres";
                 return null;
               },
             ),
@@ -242,7 +255,9 @@ class _CamposSenhaState extends State<CamposSenha> {
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscureConfirmarSenha ? Icons.visibility_off : Icons.visibility,
+                    _obscureConfirmarSenha
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: Colors.grey,
                   ),
                   onPressed: () {
@@ -254,7 +269,8 @@ class _CamposSenhaState extends State<CamposSenha> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) return "Confirme a senha";
-                if (value != _novaSenhaController.text) return "As senhas não coincidem";
+                if (value != _novaSenhaController.text)
+                  return "As senhas não coincidem";
                 return null;
               },
             ),

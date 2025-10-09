@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/main.dart' show Main;
 
-class feedperfil extends StatelessWidget {
+class FeedPerfil extends StatelessWidget {
   final ServicePost post;
 
-  const feedperfil({super.key, required this.post});
+  const FeedPerfil({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
+    final limitedMedia = post.images.take(50).toList(); // 🔹 Máximo 50 mídias
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -23,12 +27,11 @@ class feedperfil extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header com informações do prestador
+          // 🔹 Cabeçalho do prestador
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                // Avatar com borda
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -43,7 +46,6 @@ class feedperfil extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Informações
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,17 +91,81 @@ class feedperfil extends StatelessWidget {
             ),
           ),
 
-          // Grid de Imagens
-          if (post.images.isNotEmpty)
+          // 🔹 Carrossel de imagens/vídeos
+          if (limitedMedia.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: _buildImageGrid(context),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    height: 260,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: limitedMedia.length > 1,
+                    viewportFraction: 1.0,
+                    autoPlay: limitedMedia.length > 1,
+                    autoPlayInterval: const Duration(seconds: 4),
+                    autoPlayAnimationDuration: const Duration(
+                      milliseconds: 800,
+                    ),
+                  ),
+                  items:
+                      limitedMedia.map((mediaUrl) {
+                        final isVideo =
+                            mediaUrl.endsWith('.mp4') ||
+                            mediaUrl.endsWith('.mov') ||
+                            mediaUrl.endsWith('.avi');
+
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return Container(
+                              width: double.infinity,
+                              color:
+                                  Colors
+                                      .grey[200], // fundo neutro enquanto carrega
+                              child:
+                                  isVideo
+                                      ? Center(
+                                        child: Icon(
+                                          Icons.play_circle_fill,
+                                          color: Colors.white.withOpacity(0.8),
+                                          size: 64,
+                                        ),
+                                      )
+                                      : Image.network(
+                                        mediaUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        loadingBuilder: (
+                                          context,
+                                          child,
+                                          loadingProgress,
+                                        ) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                const Center(
+                                                  child: Icon(
+                                                    Icons.broken_image,
+                                                    size: 40,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                      ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                ),
               ),
             ),
 
-          // Descrição
+          // 🔹 Descrição e botão "Ver mais"
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -116,50 +182,55 @@ class feedperfil extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-
-                // Footer com categoria, rating e botão
                 Row(
                   children: [
-                    // Badge de Categoria
-                   
-
                     const Spacer(),
-
-                    // Botão Ver Mais
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Ação ao clicar em "Ver mais"
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                    GestureDetector(
+                      onTap:
+                          () => Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Main()),
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A202C),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Text(
-                                'Ver mais',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(20),
+                          child: GestureDetector(
+                            onTap:
+                                () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => Main(),
+                                  ),
                                 ),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
                               ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                                size: 16,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1A202C),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            ],
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Text(
+                                    'Ver mais',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -172,138 +243,6 @@ class feedperfil extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  // Constrói o grid de imagens de forma inteligente
-  Widget _buildImageGrid(BuildContext context) {
-    final imageCount = post.images.length;
-    
-    if (imageCount == 1) {
-      // Uma imagem: ocupa toda a largura
-      return Image.network(
-        post.images[0],
-        width: double.infinity,
-        height: 240,
-        fit: BoxFit.cover,
-      );
-    } else if (imageCount == 2) {
-      // Duas imagens: lado a lado
-      return Row(
-        children: [
-          Expanded(
-            child: Image.network(
-              post.images[0],
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Image.network(
-              post.images[1],
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ],
-      );
-    } else if (imageCount == 3) {
-      // Três imagens: uma grande + duas pequenas
-      return Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Image.network(
-              post.images[0],
-              height: 240,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              children: [
-                Image.network(
-                  post.images[1],
-                  height: 118,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 4),
-                Image.network(
-                  post.images[2],
-                  height: 118,
-                  fit: BoxFit.cover,
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else {
-      // Quatro ou mais imagens: grid 2x2 com contador
-      return Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Image.network(
-                  post.images[0],
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Image.network(
-                  post.images[1],
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Expanded(
-                child: Image.network(
-                  post.images[2],
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Image.network(
-                      post.images[3],
-                      height: 120,
-                      fit: BoxFit.cover,
-                    ),
-                    if (imageCount > 4)
-                      Container(
-                        height: 120,
-                        color: Colors.black54,
-                        child: Center(
-                          child: Text(
-                            '+${imageCount - 4}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    }
   }
 }
 

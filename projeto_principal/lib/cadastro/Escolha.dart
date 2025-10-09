@@ -25,13 +25,13 @@ class Escolha extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
-  icon: Icon(Icons.arrow_back, color: Colors.black),
-  onPressed: () {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Cadastro()),
-    );
-  },
-),
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Cadastro()),
+              );
+            },
+          ),
           title: Text(
             "Faça sua escolha",
             style: TextStyle(

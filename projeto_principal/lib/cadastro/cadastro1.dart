@@ -9,7 +9,7 @@ import 'package:tcc/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '##.###-###',
-  filter: { "#": RegExp(r'[a-zA-Z0-9]') },
+  filter: {"#": RegExp(r'[a-zA-Z0-9]')},
 );
 
 
@@ -42,24 +42,26 @@ class _CadastroState extends State<Cadastro> {
   }
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
 
       home: Scaffold(
         body: Container(
-
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
-          decoration: BoxDecoration(color: const Color.fromARGB(255, 255, 255, 255)),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 255, 255, 255),
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-
                 Center(
                   child: Padding(
-                    padding:  EdgeInsets.only(  top: MediaQuery.of(context).size.height * 0.07,),
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.07,
+                    ),
                     child: imagem(),
                   ),
                 ),
@@ -81,7 +83,7 @@ class _CadastroState extends State<Cadastro> {
                   ),
                 ),
                 //fim sign
-              
+
                 //textfield de email
                 Padding(
                   padding: EdgeInsets.only(
@@ -105,7 +107,7 @@ class _CadastroState extends State<Cadastro> {
                 ),
 
                 // fim senha
-               Padding(
+                Padding(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
@@ -126,9 +128,9 @@ class _CadastroState extends State<Cadastro> {
                         passwordConfirmationController: confirmation_passwordController,)
                     ),
                 ),
+
                 //fim botao
                 //escrita para o cadastro
-               
               ],
             ),
           ),
@@ -137,7 +139,6 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 }
-
 
 class email extends StatefulWidget {
   final TextEditingController? controller;
@@ -187,8 +188,6 @@ class _emailState extends State<email> {
     );
   }
 }
-
-
 
 class senha extends StatefulWidget {
   final TextEditingController? controller;
@@ -247,7 +246,6 @@ class _senhaState extends State<senha> {
     );
   }
 }
-
 
 class confirmar extends StatefulWidget {
   final TextEditingController? controller;
@@ -376,20 +374,32 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
-        
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-        Padding(
-          padding: EdgeInsets.only(left:MediaQuery.of(context).size.width * 0.09, ),
-          child: Text("continuar", style: TextStyle(
-             color: const Color.from(alpha: 1, red: 0.988, green: 0.984, blue: 0.984),
-                          fontSize: MediaQuery.of(context).size.width * 0.05,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w800,
-          ),),
-        ), Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,)
-      ],),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.09,
+              ),
+              child: Text(
+                "continuar",
+                style: TextStyle(
+                  color: const Color.from(
+                    alpha: 1,
+                    red: 0.988,
+                    green: 0.984,
+                    blue: 0.984,
+                  ),
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios_sharp, color: Colors.white),
+          ],
+        ),
       ),
     );
   }
@@ -401,8 +411,8 @@ class imagem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-       width:MediaQuery.of(context).size.width *0.4,
-       height:MediaQuery.of(context).size.height *0.25,
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage("assets/imagens/logo.png"), //fundo da imagem

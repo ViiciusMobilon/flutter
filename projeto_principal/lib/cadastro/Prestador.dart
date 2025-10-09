@@ -4,7 +4,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
+<<<<<<< HEAD
 // ignore: unused_import
+=======
+>>>>>>> frontend
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:tcc/data/controllers/verificar_controller.dart';
 import 'package:tcc/cadastro/dropdown.dart';
@@ -12,15 +15,20 @@ import 'package:tcc/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 
+<<<<<<< HEAD
 
 // void main() => runApp(Prestador(usuario: UsuarioGeral(),));
+=======
+class Prestador extends StatelessWidget {
+  const Prestador({super.key});
+>>>>>>> frontend
 
 class Prestador extends StatefulWidget {
   final Userform usuario;
@@ -62,6 +70,7 @@ class _PrestadorState extends State<Prestador> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEF7FD),
+<<<<<<< HEAD
            leading: IconButton(
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
@@ -71,12 +80,24 @@ class _PrestadorState extends State<Prestador> {
   },
 ),
           title:  Text(
+=======
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Escolha()),
+              );
+            },
+          ),
+          title: Text(
+>>>>>>> frontend
             "Cadastro",
-            style: TextStyle(color: Colors.black,
-            fontSize: MediaQuery.of(context).size.width*0.07,
-            fontWeight: FontWeight.w800,
-            fontFamily: "Poppins",),
-             
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: MediaQuery.of(context).size.width * 0.07,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins",
+            ),
           ),
           centerTitle: true,
         ),
@@ -109,7 +130,7 @@ class _PrestadorState extends State<Prestador> {
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
-               
+
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
               child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel),
@@ -143,6 +164,7 @@ class _PrestadorState extends State<Prestador> {
               },
               ),
             ),
+<<<<<<< HEAD
          
            Padding(
                   padding: EdgeInsets.only(
@@ -159,6 +181,15 @@ class _PrestadorState extends State<Prestador> {
                   erroTelefone: (msg) => setState(() => erroTelefone = msg)
                   )),
                 ),
+=======
+
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.08,
+              ),
+              child: Center(child: botao()),
+            ),
+>>>>>>> frontend
           ],
         ),
       ),
@@ -222,6 +253,7 @@ class _PerfilimagemState extends State<Perfilimagem> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
+<<<<<<< HEAD
           child: widget.image != null
               ? Image.file(
                   widget.image!,
@@ -241,9 +273,31 @@ class _PerfilimagemState extends State<Perfilimagem> {
                       Icons.camera_alt,
                       size: MediaQuery.of(context).size.width * 0.1,
                       color: Colors.white70,
+=======
+          child:
+              _image != null
+                  ? Image.file(
+                    _image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                  : Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
+>>>>>>> frontend
                     ),
                   ),
-                ),
         ),
       ),
     );
@@ -267,23 +321,21 @@ class _NomeState extends State<Nome> {
         labelText: "Nome",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "Fulano de Tal",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
-        focusedBorder:OutlineInputBorder(
-           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
@@ -306,30 +358,27 @@ class _TelefoneState extends State<Telefone> {
     return TextField(
       controller: widget.controller,
       inputFormatters: [maskFormatter],
-      
+
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: "Telefone",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "(14)999999999",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-           
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
         errorText: widget.erroTel,
       ),
@@ -357,7 +406,7 @@ class _cpfState extends State<cpf> {
     return TextField(
       controller: widget.controller,
       keyboardType: TextInputType.number,
-  inputFormatters: [cpfMaskFormatter],
+      inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
         hintText: "000.000.000.00",
         hintStyle: TextStyle(
@@ -392,6 +441,95 @@ class _cpfState extends State<cpf> {
   }
 }
 
+<<<<<<< HEAD
+=======
+class Area extends StatelessWidget {
+  final dropValue = ValueNotifier('');
+  final dropOpcoes = [
+    'Pedreiro',
+    'Pintor',
+    'Eletricista',
+    'Encanador',
+    'Marceneiro',
+    'Jardineiro',
+    'Gesseiro',
+    'Serralheiro',
+    'Vidraceiro',
+    'Alvenaria',
+    'Telhadista',
+    'Azulejista',
+    'Instalador de drywall',
+    'Servente de obras',
+    'Outros',
+  ];
+
+  Area({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ValueListenableBuilder(
+        valueListenable: dropValue,
+        builder: (BuildContext context, String value, _) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: DropdownSearch<String>(
+              items: dropOpcoes,
+              selectedItem: value.isEmpty ? null : value,
+              onChanged: (String? newValue) {
+                dropValue.value = newValue ?? '';
+              },
+              popupProps: PopupProps.menu(
+                showSearchBox: true,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    labelText: "Pesquisar área...",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                fit: FlexFit.loose,
+                constraints: BoxConstraints(maxHeight: 250),
+              ),
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Área de atuação",
+                  hintText: "Escolha a área de atuação",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: const Color.fromRGBO(121, 180, 217, 1),
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              dropdownBuilder: (context, selectedItem) {
+                return Text(
+                  selectedItem ?? "Escolha a área de atuação",
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
+                    fontFamily: "Poppins",
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+>>>>>>> frontend
 class botao extends StatefulWidget {
   final Userform usuario;
   final int? idramo;
@@ -421,6 +559,7 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+<<<<<<< HEAD
      onTap:
           () async{
             widget.usuario.ramo = widget.idramo;
@@ -488,6 +627,12 @@ class _botaoState extends State<botao> {
             print("cpf:${widget.usuario.cpf}");
             print("ramo:${widget.usuario.ramo}");
       ;},
+=======
+      onTap:
+          () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => CEP())),
+>>>>>>> frontend
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -504,7 +649,7 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
-      
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -534,4 +679,3 @@ class _botaoState extends State<botao> {
     );
   }
 }
-

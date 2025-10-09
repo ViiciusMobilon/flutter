@@ -53,9 +53,7 @@ class _EsqueciasenhaState extends State<TrocarEmail> {
 
               Center(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                    
-                  ),
+                  padding: EdgeInsets.only(),
                   child: Text(
                     "Redefina a e duas etapas simples",
                     style: TextStyle(
@@ -68,7 +66,6 @@ class _EsqueciasenhaState extends State<TrocarEmail> {
                 ),
               ),
 
-            
               //fim sign
 
               //textfield de email
@@ -157,7 +154,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPage() )),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPage())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

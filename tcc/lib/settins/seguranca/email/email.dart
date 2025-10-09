@@ -1,20 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/settins/seguranca/email/codigoemail.dart';
 
-void main() => runApp(Esqueciasenha());
+void main() => runApp(TrocarEmail());
 
-class Esqueciasenha extends StatefulWidget {
-  const Esqueciasenha({super.key});
+class TrocarEmail extends StatefulWidget {
+  const TrocarEmail({super.key});
 
   @override
-  State<Esqueciasenha> createState() => _EsqueciasenhaState();
+  State<TrocarEmail> createState() => _EsqueciasenhaState();
 }
 
-class _EsqueciasenhaState extends State<Esqueciasenha> {
+class _EsqueciasenhaState extends State<TrocarEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+       
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(
+          "Trocar Email",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: MediaQuery.of(context).size.width * 0.07,
+            fontWeight: FontWeight.w800,
+            fontFamily: "Poppins",
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height * 1,
         width: MediaQuery.of(context).size.width * 1,
@@ -41,7 +61,7 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
                   child: Text(
-                    "Esqueceu a senha ?",
+                    "Quer trocar o seu email?",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.07,
                       color: const Color.fromARGB(255, 8, 8, 8),
@@ -118,7 +138,7 @@ class _emailesqueciState extends State<emailesqueci> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "Email cadastrado",
+        labelText: "Novo Email",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -155,7 +175,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPage())),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageEmail())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

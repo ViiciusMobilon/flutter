@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:tcc/main.dart';
 
@@ -16,9 +15,9 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
 
   void salvarSenha() {
     if (senhaController.text != confirmar_senhaController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("As senhas não coincidem")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("As senhas não coincidem")));
       return;
     }
 
@@ -70,7 +69,7 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
                   horizontal: MediaQuery.of(context).size.width * 0.1,
                   vertical: MediaQuery.of(context).size.height * 0.04,
                 ),
-                child: Novasenha()
+                child: Novasenha(),
               ),
 
               // Confirmar_senha Novasenha
@@ -87,7 +86,14 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
                 child: GestureDetector(
+<<<<<<< HEAD
                   onTap: ()=> Navigator.of(context).push((MaterialPageRoute(builder: (context) => MainApp()))),
+=======
+                  onTap:
+                      () => Navigator.of(
+                        context,
+                      ).push((MaterialPageRoute(builder: (context) => Main()))),
+>>>>>>> frontend
                   child: botao(),
                 ),
               ),
@@ -118,7 +124,7 @@ class imagem extends StatelessWidget {
 }
 
 class botao extends StatelessWidget {
-  const botao({super.key, });
+  const botao({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
+<<<<<<< HEAD
+=======
+import 'package:tcc/paginas%20principais/pagina_principal.dart';
+>>>>>>> frontend
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class PerfilDeOutroUsuario extends StatefulWidget {
+  const PerfilDeOutroUsuario({super.key});
 
   @override
-  State<ProfileScreen> createState() => ProfileScreenState();
+  State<PerfilDeOutroUsuario> createState() => ProfileScreenState();
 }
 
-class ProfileScreenState extends State<ProfileScreen> {
+class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -32,10 +36,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _loadInitialPosts() {
-    posts.addAll(List.generate(
-      10,
-      (index) => generateFakeServicePost(index),
-    ));
+    posts.addAll(List.generate(10, (index) => generateFakeServicePost(index)));
   }
 
   Future<void> _loadMorePosts() async {
@@ -46,10 +47,12 @@ class ProfileScreenState extends State<ProfileScreen> {
 
     setState(() {
       final currentLength = posts.length;
-      posts.addAll(List.generate(
-        5,
-        (index) => generateFakeServicePost(currentLength + index),
-      ));
+      posts.addAll(
+        List.generate(
+          5,
+          (index) => generateFakeServicePost(currentLength + index),
+        ),
+      );
       isLoadingMore = false;
     });
   }
@@ -102,7 +105,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < posts.length) {
-                return feedperfil(post: posts[index]);
+                return FeedPerfil(post: posts[index]);
               } else {
                 return _buildLoadingIndicator();
               }
@@ -122,7 +125,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           Stack(
             children: [
               Container(
-                height: 200,
+                height: MediaQuery.of(context).size.height * 0.20,
                 decoration: BoxDecoration(
                   image: const DecorationImage(
                     image: NetworkImage(
@@ -132,18 +135,31 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
+
               // Gradiente overlay
               Container(
-                height: 200,
+                height: MediaQuery.of(context).size.height * 0.10,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.3),
-                    ],
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
                   ),
+                ),
+              ),
+
+              Positioned(
+                top: 30,
+                left: 10,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: MediaQuery.of(context).size.width * 0.08,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
               ),
             ],
@@ -200,10 +216,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 2),
                 const Text(
                   'Tech Solutions Inc.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF718096),
-                  ),
+                  style: TextStyle(fontSize: 14, color: Color(0xFF718096)),
                 ),
                 const SizedBox(height: 12),
 
@@ -222,7 +235,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
- Widget _buildLoveButton() {
+  Widget _buildLoveButton() {
     return GestureDetector(
       onTap: _toggleLove,
       child: Container(
@@ -261,7 +274,6 @@ class ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
 
   Widget _buildStatItem(String value, String label) {
     return Column(
@@ -277,21 +289,14 @@ class ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFF718096),
-          ),
+          style: const TextStyle(fontSize: 13, color: Color(0xFF718096)),
         ),
       ],
     );
   }
 
   Widget _buildDivider() {
-    return Container(
-      height: 40,
-      width: 1,
-      color: const Color(0xFFE2E8F0),
-    );
+    return Container(height: 40, width: 1, color: const Color(0xFFE2E8F0));
   }
 
   Widget _buildDescription() {
@@ -341,9 +346,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       padding: const EdgeInsets.all(20),
       child: Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-            const Color(0xFF2196F3),
-          ),
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF2196F3)),
         ),
       ),
     );

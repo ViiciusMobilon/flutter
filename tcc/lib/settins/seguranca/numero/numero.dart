@@ -1,20 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/settins/seguranca/numero/codigonumero.dart';
 
-void main() => runApp(Esqueciasenha());
+final maskFormatter = MaskTextInputFormatter(
+  mask: '(##) #####-####',
+  filter: {"#": RegExp(r'[0-9]')},
+);
 
-class Esqueciasenha extends StatefulWidget {
-  const Esqueciasenha({super.key});
+class Trocarnumero extends StatefulWidget {
+  const Trocarnumero({super.key});
 
   @override
-  State<Esqueciasenha> createState() => _EsqueciasenhaState();
+  State<Trocarnumero> createState() => _EsqueciasenhaState();
 }
 
-class _EsqueciasenhaState extends State<Esqueciasenha> {
+class _EsqueciasenhaState extends State<Trocarnumero> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(
+          "Trocar numero",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: MediaQuery.of(context).size.width * 0.07,
+            fontWeight: FontWeight.w800,
+            fontFamily: "Poppins",
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: Container(
         height: MediaQuery.of(context).size.height * 1,
         width: MediaQuery.of(context).size.width * 1,
@@ -41,7 +64,7 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
                   child: Text(
-                    "Esqueceu a senha ?",
+                    "Quer trocar o seu numero?",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.07,
                       color: const Color.fromARGB(255, 8, 8, 8),
@@ -111,14 +134,21 @@ class _emailesqueciState extends State<emailesqueci> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [maskFormatter],
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: MediaQuery.of(context).size.width * 0.05,
+        fontFamily: "Poppins",
+      ),
       decoration: InputDecoration(
-        hintText: "xxxxx@gmail.com",
+        hintText: "(99) 99999-9999",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "Email cadastrado",
+        labelText: "Novo numero",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -155,7 +185,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPage())),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageNumero())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
+<<<<<<< HEAD
 import 'package:tcc/Relacionaveis_a_perfil/service_provider_feed.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/repositories/portfolio_repository.dart';
 import 'package:tcc/data/services/portfolio_service.dart';
+=======
+import 'package:tcc/paginas%20principais/pagina_principal.dart';
+>>>>>>> frontend
 import 'system_star.dart';
 import 'package:provider/provider.dart';
 
+<<<<<<< HEAD
 class PerfilUser extends StatefulWidget {
   final AuthController authController;
    PerfilUser({super.key, required this.authController});
@@ -18,6 +23,16 @@ class PerfilUser extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<PerfilUser> {
+=======
+class PerfilDono extends StatefulWidget {
+  const PerfilDono({super.key});
+
+  @override
+  State<PerfilDono> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<PerfilDono> {
+>>>>>>> frontend
   bool isLoved = false;
   int loveCount = 1247;
 
@@ -41,6 +56,30 @@ class _ProfileScreenState extends State<PerfilUser> {
     super.dispose();
   }
 
+<<<<<<< HEAD
+=======
+  void _loadInitialPosts() {
+    posts.addAll(List.generate(10, (index) => generateFakeServicePost(index)));
+  }
+
+  Future<void> _loadMorePosts() async {
+    if (isLoadingMore) return;
+    setState(() => isLoadingMore = true);
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      final currentLength = posts.length;
+      posts.addAll(
+        List.generate(
+          5,
+          (index) => generateFakeServicePost(currentLength + index),
+        ),
+      );
+      isLoadingMore = false;
+    });
+  }
+>>>>>>> frontend
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
@@ -49,11 +88,34 @@ class _ProfileScreenState extends State<PerfilUser> {
     }
   }
 
+<<<<<<< HEAD
   void _toggleLove() {
     setState(() {
       isLoved = !isLoved;
       loveCount += isLoved ? 1 : -1;
     });
+=======
+  // 🔹 Função para gerar posts fake
+  ServicePost generateFakeServicePost(int index) {
+    return ServicePost(
+      id: index.toString(),
+      provider: Provider(
+        name: "João Silva",
+        company: "Tech Solutions",
+        avatar: "https://via.placeholder.com/150",
+        rating: 4.5,
+        reviewCount: 10 + index,
+      ),
+      images: ["https://via.placeholder.com/300x200"],
+      description: "Conteúdo do post ${index + 1}",
+      fullDescription: "Conteúdo completo do post ${index + 1}",
+      category: "Desenvolvimento",
+      location: "Brasil",
+      completedAt: DateTime.now().toIso8601String(),
+      likes: index * 2,
+      isLiked: false,
+    );
+>>>>>>> frontend
   }
 
   @override
@@ -68,6 +130,7 @@ class _ProfileScreenState extends State<PerfilUser> {
           SliverToBoxAdapter(child: _buildProfileHeader()),
           SliverToBoxAdapter(child: _buildDescription()),
           SliverList(
+<<<<<<< HEAD
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 print('Rebuild da lista com ${_portfolioController.portfolios.length} posts');
@@ -88,6 +151,15 @@ class _ProfileScreenState extends State<PerfilUser> {
               },
               childCount: context.watch<PortfolioController>().portfolios.length,
             ),
+=======
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index < posts.length) {
+                return FeedPerfil(post: posts[index]);
+              } else {
+                return _buildLoadingIndicator();
+              }
+            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
+>>>>>>> frontend
           ),
         ],
       ),
@@ -97,11 +169,11 @@ class _ProfileScreenState extends State<PerfilUser> {
   Widget _buildProfileHeader() {
   final user = widget.authController.usuario;
     return SizedBox(
-      height: 300,
+      height: MediaQuery.of(context).size.height * 0.40,
       child: Stack(
         children: [
           Container(
-            height: 180,
+            height: MediaQuery.of(context).size.height * 0.16,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -143,15 +215,41 @@ class _ProfileScreenState extends State<PerfilUser> {
                   ),
                 ),
                 const SizedBox(height: 4),
+<<<<<<< HEAD
                 Text('${user?.ramoNome ?? ''}',
                     style: TextStyle(color: Colors.grey[700])),
                 Text('${user?.razao_social ?? user?.tipo}',
                     style: TextStyle(color: Colors.grey[500])),
+=======
+                Text(
+                  'Desenvolvedor Mobile',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+                Text(
+                  'Tech Solutions Inc.',
+                  style: TextStyle(color: Colors.grey[500]),
+                ),
+>>>>>>> frontend
                 const SizedBox(height: 8),
                 estrelaperfil(),
                 const SizedBox(height: 12),
                 _buildLoveButton(),
               ],
+            ),
+          ),
+          Positioned(
+            left: MediaQuery.of(context).size.width * 0.87,
+            top: MediaQuery.of(context).size.height * 0.17,
+            child: IconButton(
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => TelaPrincipal()),
+                  ),
+              icon: Icon(
+                Icons.photo_camera,
+                color: Colors.white,
+                size: MediaQuery.of(context).size.width * 0.06,
+              ),
             ),
           ),
         ],
@@ -160,41 +258,28 @@ class _ProfileScreenState extends State<PerfilUser> {
   }
 
   Widget _buildLoveButton() {
-    return GestureDetector(
-      onTap: _toggleLove,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-        decoration: BoxDecoration(
-          color: isLoved ? Colors.red : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey[300]!),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isLoved ? Icons.favorite : Icons.favorite_border,
-              color: isLoved ? Colors.white : Colors.grey[700],
-              size: 18,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              isLoved ? 'Amei' : 'Amar',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '$loveCount',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.favorite, color: Colors.white, size: 18),
+          const SizedBox(width: 6),
+          Text(
+            'Curtidas',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$loveCount',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

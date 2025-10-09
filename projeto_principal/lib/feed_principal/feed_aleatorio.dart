@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
+import 'package:tcc/ver_mais/VerMais.dart';
+import 'package:share_plus/share_plus.dart';
 
+// ------------------------ ALEATORIO FEED ------------------------
 class AleatorioFeed extends StatefulWidget {
   const AleatorioFeed({super.key});
 
@@ -9,7 +14,7 @@ class AleatorioFeed extends StatefulWidget {
 }
 
 class _AleatorioFeedState extends State<AleatorioFeed> {
-  final List<ServicePost> _posts = [];
+  final List<ServicePostFeed> _posts = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
 
@@ -30,23 +35,24 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 2));
 
-    List<ServicePost> newPosts = List.generate(5, (index) {
+    List<ServicePostFeed> newPosts = List.generate(3, (index) {
       int id = _posts.length + index + 1;
-      return ServicePost(
+
+      List<String> imageUrls = List.generate(
+        50,
+        (imgIndex) =>
+            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+      );
+
+      return ServicePostFeed(
         id: id.toString(),
-        provider: Provider(
-          name: "Prestador $id",
-          company: "Empresa $id",
-          avatar: "https://via.placeholder.com/150",
-          rating: 4.5,
-          reviewCount: 50,
-        ),
-        images: ["https://via.placeholder.com/300x200?text=Post+$id"],
+        providerName: "Prestador $id",
+        providerCompany: "Empresa $id",
+        providerAvatar: "https://picsum.photos/100/100?random=$id",
+        location: "Cidade $id",
         description: "Descrição breve do serviço $id...",
         fullDescription: "Descrição completa do serviço $id...",
-        category: "Categoria $id",
-        location: "Cidade $id",
-        completedAt: "2025-01-0$id",
+        images: imageUrls,
         likes: 0,
         isLiked: false,
       );
@@ -77,9 +83,9 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
           } else {
             return _isLoading
                 ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                )
                 : const SizedBox.shrink();
           }
         },
@@ -88,50 +94,34 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
   }
 }
 
-class ServicePost {
+class ServicePostFeed {
   final String id;
-  final Provider provider;
-  final List<String> images;
+  final String providerName;
+  final String providerCompany;
+  final String providerAvatar;
+  final String location;
   final String description;
   final String fullDescription;
-  final String category;
-  final String location;
-  final String completedAt;
+  final List<String> images;
   int likes;
   bool isLiked;
 
-  ServicePost({
+  ServicePostFeed({
     required this.id,
-    required this.provider,
-    required this.images,
+    required this.providerName,
+    required this.providerCompany,
+    required this.providerAvatar,
+    required this.location,
     required this.description,
     required this.fullDescription,
-    required this.category,
-    required this.location,
-    required this.completedAt,
+    required this.images,
     required this.likes,
     required this.isLiked,
   });
 }
 
-class Provider {
-  final String name;
-  final String company;
-  final String avatar;
-  final double rating;
-  final int reviewCount;
-
-  Provider({
-    required this.name,
-    required this.company,
-    required this.avatar,
-    required this.rating,
-    required this.reviewCount,
-  });
-}
-
 class ServiceProviderFeed extends StatelessWidget {
-  final ServicePost post;
+  final ServicePostFeed post;
 
   const ServiceProviderFeed({super.key, required this.post});
 
@@ -150,212 +140,182 @@ class ServiceProviderFeed extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header com informações do prestador
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // Avatar
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(post.provider.avatar),
+      child: GestureDetector(
+        onTap:
+            () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const PerfilDeOutroUsuario(),
+              ),
+            ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cabeçalho
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(post.providerAvatar),
                     radius: 28,
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Informações
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.provider.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Color(0xFF1A202C),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        post.provider.company,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF718096),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 14,
-                            color: Color(0xFF718096),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.providerName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            post.location,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF718096),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          post.providerCompany,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              size: 14,
+                              color: Colors.grey,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                post.location,
+                                style: const TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          // Imagens com Carousel
-          if (post.images.isNotEmpty)
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 240,
-                enlargeCenterPage: false,
-                enableInfiniteScroll: false,
-                autoPlay: false,
-                viewportFraction: 1.0,
-                scrollPhysics: const BouncingScrollPhysics(),
+                ],
               ),
-              items: post.images.map((img) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      img,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              }).toList(),
             ),
 
-          // Descrição
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  post.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF4A5568),
-                    height: 1.5,
-                  ),
+            // Carrossel de imagens
+            if (post.images.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 240,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
                 ),
-                const SizedBox(height: 12),
-                
-                // Footer com categoria, rating e botão
-                Row(
-                  children: [
-                    // Badge de Categoria
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF0F4F8),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                     
-                    ),
-                 
-                    
-                    // Rating
-                  
-                    
-                    const Spacer(),
-                    
-                    // Botão Ver Mais
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Ação ao clicar em "Ver mais"
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A202C),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Text(
-                                'Ver mais',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                items:
+                    post.images.map((url) {
+                      return ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.network(
+                            url,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (context, error, stackTrace) => const Center(
+                                  child: Icon(Icons.broken_image, size: 40),
                                 ),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ],
                           ),
+                        ),
+                      );
+                    }).toList(),
+              ),
+
+            // Descrição e botão "Ver mais"
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      post.description,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder:
+                                (context) => VerMaisPage(post: post.toDetail()),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1A202C),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Ver mais',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-final List<ServicePost> servicePosts = List.generate(5, (index) {
-  return ServicePost(
-    id: "$index",
-    provider: Provider(
-      name: "Profissional $index",
-      company: "Empresa $index",
-      avatar: "https://picsum.photos/100/100?random=$index",
-      rating: 4.5,
-      reviewCount: 20 + index,
-    ),
-    images: List.generate(
-      3,
-      (imgIndex) =>
-          "https://picsum.photos/400/200?random=${index * 3 + imgIndex}",
-    ),
-    description: "Descrição curta do serviço $index...",
-    fullDescription: "Descrição detalhada do serviço $index...",
-    category: "Categoria $index",
-    location: "Cidade $index",
-    completedAt: "2025-10-01",
-    likes: index * 5,
-    isLiked: false,
-  );
-});
+extension ServicePostFeedExtension on ServicePostFeed {
+  ServicePost toDetail() {
+    return ServicePost(
+      id: id,
+      serviceName: providerCompany,
+      description: fullDescription,
+      mediaUrls: images,
+      providerName: providerName,
+      providerCompany: providerCompany,
+      providerPhotoUrl: providerAvatar,
+      providerRating: null,
+      providerCity: location,
+      isLiked: isLiked,
+      likeCount: likes,
+    );
+  }
+}
