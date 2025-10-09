@@ -20,66 +20,13 @@ dependencies:
   intl: ^0.17.0
   video_player: ^2.9.2
   cupertino_icons: ^1.0.8
-  flutter_otp_text_field: ^1.5.1+1
-  carousel_slider: ^5.0.0
-  provider: ^6.1.5+1
-  share_plus: ^12.0.0
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_launcher_icons: ^0.13.1
-
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/imagens/logo_app.png"
-
-flutter:
-  uses-material-design: true
-
-  assets:
-    - assets/imagens/logo_app.png
-    - assets/imagens/logo.png
-    - assets/imagens/fundo.png
-
-  fonts:
-    - family: Anton
-      fonts:
-        - asset: assets/fonts/Anton-Regular.ttf
-    - family: Modak
-      fonts:
-        - asset: assets/fonts/Modak-Regular.ttf
-    - family: Poppins
-      fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
-name: tcc
-description: "A new Flutter project."
-publish_to: 'none' 
-
-version: 1.0.0+1
-
-environment:
-  sdk: ^3.7.2
-
-dependencies:
-  flutter:
-    sdk: flutter
-  shared_preferences: ^2.2.2
-  path_provider: ^2.1.2
-  dropdown_search: ^5.0.6 
-  flutter_rating_bar: ^4.0.1
-  image_picker: ^1.0.4
-  pinput: ^5.0.0
-  mask_text_input_formatter: ^2.4.0
-  intl: ^0.17.0
-  video_player: ^2.9.2
-  cupertino_icons: ^1.0.8
   http: ^1.5.0
   flutter_secure_storage: ^9.2.4
   flutter_otp_text_field: ^1.5.1+1
   carousel_slider: ^5.0.0
   dio: ^5.9.0
   provider: ^6.0.5
+  share_plus: ^12.0.0
 
 dev_dependencies:
   flutter_test:

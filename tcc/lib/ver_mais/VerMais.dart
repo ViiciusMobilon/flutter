@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:tcc/ver_mais/editar_post.dart' show EditarPostPage;
 import 'package:video_player/video_player.dart';
 import 'package:share_plus/share_plus.dart';
-  import 'package:tcc/service_post.dart';
+import 'package:tcc/service_post.dart';
 
 // Widget principal da página de detalhes do post
 class VerMaisPage extends StatefulWidget {
