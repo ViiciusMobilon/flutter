@@ -5,21 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "projeto_principal",
-            "cwd": "projeto_principal",
+            "name": "tcc",
+            "cwd": "tcc",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "projeto_principal (profile mode)",
-            "cwd": "projeto_principal",
+            "name": "tcc (profile mode)",
+            "cwd": "tcc",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "projeto_principal (release mode)",
-            "cwd": "projeto_principal",
+            "name": "tcc (release mode)",
+            "cwd": "tcc",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
