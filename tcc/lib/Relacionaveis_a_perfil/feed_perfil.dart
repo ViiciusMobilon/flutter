@@ -5,10 +5,9 @@ import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:tcc/service_post.dart';
 
-// ------------------------ ALEATORIO FEED ------------------------
 class FeedPerfil extends StatefulWidget {
   final ServicePostFeed post;
-   FeedPerfil({super.key, required this.post});
+  const FeedPerfil({super.key, required this.post});
 
   @override
   State<FeedPerfil> createState() => _FeedPerfilState();
@@ -16,20 +15,12 @@ class FeedPerfil extends StatefulWidget {
 
 class _FeedPerfilState extends State<FeedPerfil> {
   final List<ServicePostFeed> _posts = [];
-  final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _loadMorePosts();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 200 &&
-          !_isLoading) {
-        _loadMorePosts();
-      }
-    });
   }
 
   void _loadMorePosts() async {
@@ -45,8 +36,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
             "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
       );
 
-      // Vídeo de teste
-      String? videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+      String videoUrl =
+          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
 
       return ServicePostFeed(
         id: id.toString(),
@@ -57,7 +48,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
         description: "Descrição breve do serviço $id...",
         fullDescription: "Descrição completa do serviço $id...",
         images: imageUrls,
-        videoUrl: videoUrl != null ? [videoUrl] : null,
+        videoUrl: [videoUrl],
         likes: 0,
         isLiked: false,
       );
@@ -77,28 +68,21 @@ class _FeedPerfilState extends State<FeedPerfil> {
 
     return Container(
       color: const Color(0xFFF5F7FA),
-      child: ListView.builder(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _posts.length + 1,
-        itemBuilder: (context, index) {
-          if (index < _posts.length) {
-            return ServiceProviderFeed(post: _posts[index]);
-          } else {
-            return _isLoading
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                : const SizedBox.shrink();
-          }
-        },
+      child: Column(
+        children: [
+          for (var post in _posts) ServiceProviderFeed(post: post),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+        ],
       ),
     );
   }
 }
 
+// ------------------- COMPONENTE DE CADA CARD -------------------
 class ServiceProviderFeed extends StatelessWidget {
   final ServicePostFeed post;
 
@@ -106,7 +90,6 @@ class ServiceProviderFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Combina vídeo e imagens em um único array de widgets
     List<Widget> carouselItems = [];
 
     if (post.videoUrl != null) {
@@ -183,7 +166,8 @@ class ServiceProviderFeed extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -201,7 +185,7 @@ class ServiceProviderFeed extends StatelessWidget {
               ),
             ),
 
-            // Carrossel de imagens + vídeo
+            // Carrossel de imagens e vídeo
             if (carouselItems.isNotEmpty)
               CarouselSlider(
                 options: CarouselOptions(
@@ -212,7 +196,7 @@ class ServiceProviderFeed extends StatelessWidget {
                 items: carouselItems,
               ),
 
-            // Descrição e botão "Ver mais"
+            // Descrição + botão "Ver mais"
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -234,13 +218,15 @@ class ServiceProviderFeed extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => VerMaisPage(post: post.toDetail()),
+                            builder: (context) =>
+                                VerMaisPage(post: post.toDetail()),
                           ),
                         );
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A202C),
                           borderRadius: BorderRadius.circular(20),
@@ -277,10 +263,9 @@ class ServiceProviderFeed extends StatelessWidget {
   }
 }
 
-// ------------------- VIDEO WIDGET -------------------
+// ------------------- VÍDEO -------------------
 class _CarouselVideoItem extends StatefulWidget {
   final String videoUrl;
-
   const _CarouselVideoItem({required this.videoUrl});
 
   @override
@@ -294,9 +279,7 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
+      ..initialize().then((_) => setState(() {}));
   }
 
   @override
@@ -330,7 +313,9 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
               },
               child: Center(
                 child: Icon(
-                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  _controller.value.isPlaying
+                      ? Icons.pause
+                      : Icons.play_arrow,
                   color: Colors.white70,
                   size: 50,
                 ),

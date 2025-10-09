@@ -54,7 +54,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
         providerAvatar: "https://picsum.photos/100/100?random=$id",
         location: "Cidade $id",
         description: "Descrição breve do serviço $id...",
-        fullDescription: "Descrição completa do serviço $id...",
+        fullDescription: "Descrição completa do serviço qr$id...",
         images: imageUrls,
         videoUrl: videoUrl != null ? [videoUrl] : null,
         likes: 0,

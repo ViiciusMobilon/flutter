@@ -8,10 +8,12 @@ import 'system_star.dart';
 class PerfilDono extends StatefulWidget {
 
 
-  const PerfilDono({super.key});
+   PerfilDono({super.key});
 
   @override
   State<PerfilDono> createState() => _PerfilDonoState();
+  
+
 }
 
 class _PerfilDonoState extends State<PerfilDono> {
@@ -88,6 +90,7 @@ class _PerfilDonoState extends State<PerfilDono> {
 
   @override
   Widget build(BuildContext context) {
+    print('Rebuild PerfilDono');
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
