@@ -128,6 +128,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,

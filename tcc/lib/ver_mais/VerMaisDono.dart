@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/editar_post.dart' show EditarPostPage;
 import 'package:video_player/video_player.dart';
-import 'package:share_plus/share_plus.dart';
   import 'package:tcc/service_post.dart';
 
 // Widget principal da página de detalhes do post
@@ -93,15 +93,7 @@ class _VerMaisPageState extends State<VerMaisPageDono>
   }
 
   // Compartilha informações do post
-  void _sharePost() {
-    Share.share(
-      'Confira este serviço: ${widget.post.serviceName}\n'
-      'Por ${widget.post.providerName} - ${widget.post.providerCompany}\n'
-      '${widget.post.description}',
-      subject: widget.post.serviceName,
-    );
-  }
-
+  
   // Cria cada item do carrossel com borda
   Widget _buildMediaItem(String mediaUrl, int index) {
     bool isVideo = _isVideoUrl(mediaUrl);
@@ -410,7 +402,7 @@ class _VerMaisPageState extends State<VerMaisPageDono>
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: InkWell(
-                onTap: _sharePost,
+               
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(

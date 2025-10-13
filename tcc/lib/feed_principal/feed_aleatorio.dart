@@ -45,7 +45,8 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
       );
 
       // Vídeo de teste
-      String? videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+      String? videoUrl =
+          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
 
       return ServicePostFeed(
         id: id.toString(),
@@ -87,9 +88,9 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
           } else {
             return _isLoading
                 ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                )
                 : const SizedBox.shrink();
           }
         },
@@ -112,21 +113,23 @@ class ServiceProviderFeed extends StatelessWidget {
       carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
     }
 
-    carouselItems.addAll(post.images!.map((url) {
-      return ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => const Center(
-              child: Icon(Icons.broken_image, size: 40),
+    carouselItems.addAll(
+      post.images!.map((url) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Image.network(
+              url,
+              fit: BoxFit.cover,
+              errorBuilder:
+                  (context, error, stackTrace) =>
+                      const Center(child: Icon(Icons.broken_image, size: 40)),
             ),
           ),
-        ),
-      );
-    }));
+        );
+      }),
+    );
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -142,11 +145,12 @@ class ServiceProviderFeed extends StatelessWidget {
         ],
       ),
       child: GestureDetector(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const PerfilDeOutroUsuario(),
-          ),
-        ),
+        onTap:
+            () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const PerfilDeOutroUsuario(),
+              ),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -182,7 +186,11 @@ class ServiceProviderFeed extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                            const Icon(
+                              Icons.location_on,
+                              size: 14,
+                              color: Colors.grey,
+                            ),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -233,13 +241,17 @@ class ServiceProviderFeed extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => VerMaisPage(post: post.toDetail()),
+                            builder:
+                                (context) => VerMaisPage(post: post.toDetail()),
                           ),
                         );
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A202C),
                           borderRadius: BorderRadius.circular(20),
@@ -313,29 +325,80 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       child: Stack(
+        alignment: Alignment.center,
         children: [
           AspectRatio(
             aspectRatio: _controller.value.aspectRatio,
             child: VideoPlayer(_controller),
           ),
+
+          // Gradiente sutil para legibilidade
           Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _controller.value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
-                });
-              },
-              child: Center(
-                child: Icon(
-                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white70,
-                  size: 50,
+            child: IgnorePointer(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.black26,
+                      Colors.black45,
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
               ),
             ),
           ),
+
+          // Botão Play/Pause com design aprimorado
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _controller.value.isPlaying
+                    ? _controller.pause()
+                    : _controller.play();
+              });
+            },
+            child: AnimatedOpacity(
+              opacity: _controller.value.isPlaying ? 0.0 : 1.0,
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16),
+                child: const Icon(
+                  Icons.play_arrow_rounded,
+                  color: Colors.white,
+                  size: 48,
+                ),
+              ),
+            ),
+          ),
+
+          // Indicador de carregamento quando estiver iniciando
+          if (_controller.value.isBuffering)
+            const Positioned(
+              bottom: 12,
+              right: 12,
+              child: SizedBox(
+                height: 22,
+                width: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ),
         ],
       ),
     );
