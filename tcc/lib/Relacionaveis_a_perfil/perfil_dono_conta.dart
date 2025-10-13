@@ -4,7 +4,6 @@ import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_portfolio.dart';
 import 'package:tcc/service_post.dart';
 import 'system_star.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';

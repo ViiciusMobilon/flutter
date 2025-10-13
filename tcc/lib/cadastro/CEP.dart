@@ -7,7 +7,7 @@ import 'package:tcc/data/models/cep.dart';
 import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/cep_repository.dart';
 import 'package:tcc/data/services/auth_service.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/data/http/dio_client.dart' as apiHttp;
 
 
@@ -420,7 +420,7 @@ class _botaoState extends State<botao> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TelaPrincipal(authController: _authController),
+                  builder: (_) => TelaPrincipal(authcontroller: ,),
                 ),
               );
             } else {

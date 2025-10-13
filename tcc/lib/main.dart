@@ -7,7 +7,7 @@ import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/repositories/auth_repository.dart';
 import 'package:tcc/data/services/auth_service.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/teste_video.dart';
 import 'package:provider/provider.dart';
 

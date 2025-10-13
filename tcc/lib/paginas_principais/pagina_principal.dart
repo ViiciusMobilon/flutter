@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
@@ -7,8 +8,9 @@ import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
 class TelaPrincipal extends StatefulWidget {
+  final AuthController authcontroller;
   
-  const TelaPrincipal({super.key});
+  TelaPrincipal({super.key, required this.authcontroller});
 
   @override
   State<TelaPrincipal> createState() => _TelaPrincipalState();
@@ -131,7 +133,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const settinspage(),
+                          builder: (context) => settinspage(),
                         ),
                       );
                     },

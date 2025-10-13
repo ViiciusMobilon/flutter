@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
 
 class Midia {
   final File arquivo;

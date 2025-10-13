@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/service_post.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
 
 class PerfilDeOutroUsuario extends StatefulWidget {
   const PerfilDeOutroUsuario({super.key});
