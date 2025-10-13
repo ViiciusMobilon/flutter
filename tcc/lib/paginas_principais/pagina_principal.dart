@@ -24,7 +24,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [AleatorioFeed(), PerfilDono()];
+    _paginas = [AleatorioFeed(), PerfilUser()];
   }
 
   @override

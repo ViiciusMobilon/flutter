@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => TelaPrincipal(authController: _authController),
+            builder: (_) => TelaPrincipal(authcontroller: _authController),
           ),
         );
       } else {
