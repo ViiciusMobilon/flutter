@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:tcc/service_post.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 // ------------------------ ALEATORIO FEED ------------------------
 class AleatorioFeed extends StatefulWidget {
@@ -46,7 +47,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 
       // Vídeo de teste
       String? videoUrl =
-          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+          "https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_5MG.mp4";
 
       return ServicePostFeed(
         id: id.toString(),
@@ -300,6 +301,7 @@ class _CarouselVideoItem extends StatefulWidget {
 
 class _CarouselVideoItemState extends State<_CarouselVideoItem> {
   late VideoPlayerController _controller;
+  bool _isVisible = false;
 
   @override
   void initState() {
@@ -316,90 +318,108 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
     super.dispose();
   }
 
+  void _handleVisibility(double visibleFraction) {
+    final wasVisible = _isVisible;
+    _isVisible = visibleFraction > 0.5; // mais de 50% visível
+
+    if (_isVisible && !_controller.value.isPlaying) {
+      _controller.play();
+    } else if (!_isVisible && _controller.value.isPlaying) {
+      _controller.pause();
+    }
+
+    // Evita setState redundante
+    if (wasVisible != _isVisible) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_controller.value.isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          ),
+    return VisibilityDetector(
+      key: Key(widget.videoUrl),
+      onVisibilityChanged: (info) => _handleVisibility(info.visibleFraction),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            ),
 
-          // Gradiente sutil para legibilidade
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      Colors.black26,
-                      Colors.black45,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+            // Gradiente sutil para legibilidade
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black26,
+                        Colors.black45,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
 
-          // Botão Play/Pause com design aprimorado
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                _controller.value.isPlaying
-                    ? _controller.pause()
-                    : _controller.play();
-              });
-            },
-            child: AnimatedOpacity(
-              opacity: _controller.value.isPlaying ? 0.0 : 1.0,
-              duration: const Duration(milliseconds: 300),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(16),
-                child: const Icon(
-                  Icons.play_arrow_rounded,
-                  color: Colors.white,
-                  size: 48,
+            // Botão Play/Pause manual
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
+                });
+              },
+              child: AnimatedOpacity(
+                opacity: _controller.value.isPlaying ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 48,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // Indicador de carregamento quando estiver iniciando
-          if (_controller.value.isBuffering)
-            const Positioned(
-              bottom: 12,
-              right: 12,
-              child: SizedBox(
-                height: 22,
-                width: 22,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            // Indicador de carregamento
+            if (_controller.value.isBuffering)
+              const Positioned(
+                bottom: 12,
+                right: 12,
+                child: SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
