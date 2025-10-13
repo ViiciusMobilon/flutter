@@ -3,7 +3,7 @@ import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
-import 'package:tcc/paginas%20principais/pesquisa.dart';
+import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
 class TelaPrincipal extends StatefulWidget {

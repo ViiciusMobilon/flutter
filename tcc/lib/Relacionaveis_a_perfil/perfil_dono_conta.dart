@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 

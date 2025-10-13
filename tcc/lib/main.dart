@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

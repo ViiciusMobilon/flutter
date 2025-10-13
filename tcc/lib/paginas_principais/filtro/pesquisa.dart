@@ -4,6 +4,7 @@ import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 
 class BarraDePesquisa extends SearchDelegate<String> {
+  // Lista de dados (profissões disponíveis para busca)
   final List<String> dados = [
     "Pedreiro",
     "Pintor",
@@ -17,64 +18,21 @@ class BarraDePesquisa extends SearchDelegate<String> {
     "Instalador de Ar Condicionado",
   ];
 
+  // Metadados com informações adicionais de cada profissão
   final Map<String, Map<String, dynamic>> _meta = {
-    "Pedreiro": {
-      "likes": 120,
-      "views": 2000,
-      "rating": 4.2,
-      "date": "2025-09-30",
-    },
+    "Pedreiro": {"likes": 120, "views": 2000, "rating": 4.2, "date": "2025-09-30"},
     "Pintor": {"likes": 45, "views": 800, "rating": 3.8, "date": "2025-10-03"},
-    "Eletricista": {
-      "likes": 230,
-      "views": 5000,
-      "rating": 4.7,
-      "date": "2025-09-25",
-    },
-    "Encanador": {
-      "likes": 60,
-      "views": 1200,
-      "rating": 4.0,
-      "date": "2025-09-29",
-    },
-    "Marceneiro": {
-      "likes": 15,
-      "views": 400,
-      "rating": 3.5,
-      "date": "2025-08-10",
-    },
-    "Jardineiro": {
-      "likes": 5,
-      "views": 150,
-      "rating": 3.0,
-      "date": "2025-07-20",
-    },
-    "Carpinteiro": {
-      "likes": 90,
-      "views": 1300,
-      "rating": 4.1,
-      "date": "2025-10-01",
-    },
-    "Soldador": {
-      "likes": 40,
-      "views": 560,
-      "rating": 3.9,
-      "date": "2025-09-15",
-    },
-    "Técnico em Refrigeração": {
-      "likes": 75,
-      "views": 900,
-      "rating": 4.3,
-      "date": "2025-09-27",
-    },
-    "Instalador de Ar Condicionado": {
-      "likes": 150,
-      "views": 2200,
-      "rating": 4.6,
-      "date": "2025-09-20",
-    },
+    "Eletricista": {"likes": 230, "views": 5000, "rating": 4.7, "date": "2025-09-25"},
+    "Encanador": {"likes": 60, "views": 1200, "rating": 4.0, "date": "2025-09-29"},
+    "Marceneiro": {"likes": 15, "views": 400, "rating": 3.5, "date": "2025-08-10"},
+    "Jardineiro": {"likes": 5, "views": 150, "rating": 3.0, "date": "2025-07-20"},
+    "Carpinteiro": {"likes": 90, "views": 1300, "rating": 4.1, "date": "2025-10-01"},
+    "Soldador": {"likes": 40, "views": 560, "rating": 3.9, "date": "2025-09-15"},
+    "Técnico em Refrigeração": {"likes": 75, "views": 900, "rating": 4.3, "date": "2025-09-27"},
+    "Instalador de Ar Condicionado": {"likes": 150, "views": 2200, "rating": 4.6, "date": "2025-09-20"},
   };
 
+  // Mapa de segmentos (empresa ou prestador)
   final Map<String, String> segmentoMap = {
     "Pedreiro": "Empresa",
     "Marceneiro": "Prestador",
@@ -88,16 +46,22 @@ class BarraDePesquisa extends SearchDelegate<String> {
     "Instalador de Ar Condicionado": "Prestador",
   };
 
-  // -------------------- ESTADO DOS FILTROS --------------------
-  String? filtroTempo; // "24h", "7d", "30d", ou "personalizado"
+  // -------------------- FILTROS --------------------
+
+  // Filtro de tempo
+  String? filtroTempo;
   DateTime? filtroDataInicio;
   DateTime? filtroDataFim;
 
-  RangeValues filtroCurtidas = const RangeValues(0, 1000);
-  RangeValues filtroViews = const RangeValues(0, 10000);
+  // Filtros de intervalo (curtidas e views)
+  RangeValues filtroCurtidas = RangeValues(0, 1000);
+  RangeValues filtroViews = RangeValues(0, 10000);
+
+  // Filtros de categoria e avaliação
   Set<String> filtroSegmentosSelecionados = {};
   double filtroAvaliacaoMinima = 0.0;
 
+  // Contador de filtros ativos
   int get _numeroFiltrosAtivos {
     int count = 0;
     if (filtroTempo != null) count++;
@@ -108,17 +72,19 @@ class BarraDePesquisa extends SearchDelegate<String> {
     return count;
   }
 
+  // Placeholder do campo de pesquisa
   @override
   String get searchFieldLabel => "Buscar profissionais...";
 
+  // Tema visual da barra de pesquisa
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context).copyWith(
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.indigoAccent,
         foregroundColor: Colors.white,
       ),
-      inputDecorationTheme: const InputDecorationTheme(
+      inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(color: Colors.white70),
       ),
     );
@@ -131,23 +97,25 @@ class BarraDePesquisa extends SearchDelegate<String> {
       Stack(
         alignment: Alignment.topRight,
         children: [
+          // Ícone de filtro
           IconButton(
-            icon: const Icon(Icons.filter_alt, color: Colors.white),
+            icon: Icon(Icons.filter_alt, color: Colors.white),
             onPressed: () => _abrirPainelFiltros(context),
           ),
+          // Indicador de filtros ativos
           if (_numeroFiltrosAtivos > 0)
             Positioned(
               right: 6,
               top: 6,
               child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
                   color: Colors.redAccent,
                   shape: BoxShape.circle,
                 ),
                 child: Text(
                   '$_numeroFiltrosAtivos',
-                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                  style: TextStyle(color: Colors.white, fontSize: 10),
                 ),
               ),
             ),
@@ -161,29 +129,32 @@ class BarraDePesquisa extends SearchDelegate<String> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
       ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setStateModal) {
+            // Função para limpar todos os filtros
             void limparTudo() {
               setStateModal(() {
                 filtroTempo = null;
                 filtroDataInicio = null;
                 filtroDataFim = null;
-                filtroCurtidas = const RangeValues(0, 1000);
-                filtroViews = const RangeValues(0, 10000);
+                filtroCurtidas = RangeValues(0, 1000);
+                filtroViews = RangeValues(0, 10000);
                 filtroSegmentosSelecionados.clear();
                 filtroAvaliacaoMinima = 0.0;
               });
             }
 
+            // Função para aplicar os filtros
             void aplicar() {
               Navigator.pop(context);
               showResults(context);
             }
 
+            // Lista de segmentos únicos
             final segmentosDisponiveis = segmentoMap.values.toSet().toList();
 
             return Padding(
@@ -201,7 +172,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Filtros',
                           style: TextStyle(
                             fontSize: 18,
@@ -210,99 +181,86 @@ class BarraDePesquisa extends SearchDelegate<String> {
                         ),
                         TextButton(
                           onPressed: limparTudo,
-                          child: const Text('Limpar'),
+                          child: Text('Limpar'),
                         ),
                       ],
                     ),
-                    const Divider(),
+                    Divider(),
 
-                    // -------- TEMPO --------
-                    const Text(
-                      'Período de publicação',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 6),
+                    // Filtro por período de publicação
+                    Text('Período de publicação', style: TextStyle(fontWeight: FontWeight.w600)),
+                    SizedBox(height: 6),
 
-                    // Radios padrão
+                    // Opções padrão de tempo
                     RadioListTile<String?>(
-                      title: const Text('Últimas 24 horas'),
+                      title: Text('Últimas 24 horas'),
                       value: '24h',
                       groupValue: filtroTempo,
-                      onChanged:
-                          (v) => setStateModal(() {
-                            filtroTempo = v;
-                            filtroDataInicio = filtroDataFim = null;
-                          }),
+                      onChanged: (v) => setStateModal(() {
+                        filtroTempo = v;
+                        filtroDataInicio = filtroDataFim = null;
+                      }),
                     ),
                     RadioListTile<String?>(
-                      title: const Text('Últimos 7 dias'),
+                      title: Text('Últimos 7 dias'),
                       value: '7d',
                       groupValue: filtroTempo,
-                      onChanged:
-                          (v) => setStateModal(() {
-                            filtroTempo = v;
-                            filtroDataInicio = filtroDataFim = null;
-                          }),
+                      onChanged: (v) => setStateModal(() {
+                        filtroTempo = v;
+                        filtroDataInicio = filtroDataFim = null;
+                      }),
                     ),
                     RadioListTile<String?>(
-                      title: const Text('Últimos 30 dias'),
+                      title: Text('Últimos 30 dias'),
                       value: '30d',
                       groupValue: filtroTempo,
-                      onChanged:
-                          (v) => setStateModal(() {
-                            filtroTempo = v;
-                            filtroDataInicio = filtroDataFim = null;
-                          }),
+                      onChanged: (v) => setStateModal(() {
+                        filtroTempo = v;
+                        filtroDataInicio = filtroDataFim = null;
+                      }),
                     ),
-
-                    // Filtro personalizado
                     RadioListTile<String?>(
-                      title: const Text('Intervalo personalizado'),
+                      title: Text('Intervalo personalizado'),
                       value: 'personalizado',
                       groupValue: filtroTempo,
                       onChanged: (v) => setStateModal(() => filtroTempo = v),
                     ),
+
+                    // Campos de data se "personalizado" estiver ativo
                     if (filtroTempo == 'personalizado')
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         child: Row(
                           children: [
+                            // Data inicial
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: () async {
                                   final picked = await showDatePicker(
                                     context: context,
-                                    initialDate:
-                                        filtroDataInicio ?? DateTime.now(),
+                                    initialDate: filtroDataInicio ?? DateTime.now(),
                                     firstDate: DateTime(2020),
                                     lastDate: DateTime.now(),
                                   );
                                   if (picked != null) {
-                                    setStateModal(
-                                      () => filtroDataInicio = picked,
-                                    );
+                                    setStateModal(() => filtroDataInicio = picked);
                                   }
                                 },
                                 child: Text(
                                   filtroDataInicio == null
                                       ? "Data inicial"
-                                      : DateFormat(
-                                        'dd/MM/yyyy',
-                                      ).format(filtroDataInicio!),
+                                      : DateFormat('dd/MM/yyyy').format(filtroDataInicio!),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
+                            // Data final
                             Expanded(
                               child: OutlinedButton(
                                 onPressed: () async {
                                   final picked = await showDatePicker(
                                     context: context,
-                                    initialDate:
-                                        filtroDataFim ?? DateTime.now(),
+                                    initialDate: filtroDataFim ?? DateTime.now(),
                                     firstDate: DateTime(2020),
                                     lastDate: DateTime.now(),
                                   );
@@ -313,9 +271,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
                                 child: Text(
                                   filtroDataFim == null
                                       ? "Data final"
-                                      : DateFormat(
-                                        'dd/MM/yyyy',
-                                      ).format(filtroDataFim!),
+                                      : DateFormat('dd/MM/yyyy').format(filtroDataFim!),
                                 ),
                               ),
                             ),
@@ -323,14 +279,11 @@ class BarraDePesquisa extends SearchDelegate<String> {
                         ),
                       ),
 
-                    const SizedBox(height: 10),
-                    const Divider(),
+                    SizedBox(height: 10),
+                    Divider(),
 
-                    // -------- Curtidas --------
-                    const Text(
-                      'Curtidas (intervalo)',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                    // Filtro por curtidas
+                    Text('Curtidas (intervalo)', style: TextStyle(fontWeight: FontWeight.w600)),
                     RangeSlider(
                       values: filtroCurtidas,
                       min: 0,
@@ -343,13 +296,10 @@ class BarraDePesquisa extends SearchDelegate<String> {
                       onChanged: (v) => setStateModal(() => filtroCurtidas = v),
                     ),
 
-                    const Divider(),
+                    Divider(),
 
-                    // -------- Views --------
-                    const Text(
-                      'Visualizações (intervalo)',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                    // Filtro por visualizações
+                    Text('Visualizações (intervalo)', style: TextStyle(fontWeight: FontWeight.w600)),
                     RangeSlider(
                       values: filtroViews,
                       min: 0,
@@ -362,61 +312,44 @@ class BarraDePesquisa extends SearchDelegate<String> {
                       onChanged: (v) => setStateModal(() => filtroViews = v),
                     ),
 
-                    const Divider(),
+                    Divider(),
 
-                    // -------- Segmentos --------
-                    const Text(
-                      'Segmento',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 6),
+                    // Filtro por segmento
+                    Text('Segmento', style: TextStyle(fontWeight: FontWeight.w600)),
+                    SizedBox(height: 6),
                     Wrap(
                       spacing: 8,
-                      children:
-                          segmentosDisponiveis.map((seg) {
-                            final selected = filtroSegmentosSelecionados
-                                .contains(seg);
-                            return FilterChip(
-                              label: Text(seg),
-                              selected: selected,
-                              onSelected:
-                                  (sel) => setStateModal(
-                                    () =>
-                                        sel
-                                            ? filtroSegmentosSelecionados.add(
-                                              seg,
-                                            )
-                                            : filtroSegmentosSelecionados
-                                                .remove(seg),
-                                  ),
-                            );
-                          }).toList(),
+                      children: segmentosDisponiveis.map((seg) {
+                        final selected = filtroSegmentosSelecionados.contains(seg);
+                        return FilterChip(
+                          label: Text(seg),
+                          selected: selected,
+                          onSelected: (sel) => setStateModal(() =>
+                              sel ? filtroSegmentosSelecionados.add(seg) : filtroSegmentosSelecionados.remove(seg)),
+                        );
+                      }).toList(),
                     ),
 
-                    const Divider(),
+                    Divider(),
 
-                    // -------- Avaliação mínima --------
-                    const Text(
-                      'Avaliação mínima',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
+                    // Filtro de avaliação mínima
+                    Text('Avaliação mínima', style: TextStyle(fontWeight: FontWeight.w600)),
                     Slider(
                       value: filtroAvaliacaoMinima,
                       min: 0,
                       max: 5,
                       divisions: 100,
                       label: filtroAvaliacaoMinima.toStringAsFixed(1),
-                      onChanged:
-                          (v) => setStateModal(() => filtroAvaliacaoMinima = v),
+                      onChanged: (v) => setStateModal(() => filtroAvaliacaoMinima = v),
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
-                    // -------- Ações --------
+                    // Botão aplicar filtros
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: aplicar,
                           style: ElevatedButton.styleFrom(
@@ -425,14 +358,11 @@ class BarraDePesquisa extends SearchDelegate<String> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: const Text(
-                            'Aplicar',
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          child: Text('Aplicar', style: TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -443,37 +373,31 @@ class BarraDePesquisa extends SearchDelegate<String> {
     );
   }
 
-  // -------------------- RESULTADOS --------------------
+  // -------------------- RESULTADOS DA PESQUISA --------------------
   @override
   Widget buildResults(BuildContext context) {
-    final resultados =
-        dados
-            .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+    // Filtra os dados conforme o texto digitado
+    final resultados = dados.where((item) => item.toLowerCase().contains(query.toLowerCase())).toList();
 
+    // Caso nenhum resultado seja encontrado
     if (resultados.isEmpty) {
-      return const Center(
-        child: Text(
-          "Nenhum profissional encontrado",
-          style: TextStyle(fontSize: 16, color: Colors.grey),
-        ),
+      return Center(
+        child: Text("Nenhum profissional encontrado", style: TextStyle(fontSize: 16, color: Colors.grey)),
       );
     }
 
+    // Exibe os resultados encontrados
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       itemCount: resultados.length,
       itemBuilder: (context, index) {
         final item = resultados[index];
         final meta = _meta[item]!;
 
         return GestureDetector(
-          onTap:
-              () => Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario())),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario())),
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
+            margin: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -481,12 +405,12 @@ class BarraDePesquisa extends SearchDelegate<String> {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
                   blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(14),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -494,7 +418,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
                   Container(
                     width: 54,
                     height: 54,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
                         colors: [Color(0xFF2196F3), Color(0xFF5E35B1)],
@@ -505,73 +429,59 @@ class BarraDePesquisa extends SearchDelegate<String> {
                     child: Center(
                       child: Text(
                         item[0].toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: Color.fromARGB(255, 211, 0, 0), fontSize: MediaQuery.of(context).size.height*0.0035, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
 
+                  // Informações do resultado
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Nome e área
+                        // Nome e categoria
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
+                            
                               item,
-                              style: const TextStyle(
-                                fontSize: 17,
+                              style:  TextStyle(
+                                fontSize: MediaQuery.of(context).size.width * 0.035,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFF1A202C),
+                                color: Color.fromARGB(255, 0, 0, 0),
                               ),
                             ),
-                            Text(
-                              segmentoMap[item] ?? "Serviço",
-                              style: const TextStyle(
-                                color: Colors.indigo,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                            
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.5,
+                    child: Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 16)),
+
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        Text(
+                          segmentoMap[item] ?? "Serviço",
+                          style:  TextStyle(
+                            color: Colors.indigo,
+                            fontSize: MediaQuery.of(context).size.width * 0.035,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 8),
 
+                        // Estatísticas do profissional
                         Row(
                           children: [
-                            const Icon(
-                              Icons.star_rounded,
-                              color: Color(0xFFFFB300),
-                              size: 18,
-                            ),
+                            Icon(Icons.star_rounded, color: Color(0xFFFFB300), size: 18),
                             Text(" ${meta['rating']}  "),
-                            const Icon(
-                              Icons.favorite_rounded,
-                              color: Colors.pinkAccent,
-                              size: 17,
-                            ),
+                            Icon(Icons.favorite_rounded, color: Colors.pinkAccent, size: 17),
                             Text(" ${meta['likes']}  "),
-                            const Icon(
-                              Icons.remove_red_eye_rounded,
-                              color: Colors.indigoAccent,
-                              size: 17,
-                            ),
+                            Icon(Icons.remove_red_eye_rounded, color: Colors.indigoAccent, size: 17),
                             Text(" ${meta['views']}"),
                           ],
                         ),
                       ],
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.grey,
-                    size: 16,
                   ),
                 ],
               ),
@@ -582,30 +492,28 @@ class BarraDePesquisa extends SearchDelegate<String> {
     );
   }
 
+  // -------------------- BOTÃO VOLTAR --------------------
   @override
   Widget buildLeading(BuildContext context) => IconButton(
-    icon: const Icon(Icons.arrow_back, color: Colors.white),
-    onPressed: () => close(context, ""),
-  );
+        icon: Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => close(context, ""),
+      );
 
+  // -------------------- SUGESTÕES DE PESQUISA --------------------
   @override
   Widget buildSuggestions(BuildContext context) {
-    final sugestoes =
-        query.isEmpty
-            ? dados.take(5).toList()
-            : dados
-                .where(
-                  (item) => item.toLowerCase().startsWith(query.toLowerCase()),
-                )
-                .toList();
+    // Sugestões automáticas com base no texto
+    final sugestoes = query.isEmpty
+        ? dados.take(5).toList()
+        : dados.where((item) => item.toLowerCase().startsWith(query.toLowerCase())).toList();
 
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(8),
       itemCount: sugestoes.length,
       itemBuilder: (context, index) {
         final sugestao = sugestoes[index];
         return ListTile(
-          leading: const Icon(Icons.search, color: Colors.grey),
+          leading: Icon(Icons.search, color: Colors.grey),
           title: Text(sugestao),
           onTap: () {
             query = sugestao;

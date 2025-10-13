@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/Escolha.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '##.###-###',

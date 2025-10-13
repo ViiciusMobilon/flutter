@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/editar_post.dart' show EditarPostPage;
 import 'package:video_player/video_player.dart';
-import 'package:share_plus/share_plus.dart';
   import 'package:tcc/service_post.dart';
 
 // Widget principal da página de detalhes do post
@@ -93,15 +93,7 @@ class _VerMaisPageState extends State<VerMaisPage>
   }
 
   // Compartilha informações do post
-  void _sharePost() {
-    Share.share(
-      'Confira este serviço: ${widget.post.serviceName}\n'
-      'Por ${widget.post.providerName} - ${widget.post.providerCompany}\n'
-      '${widget.post.description}',
-      subject: widget.post.serviceName,
-    );
-  }
-
+  
   // Cria cada item do carrossel com borda
   Widget _buildMediaItem(String mediaUrl, int index) {
     bool isVideo = _isVideoUrl(mediaUrl);
@@ -227,80 +219,91 @@ class _VerMaisPageState extends State<VerMaisPage>
           ),
         ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 32,
-            backgroundColor: const Color(0xFFF5F7FA),
-            backgroundImage: widget.post.providerPhotoUrl != null
-                ? NetworkImage(widget.post.providerPhotoUrl!)
-                : null,
-            child: widget.post.providerPhotoUrl == null
-                ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C))
-                : null,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PerfilDeOutroUsuario(),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
+        ),
+        child: Column(
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.post.providerName ?? 'Prestador',
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A202C),
-                  ),
+                CircleAvatar(
+                  radius: 32,
+                  backgroundColor: const Color(0xFFF5F7FA),
+                  backgroundImage: widget.post.providerPhotoUrl != null
+                      ? NetworkImage(widget.post.providerPhotoUrl!)
+                      : null,
+                  child: widget.post.providerPhotoUrl == null
+                      ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C))
+                      : null,
                 ),
-                if (widget.post.providerCompany != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.post.providerCompany!,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: const Color(0xFF1A202C).withOpacity(0.7),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    if (widget.post.providerRating != null) ...[
-                      const Icon(Icons.star, size: 16, color: Colors.amber),
-                      const SizedBox(width: 4),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        widget.post.providerRating!.toStringAsFixed(1),
+                        widget.post.providerName ?? 'Prestador',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                           color: Color(0xFF1A202C),
                         ),
                       ),
-                      const SizedBox(width: 16),
-                    ],
-                    if (widget.post.providerCity != null) ...[
-                      const Icon(Icons.location_on,
-                          size: 16, color: Color(0xFF1A202C)),
-                      const SizedBox(width: 4),
-                      Text(
-                        widget.post.providerCity!,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: const Color(0xFF1A202C).withOpacity(0.7),
+                      if (widget.post.providerCompany != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.post.providerCompany!,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: const Color(0xFF1A202C).withOpacity(0.7),
+                          ),
                         ),
+                      ],
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          if (widget.post.providerRating != null) ...[
+                            const Icon(Icons.star, size: 16, color: Colors.amber),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.post.providerRating!.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A202C),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                          if (widget.post.providerCity != null) ...[
+                            const Icon(Icons.location_on,
+                                size: 16, color: Color(0xFF1A202C)),
+                            const SizedBox(width: 4),
+                            Text(
+                              widget.post.providerCity!,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: const Color(0xFF1A202C).withOpacity(0.7),
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ],
-                  ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

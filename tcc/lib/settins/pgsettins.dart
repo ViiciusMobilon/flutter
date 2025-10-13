@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/settins/editarperfil.dart';
 import 'package:tcc/settins/seguranca/email/email.dart';
 import 'package:tcc/settins/segurancap.dart';
