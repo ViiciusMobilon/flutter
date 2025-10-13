@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
 import 'package:tcc/settins/seguranca/email/codigoemail.dart';
 
-void main() => runApp(TrocarEmail());
+// void main() => runApp(TrocarEmail());-
 
 class TrocarEmail extends StatefulWidget {
-  const TrocarEmail({super.key});
+  final AuthController controller;
+
+   TrocarEmail({super.key, required this.controller});
 
   @override
   State<TrocarEmail> createState() => _EsqueciasenhaState();
@@ -107,7 +110,7 @@ class _EsqueciasenhaState extends State<TrocarEmail> {
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
-                child: Center(child: botao()),
+                child: Center(child: botao(controller: widget.controller,)),
               ),
 
               //fim botao
@@ -162,7 +165,9 @@ class _emailesqueciState extends State<emailesqueci> {
 }
 
 class botao extends StatefulWidget {
-  const botao({super.key});
+  final AuthController controller;
+
+  botao({super.key, required this.controller});
 
   @override
   State<botao> createState() => _botaoState();
@@ -175,7 +180,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPageEmail())),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageEmail(controller: widget.controller,))),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

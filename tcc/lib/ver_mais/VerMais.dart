@@ -9,7 +9,8 @@ import 'package:tcc/service_post.dart';
 class VerMaisPage extends StatefulWidget {
   final ServicePost post; // Recebe os dados do post
 
-  const VerMaisPage({Key? key, required this.post}) : super(key: key);
+
+  VerMaisPage({Key? key, required this.post}) : super(key: key);
 
   @override
   State<VerMaisPage> createState() => _VerMaisPageState();

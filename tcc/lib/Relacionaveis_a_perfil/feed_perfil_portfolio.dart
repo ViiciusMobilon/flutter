@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/service_post.dart';
 import 'package:video_player/video_player.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
@@ -54,10 +55,12 @@ class _FeedPerfilPortfolioState extends State<FeedPerfilPortfolio> {
       itemCount: portfolios.length,
       itemBuilder: (context, index) {
         final post = portfolios[index];
+        final spost = ServicePost();
 
         return ServiceProviderFeedPortfolio(
           post: post,
           authController: widget.authController,
+          spost: spost,
         );
       },
     );
@@ -67,12 +70,14 @@ class _FeedPerfilPortfolioState extends State<FeedPerfilPortfolio> {
 // ------------------------ CARD DE PORTFÓLIO ------------------------
 class ServiceProviderFeedPortfolio extends StatelessWidget {
   final Portfolio post;
+  final ServicePost spost;
   final AuthController authController;
 
   const ServiceProviderFeedPortfolio({
     super.key,
     required this.post,
     required this.authController,
+    required this.spost
   });
 
   @override
@@ -150,7 +155,7 @@ class ServiceProviderFeedPortfolio extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => VerMaisPage(post: post),
+                          builder: (context) => VerMaisPage(post: spost),
                         ),
                       );
                     },

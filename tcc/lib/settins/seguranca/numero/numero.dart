@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
 import 'package:tcc/settins/seguranca/numero/codigonumero.dart';
 
@@ -9,7 +10,9 @@ final maskFormatter = MaskTextInputFormatter(
 );
 
 class Trocarnumero extends StatefulWidget {
-  const Trocarnumero({super.key});
+  final AuthController controller;
+
+  Trocarnumero({super.key, required this.controller});
 
   @override
   State<Trocarnumero> createState() => _EsqueciasenhaState();
@@ -110,7 +113,7 @@ class _EsqueciasenhaState extends State<Trocarnumero> {
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
-                child: Center(child: botao()),
+                child: Center(child: botao(controller: widget.controller,)),
               ),
 
               //fim botao
@@ -172,7 +175,9 @@ class _emailesqueciState extends State<emailesqueci> {
 }
 
 class botao extends StatefulWidget {
-  const botao({super.key});
+  final AuthController controller;
+
+  botao({super.key, required this.controller});
 
   @override
   State<botao> createState() => _botaoState();
@@ -185,7 +190,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPageNumero())),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageNumero(controller: widget.controller,))),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
