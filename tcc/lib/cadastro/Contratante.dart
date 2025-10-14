@@ -5,15 +5,19 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 
+// Máscara para telefone (ex: (14) 99999-9999)
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
   filter: {"#": RegExp(r'[0-9]')},
 );
+
+// Máscara para CPF (ex: 000.000.000-00)
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
   filter: {"#": RegExp(r'[0-9]')},
 );
 
+// Tela principal do cadastro do Contratante
 class Contratante extends StatelessWidget {
   const Contratante({super.key});
 
@@ -23,10 +27,12 @@ class Contratante extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: Scaffold(
+        // AppBar branca com título e botão de voltar
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
+            // Volta para a tela de escolha
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Escolha()),
@@ -44,10 +50,13 @@ class Contratante extends StatelessWidget {
           ),
           centerTitle: true,
         ),
+
+        // Corpo da tela
         body: Container(
           color: const Color.fromARGB(255, 255, 255, 255),
           child: ListView(
             children: <Widget>[
+              // Campo de perfil com foto
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.width * 0.1,
@@ -57,6 +66,8 @@ class Contratante extends StatelessWidget {
                 ),
                 child: const Perfil(),
               ),
+
+              // Campo de Nome
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.width * 0.1,
@@ -66,16 +77,18 @@ class Contratante extends StatelessWidget {
                 ),
                 child: const Nome(),
               ),
+
+              // Campo de Telefone
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.03,
                   left: MediaQuery.of(context).size.width * 0.1,
-          
                   right: MediaQuery.of(context).size.width * 0.1,
                 ),
                 child: const Telefone(),
               ),
-          
+
+              // Campo de CPF
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.03,
@@ -84,7 +97,8 @@ class Contratante extends StatelessWidget {
                 ),
                 child: cpf(),
               ),
-          
+
+              // Botão "Próximo"
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.25,
@@ -99,6 +113,7 @@ class Contratante extends StatelessWidget {
   }
 }
 
+// Widget para foto de perfil
 class Perfil extends StatefulWidget {
   const Perfil({super.key});
 
@@ -110,6 +125,7 @@ class _PerfilState extends State<Perfil> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
+  // Função para escolher a imagem da câmera ou galeria
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -119,6 +135,7 @@ class _PerfilState extends State<Perfil> {
     }
   }
 
+  // Mostra diálogo para escolher fonte da imagem
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -149,41 +166,42 @@ class _PerfilState extends State<Perfil> {
     );
   }
 
+  // Construção do widget
   @override
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child:
-              _image != null
-                  ? Image.file(
-                    _image!,
-                    width: 150,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  )
-                  : Container(
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    height: MediaQuery.of(context).size.width * 0.3,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: MediaQuery.of(context).size.width * 0.1,
-                        color: Colors.white70,
-                      ),
+          child: _image != null
+              ? Image.file(
+                  _image!,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.width * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                      color: Colors.white70,
                     ),
                   ),
+                ),
         ),
       ),
     );
   }
 }
 
+// Campo de Nome
 class Nome extends StatefulWidget {
   const Nome({super.key});
 
@@ -220,6 +238,7 @@ class _NomeState extends State<Nome> {
   }
 }
 
+// Campo de Telefone
 class Telefone extends StatefulWidget {
   const Telefone({super.key});
 
@@ -232,7 +251,6 @@ class _TelefoneState extends State<Telefone> {
   Widget build(BuildContext context) {
     return TextField(
       inputFormatters: [maskFormatter],
-
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: "Telefone",
@@ -259,6 +277,7 @@ class _TelefoneState extends State<Telefone> {
   }
 }
 
+// Campo de CPF
 class cpf extends StatefulWidget {
   const cpf({super.key});
 
@@ -273,7 +292,7 @@ class _cpfState extends State<cpf> {
       keyboardType: TextInputType.number,
       inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
-        hintText: "000.000.000.00",
+        hintText: "000.000.000-00",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -285,7 +304,6 @@ class _cpfState extends State<cpf> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -302,6 +320,7 @@ class _cpfState extends State<cpf> {
   }
 }
 
+// Botão "Próximo" para avançar à tela de CEP
 class botao extends StatefulWidget {
   const botao({super.key});
 
@@ -313,10 +332,8 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => CEP())),
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => CEP())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -324,16 +341,14 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
         ),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -342,14 +357,9 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Proximo",
+                "Próximo",
                 style: TextStyle(
-                  color: const Color.from(
-                    alpha: 1,
-                    red: 0.988,
-                    green: 0.984,
-                    blue: 0.984,
-                  ),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,

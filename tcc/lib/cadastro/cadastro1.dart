@@ -1,42 +1,46 @@
+// Importações principais do Flutter
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+// Importação da tela "Escolha", para navegação após o cadastro
 import 'package:tcc/cadastro/Escolha.dart';
 
-final maskFormatter = MaskTextInputFormatter(
-  mask: '##.###-###',
-  filter: { "#": RegExp(r'[a-zA-Z0-9]') },
-);
-
-
+// -----------------------------
+// Tela principal de Cadastro
+// -----------------------------
 class Cadastro extends StatelessWidget {
   const Cadastro({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-
+    return MaterialApp(
+      debugShowCheckedModeBanner: false, // Remove a faixa de debug
       home: Scaffold(
         body: Container(
-
+          // Define o tamanho total da tela
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
-          decoration: BoxDecoration(color: const Color.fromARGB(255, 255, 255, 255)),
+
+          // Fundo branco
+          decoration: const BoxDecoration(color: Colors.white),
+
+          // Permite rolar o conteúdo caso o teclado apareça
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
+              crossAxisAlignment: CrossAxisAlignment.start, // Alinha à esquerda
               children: [
-
+                // ---------- LOGO ----------
                 Center(
                   child: Padding(
-                    padding:  EdgeInsets.only(  top: MediaQuery.of(context).size.height * 0.07,),
-                    child: imagem(),
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.07,
+                    ),
+                    child: const imagem(), // Chama o widget da imagem
                   ),
                 ),
-                //texto sign
+
+                // ---------- TÍTULO "Cadastro" ----------
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -46,16 +50,15 @@ class Cadastro extends StatelessWidget {
                       "Cadastro",
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.06,
-                        color: const Color.fromARGB(255, 8, 8, 8),
+                        color: Colors.black,
                         fontWeight: FontWeight.w800,
                         fontFamily: "Poppins",
                       ),
                     ),
                   ),
                 ),
-                //fim sign
-              
-                //textfield de email
+
+                // ---------- CAMPO EMAIL ----------
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.04,
@@ -63,38 +66,36 @@ class Cadastro extends StatelessWidget {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(),
+                  child: const email(), // Chama o widget do campo de e-mail
                 ),
-                //fim email
-                //textfield senha
+
+                // ---------- CAMPO SENHA ----------
                 Padding(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: senha(),
+                  child: const senha(), // Campo de senha
                 ),
 
-                // fim senha
-               Padding(
+                // ---------- CAMPO CONFIRMAR SENHA ----------
+                Padding(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: confirmar(),
+                  child: const confirmar(),
                 ),
-                //botao
+
+                // ---------- BOTÃO CONTINUAR ----------
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: const Center(child: botao()),
                 ),
-                //fim botao
-                //escrita para o cadastro
-               
               ],
             ),
           ),
@@ -104,7 +105,9 @@ class Cadastro extends StatelessWidget {
   }
 }
 
-
+// -----------------------------
+// CAMPO DE EMAIL
+// -----------------------------
 class email extends StatefulWidget {
   const email({super.key});
 
@@ -117,27 +120,30 @@ class _emailState extends State<email> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        hintText: "xxxxx@gmail.com",
+        hintText: "xxxxx@gmail.com", // Texto de exemplo
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "email",
+        labelText: "Email",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
 
-        focusedBorder: OutlineInputBorder(
+        // Bordas do campo quando está em foco
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        enabledBorder: OutlineInputBorder(
+
+        // Bordas padrão
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
@@ -146,8 +152,9 @@ class _emailState extends State<email> {
   }
 }
 
-
-
+// -----------------------------
+// CAMPO DE SENHA
+// -----------------------------
 class senha extends StatefulWidget {
   const senha({super.key});
 
@@ -156,7 +163,7 @@ class senha extends StatefulWidget {
 }
 
 class _senhaState extends State<senha> {
-  bool senhaVisivel = true; // controla se a senha está oculta
+  bool senhaVisivel = true; // Controla se a senha está oculta ou não
 
   void mudarVisao() {
     setState(() {
@@ -167,9 +174,7 @@ class _senhaState extends State<senha> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      inputFormatters: [LengthLimitingTextInputFormatter(8)],
-
-      obscureText: senhaVisivel, // oculta ou mostra
+      obscureText: senhaVisivel, // Oculta ou mostra o texto
       decoration: InputDecoration(
         labelText: "Senha",
         labelStyle: TextStyle(
@@ -182,7 +187,8 @@ class _senhaState extends State<senha> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        border: const UnderlineInputBorder(),
+
+        // Bordas e estilo
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: Color.fromRGBO(121, 180, 217, 1),
@@ -194,8 +200,13 @@ class _senhaState extends State<senha> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+
+        // Ícone de mostrar/ocultar senha
         suffixIcon: IconButton(
-          icon: Icon(senhaVisivel ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+              senhaVisivel ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+          ),
           onPressed: mudarVisao,
         ),
       ),
@@ -203,7 +214,9 @@ class _senhaState extends State<senha> {
   }
 }
 
-
+// -----------------------------
+// CAMPO CONFIRMAR SENHA
+// -----------------------------
 class confirmar extends StatefulWidget {
   const confirmar({super.key});
 
@@ -212,8 +225,7 @@ class confirmar extends StatefulWidget {
 }
 
 class _confirmarState extends State<confirmar> {
-  @override
-  bool senha2 = true;
+  bool senha2 = true; // Controla se a senha está oculta
 
   void mudarvisao() {
     setState(() {
@@ -221,9 +233,9 @@ class _confirmarState extends State<confirmar> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return TextField(
-      autofocus: false,
       obscureText: senha2,
       decoration: InputDecoration(
         labelText: "Confirmar Senha",
@@ -237,18 +249,19 @@ class _confirmarState extends State<confirmar> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        border: UnderlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+
+        // Ícone de alternar visibilidade
         suffixIcon: IconButton(
           icon: Icon(senha2 ? Icons.visibility_off : Icons.visibility),
           onPressed: mudarvisao,
@@ -258,6 +271,9 @@ class _confirmarState extends State<confirmar> {
   }
 }
 
+// -----------------------------
+// BOTÃO "CONTINUAR"
+// -----------------------------
 class botao extends StatefulWidget {
   const botao({super.key});
 
@@ -269,54 +285,69 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:() => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Escolha()), ),
+      // Ao clicar, navega para a tela Escolha
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const Escolha()),
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
+
+        // Botão com gradiente e sombra
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
+          gradient: const LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
+          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: const Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
         ),
-        
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-        Padding(
-          padding: EdgeInsets.only(left:MediaQuery.of(context).size.width * 0.09, ),
-          child: Text("continuar", style: TextStyle(
-             color: const Color.from(alpha: 1, red: 0.988, green: 0.984, blue: 0.984),
-                          fontSize: MediaQuery.of(context).size.width * 0.05,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w800,
-          ),),
-        ), Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,)
-      ],),
+
+        // Conteúdo do botão (texto + ícone)
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.09,
+              ),
+              child: Text(
+                "Continuar",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios_sharp, color: Colors.white),
+          ],
+        ),
       ),
     );
   }
 }
 
+// -----------------------------
+// LOGO / IMAGEM SUPERIOR
+// -----------------------------
 class imagem extends StatelessWidget {
   const imagem({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-       width:MediaQuery.of(context).size.width *0.4,
-       height:MediaQuery.of(context).size.height *0.25,
-      decoration: BoxDecoration(
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.25,
+      decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/logo.png"), //fundo da imagem
-          fit: BoxFit.fill,
+          image: AssetImage("assets/imagens/logo.png"),
+          fit: BoxFit.fill, // Preenche o espaço sem distorcer
         ),
       ),
     );

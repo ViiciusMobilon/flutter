@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tcc/main.dart';
+import 'package:tcc/main.dart'; // Importa a tela principal do app
 
+// --------------------------- TELA NOVA SENHA ---------------------------
 class NovaSenhaPage extends StatefulWidget {
-  final String codigo;
+  final String codigo; // Recebe o código digitado anteriormente
+
   const NovaSenhaPage({super.key, required this.codigo});
 
   @override
@@ -10,44 +12,52 @@ class NovaSenhaPage extends StatefulWidget {
 }
 
 class _NovaSenhaPageState extends State<NovaSenhaPage> {
+  // Controladores dos campos de senha
   final senhaController = TextEditingController();
   final confirmar_senhaController = TextEditingController();
 
+  // Função que será chamada ao clicar em "Salvar"
   void salvarSenha() {
+    // Verifica se as duas senhas são iguais
     if (senhaController.text != confirmar_senhaController.text) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("As senhas não coincidem")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("As senhas não coincidem")),
+      );
       return;
     }
 
-    // Aqui você chamaria sua API passando widget.codigo + nova Novasenha
+    // Aqui seria o ponto onde a senha é enviada para o servidor / API
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Senha redefinida com sucesso!")),
     );
 
-    Navigator.pop(context); // volta para tela anterior
+    Navigator.pop(context); // Volta para a tela anterior
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        // Ocupa toda a tela
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+
+        // Fundo branco
         decoration: const BoxDecoration(color: Colors.white),
+
+        // Scroll para evitar overflow com o teclado
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Logo
+              // ------------------- LOGO -------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.07,
                 ),
-                child: imagem(),
+                child: const imagem(),
               ),
 
-              // Título
+              // ------------------- TÍTULO -------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.05,
@@ -63,34 +73,37 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
                 ),
               ),
 
-              // Campo Novasenha
+              // ------------------- CAMPO NOVA SENHA -------------------
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.1,
                   vertical: MediaQuery.of(context).size.height * 0.04,
                 ),
-                child: Novasenha(),
+                child: const Novasenha(),
               ),
 
-              // Confirmar_senha Novasenha
+              // ------------------- CAMPO CONFIRMAR SENHA -------------------
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: MediaQuery.of(context).size.width * 0.1,
                 ),
-                child: confirmar_senha(),
+                child: const confirmar_senha(),
               ),
 
-              // Botão salvar
+              // ------------------- BOTÃO SALVAR -------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
                 child: GestureDetector(
-                  onTap:
-                      () => Navigator.of(
-                        context,
-                      ).push((MaterialPageRoute(builder: (context) => Main()))),
-                  child: botao(),
+                  // Quando o botão é clicado
+                  onTap: () {
+                    // Ao clicar, leva o usuário de volta à tela principal
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => const Main()),
+                    );
+                  },
+                  child: const botao(),
                 ),
               ),
             ],
@@ -101,6 +114,7 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
   }
 }
 
+// --------------------------- LOGO ---------------------------
 class imagem extends StatelessWidget {
   const imagem({super.key});
 
@@ -119,6 +133,7 @@ class imagem extends StatelessWidget {
   }
 }
 
+// --------------------------- BOTÃO "SALVAR" ---------------------------
 class botao extends StatelessWidget {
   const botao({super.key});
 
@@ -133,6 +148,7 @@ class botao extends StatelessWidget {
         ),
         borderRadius: const BorderRadius.all(Radius.circular(40)),
         boxShadow: [
+          // Adiciona sombra para o botão
           BoxShadow(
             color: Colors.grey.withOpacity(0.6),
             offset: const Offset(0, 4),
@@ -141,6 +157,7 @@ class botao extends StatelessWidget {
           ),
         ],
       ),
+      // Texto "Salvar"
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -159,6 +176,7 @@ class botao extends StatelessWidget {
   }
 }
 
+// --------------------------- CAMPO "NOVA SENHA" ---------------------------
 class Novasenha extends StatefulWidget {
   const Novasenha({super.key});
 
@@ -167,19 +185,20 @@ class Novasenha extends StatefulWidget {
 }
 
 class _senhaState extends State<Novasenha> {
-  @override
-  bool Novasenha = true;
+  bool Novasenha = true; // Controla se a senha está visível ou oculta
 
+  // Alterna a visibilidade da senha
   void mudarvisao() {
     setState(() {
       Novasenha = !Novasenha;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return TextField(
       autofocus: false,
-      obscureText: Novasenha,
+      obscureText: Novasenha, // Oculta o texto se for true
       decoration: InputDecoration(
         labelText: "Digite a nova senha",
         labelStyle: TextStyle(
@@ -192,18 +211,19 @@ class _senhaState extends State<Novasenha> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        border: UnderlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
+        border: const UnderlineInputBorder(),
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        // Ícone para mostrar/ocultar a senha
         suffixIcon: IconButton(
           icon: Icon(Novasenha ? Icons.visibility_off : Icons.visibility),
           onPressed: mudarvisao,
@@ -213,6 +233,7 @@ class _senhaState extends State<Novasenha> {
   }
 }
 
+// --------------------------- CAMPO "CONFIRMAR SENHA" ---------------------------
 class confirmar_senha extends StatefulWidget {
   const confirmar_senha({super.key});
 
@@ -221,15 +242,16 @@ class confirmar_senha extends StatefulWidget {
 }
 
 class _confirmar_senhaState extends State<confirmar_senha> {
-  @override
-  bool confirmar = true;
+  bool confirmar = true; // Controla a visibilidade do campo
 
+  // Alterna a visibilidade da senha
   void mudarvisao() {
     setState(() {
       confirmar = !confirmar;
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return TextField(
       autofocus: false,
@@ -246,18 +268,19 @@ class _confirmar_senhaState extends State<confirmar_senha> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        border: UnderlineInputBorder(),
-        focusedBorder: OutlineInputBorder(
+        border: const UnderlineInputBorder(),
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        // Ícone para alternar visibilidade
         suffixIcon: IconButton(
           icon: Icon(confirmar ? Icons.visibility_off : Icons.visibility),
           onPressed: mudarvisao,

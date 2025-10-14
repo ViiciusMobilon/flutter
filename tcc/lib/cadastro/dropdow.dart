@@ -1,9 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
-
-
-
+// Widget principal para selecionar a área de atuação
 class Area extends StatefulWidget {
   const Area({super.key});
 
@@ -12,12 +10,16 @@ class Area extends StatefulWidget {
 }
 
 class _AreaState extends State<Area> {
-   final dropValue = ValueNotifier('');
+  // Valor selecionado no dropdown
+  final dropValue = ValueNotifier('');
+  
+  // Opções disponíveis no dropdown
   final dropOpcoes = [
     "3",
     "2",
     "1",
   ];
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -25,15 +27,15 @@ class _AreaState extends State<Area> {
         valueListenable: dropValue,
         builder: (BuildContext context, String value, _) {
           return SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(context).size.width * 0.8, // Largura do dropdown
             child: DropdownSearch<String>(
-              items: dropOpcoes,
-              selectedItem: value.isEmpty ? null : value,
+              items: dropOpcoes, // Lista de opções
+              selectedItem: value.isEmpty ? null : value, // Valor selecionado
               onChanged: (String? newValue) {
-                dropValue.value = newValue ?? '';
+                dropValue.value = newValue ?? ''; // Atualiza o valor selecionado
               },
               popupProps: PopupProps.menu(
-                showSearchBox: true,
+                showSearchBox: true, // Permite pesquisar opções
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
                     labelText: "Pesquisar área...",
@@ -44,7 +46,7 @@ class _AreaState extends State<Area> {
                 ),
                 fit: FlexFit.loose,
                 constraints: BoxConstraints(
-                  maxHeight: 250,
+                  maxHeight: 250, // Altura máxima do popup
                 ),
               ),
               dropdownDecoratorProps: DropDownDecoratorProps(
@@ -56,18 +58,19 @@ class _AreaState extends State<Area> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: const Color.fromRGBO(121, 180, 217, 1),
+                      color: const Color.fromRGBO(121, 180, 217, 1), // Cor ao focar
                       width: 1.5,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
+                    borderSide: BorderSide(color: Colors.grey), // Cor padrão
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
               dropdownBuilder: (context, selectedItem) {
+                // Exibe o texto do item selecionado ou o placeholder
                 return Text(
                   selectedItem ?? "Escolha a área de atuação",
                   style: TextStyle(

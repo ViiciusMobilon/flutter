@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+// Importando telas de cadastro específicas
 import 'package:tcc/cadastro/Contratante.dart';
 import 'package:tcc/cadastro/Empresa.dart';
 import 'package:tcc/cadastro/Prestador.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 
+// Tela de escolha do tipo de cadastro
 class Escolha extends StatelessWidget {
   const Escolha({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, // Remove a faixa de DEBUG no canto
       home: Scaffold(
+        // Estrutura básica da tela com AppBar e corpo
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cor branca
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Colors.black), // Ícone de voltar
             onPressed: () {
               Navigator.of(context).pushReplacement(
+                // Ao clicar, volta para a tela de cadastro inicial
                 MaterialPageRoute(builder: (context) => Cadastro()),
               );
             },
@@ -29,17 +33,16 @@ class Escolha extends StatelessWidget {
               fontWeight: FontWeight.w800,
             ),
           ),
-          centerTitle: true,
+          centerTitle: true, // Centraliza o título
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 255, 255, 255), // Fundo branco
           ),
           child: Center(
             child: Column(
               children: <Widget>[
-                //fim da imagem
-                //empresa
+                // Botão para Empresa
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.05,
@@ -51,8 +54,7 @@ class Escolha extends StatelessWidget {
                     child: button_empresa(),
                   ),
                 ),
-                //fim button_empresa
-                //prestador
+                // Botão para Prestador
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.width * 0.01,
@@ -63,8 +65,7 @@ class Escolha extends StatelessWidget {
                     child: button_prestador(),
                   ),
                 ),
-                //fim prestador
-                //contratante
+                // Botão para Contratante
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.03,
@@ -75,7 +76,6 @@ class Escolha extends StatelessWidget {
                     child: _button_contratante(),
                   ),
                 ),
-                //fim contratante
               ],
             ),
           ),
@@ -85,6 +85,7 @@ class Escolha extends StatelessWidget {
   }
 }
 
+// Botão Empresa
 class button_empresa extends StatefulWidget {
   const button_empresa({super.key});
 
@@ -97,21 +98,19 @@ class _button_empresaState extends State<button_empresa> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Empresa())),
+          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Empresa())),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        width: MediaQuery.of(context).size.width * 0.5,
+        height: MediaQuery.of(context).size.height * 0.8, // Altura do botão
+        width: MediaQuery.of(context).size.width * 0.5, // Largura do botão
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Color.fromRGBO(255, 255, 255, 1),
+          borderRadius: BorderRadius.all(Radius.circular(20)), // Borda arredondada
+          color: Color.fromRGBO(255, 255, 255, 1), // Cor do botão
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
+            // Sombra do botão
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -119,7 +118,6 @@ class _button_empresaState extends State<button_empresa> {
         child: Column(
           children: [
             Icon(Icons.domain, size: MediaQuery.of(context).size.width * 0.4),
-
             Center(
               child: Text(
                 "Empresa",
@@ -138,6 +136,7 @@ class _button_empresaState extends State<button_empresa> {
   }
 }
 
+// Botão Prestador
 class button_prestador extends StatefulWidget {
   const button_prestador({super.key});
 
@@ -150,9 +149,7 @@ class _button_prestadorState extends State<button_prestador> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Prestador())),
+          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Prestador())),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -160,11 +157,10 @@ class _button_prestadorState extends State<button_prestador> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
           color: Color.fromRGBO(250, 252, 255, 1),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -172,7 +168,6 @@ class _button_prestadorState extends State<button_prestador> {
         child: Column(
           children: [
             Icon(Icons.badge, size: MediaQuery.of(context).size.width * 0.4),
-
             Center(
               child: Text(
                 "Prestador",
@@ -191,6 +186,7 @@ class _button_prestadorState extends State<button_prestador> {
   }
 }
 
+// Botão Contratante
 class _button_contratante extends StatefulWidget {
   const _button_contratante({super.key});
 
@@ -203,9 +199,7 @@ class __button_contratanState extends State<_button_contratante> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Contratante())),
+          () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Contratante())),
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -213,11 +207,10 @@ class __button_contratanState extends State<_button_contratante> {
           color: Color.fromRGBO(255, 255, 255, 1),
           borderRadius: BorderRadius.all(Radius.circular(20)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -228,7 +221,6 @@ class __button_contratanState extends State<_button_contratante> {
               Icons.how_to_reg,
               size: MediaQuery.of(context).size.width * 0.4,
             ),
-
             Center(
               child: Text(
                 "Contratante",

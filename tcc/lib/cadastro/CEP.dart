@@ -3,15 +3,19 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 
+// Máscara para o campo de CEP (ex: 12.345-678)
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '##.###-###',
   filter: {"#": RegExp(r'[0-9]')},
 );
+
+// Máscara para o campo de número (somente números, até 5 dígitos)
 final numeromaskFormatter = MaskTextInputFormatter(
   mask: '#####',
   filter: {"#": RegExp(r'[0-9]')},
 );
 
+// Tela principal da página de endereço (CEP)
 class CEP extends StatefulWidget {
   const CEP({super.key});
 
@@ -26,10 +30,14 @@ class _CEPState extends State<CEP> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: Scaffold(
+        backgroundColor: Colors.white,
+
+        // AppBar no topo da tela
         appBar: AppBar(
-          backgroundColor: const Color(0xFFFEF7FD),
+          backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
+            // Botão de voltar para a tela de escolha
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Escolha()),
@@ -47,8 +55,11 @@ class _CEPState extends State<CEP> {
           ),
           centerTitle: true,
         ),
+
+        // Corpo da tela (rolável)
         body: ListView(
           children: <Widget>[
+            // Campo de CEP
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.width * 0.1,
@@ -59,6 +70,7 @@ class _CEPState extends State<CEP> {
               child: const cep(),
             ),
 
+            // Linha com Cidade e Estado lado a lado
             Padding(
               padding: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.1,
@@ -70,22 +82,22 @@ class _CEPState extends State<CEP> {
                 children: [
                   Expanded(flex: 4, child: cidade()),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07),
-                  // 3 partes da largura
-                  Expanded(flex: 3, child: estado()), // 4 partes da largura
+                  Expanded(flex: 3, child: estado()),
                 ],
               ),
             ),
 
+            // Campo de rua / avenida
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
-
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
               child: const Rua(),
             ),
 
+            // Campo de número
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -94,6 +106,8 @@ class _CEPState extends State<CEP> {
               ),
               child: numero(),
             ),
+
+            // Campo de cidade repetido (aparentemente sobrou, pode remover se quiser)
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -103,6 +117,7 @@ class _CEPState extends State<CEP> {
               child: Center(child: cidade()),
             ),
 
+            // Botão "Próximo"
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.22,
@@ -116,6 +131,7 @@ class _CEPState extends State<CEP> {
   }
 }
 
+// Campo de texto para CEP
 class cep extends StatefulWidget {
   const cep({super.key});
 
@@ -137,7 +153,6 @@ class _cepState extends State<cep> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         hintText: "99999-999",
         hintStyle: TextStyle(
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -156,6 +171,7 @@ class _cepState extends State<cep> {
   }
 }
 
+// Campo de texto para Rua / Avenida
 class Rua extends StatefulWidget {
   const Rua({super.key});
 
@@ -192,6 +208,7 @@ class _RuaState extends State<Rua> {
   }
 }
 
+// Campo de texto para número da residência
 class numero extends StatefulWidget {
   const numero({super.key});
 
@@ -213,13 +230,12 @@ class _numeroState extends State<numero> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "numero",
+        labelText: "Número",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -236,6 +252,7 @@ class _numeroState extends State<numero> {
   }
 }
 
+// Botão "Próximo" com gradiente
 class botao extends StatefulWidget {
   const botao({super.key});
 
@@ -247,10 +264,9 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
+      // Navega para a tela principal
+      onTap: () => Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -258,16 +274,14 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
         ),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -276,14 +290,9 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Proximo",
+                "Próximo",
                 style: TextStyle(
-                  color: const Color.from(
-                    alpha: 1,
-                    red: 0.988,
-                    green: 0.984,
-                    blue: 0.984,
-                  ),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,
@@ -298,6 +307,7 @@ class _botaoState extends State<botao> {
   }
 }
 
+// Campo de texto para Cidade
 class cidade extends StatefulWidget {
   const cidade({super.key});
 
@@ -323,7 +333,6 @@ class _adicionaisState extends State<cidade> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -340,6 +349,7 @@ class _adicionaisState extends State<cidade> {
   }
 }
 
+// Campo de texto para Estado
 class estado extends StatefulWidget {
   const estado({super.key});
 
@@ -365,7 +375,6 @@ class _estadoState extends State<estado> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),

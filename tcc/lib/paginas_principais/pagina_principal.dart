@@ -6,8 +6,8 @@ import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
+// Tela principal do app (com navegação inferior entre Início e Perfil)
 class TelaPrincipal extends StatefulWidget {
-  
   const TelaPrincipal({super.key});
 
   @override
@@ -15,13 +15,16 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
+  // Índice da página atual (controla qual tela está visível)
   int paginaAtual = 0;
-  
+
+  // Lista das páginas que podem ser exibidas
   late final List<Widget> _paginas;
 
   @override
   void initState() {
     super.initState();
+    // Define as páginas: feed principal e perfil do dono
     _paginas = [AleatorioFeed(), PerfilDono()];
   }
 
@@ -29,89 +32,20 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      appBar:
-          paginaAtual == 0
-              ? PreferredSize(
-                preferredSize: Size.fromHeight(
-                  MediaQuery.of(context).size.height * 0.085,
-                ),
-                child: AppBar(
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  flexibleSpace: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.05,
-                          vertical: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Barra de pesquisa moderna
-                            Container(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.045,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: TextField(
-                                style: const TextStyle(color: Colors.white),
-                                cursorColor: Colors.white,
-                                readOnly: true,
-                                onTap: () {
-                                  showSearch(
-                                    context: context,
-                                    delegate: BarraDePesquisa(),
-                                  );
-                                },
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                  ),
-                                  hintText: "Pesquisar serviços...",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize:
-                                        MediaQuery.of(context).size.width *
-                                        0.04,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical:
-                                        MediaQuery.of(context).size.height *
-                                        0.012,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-              : AppBar(
-                title: const Text(
-                  "Perfil",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
+
+      // AppBar muda dependendo da página
+      appBar: paginaAtual == 0
+          // AppBar da tela inicial (com barra de pesquisa)
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(
+                MediaQuery.of(context).size.height * 0.085,
+              ),
+              child: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
                 flexibleSpace: Container(
+                  // Gradiente de fundo do AppBar
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
@@ -119,43 +53,121 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       end: Alignment.bottomRight,
                     ),
                   ),
-                ),
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.more_vert_outlined),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const settinspage(),
-                        ),
-                      );
-                    },
+                  child: SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.05,
+                        vertical: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Container da barra de pesquisa
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.045,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: TextField(
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              readOnly: true, // Impede digitação direta
+                              onTap: () {
+                                // Ao tocar, abre a tela de pesquisa personalizada
+                                showSearch(
+                                  context: context,
+                                  delegate: BarraDePesquisa(),
+                                );
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                                hintText: "Pesquisar serviços...",
+                                hintStyle: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.04,
+                                ),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical:
+                                      MediaQuery.of(context).size.height * 0.012,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
+                ),
               ),
+            )
+          // AppBar da página de Perfil
+          : AppBar(
+              title: const Text(
+                "Perfil",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              actions: [
+                // Ícone de configurações no canto direito
+                IconButton(
+                  icon: const Icon(Icons.more_vert_outlined),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const settinspage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+
+      // IndexedStack mantém o estado das páginas mesmo ao trocar
       body: IndexedStack(index: paginaAtual, children: _paginas),
-      floatingActionButton:
-          paginaAtual == 1
-              ? FloatingActionButton(
-                onPressed: () async {
-                  final resultado = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
-                  );
-                  if (resultado != null && mounted) {
-                    // Lógica para lidar com o resultado
-                  }
-                },
-                backgroundColor: const Color(0xFF5E35B1),
-                elevation: 4,
-                child: const Icon(Icons.add, color: Colors.white),
-              )
-              : null,
+
+      // Botão flutuante aparece apenas na página de Perfil
+      floatingActionButton: paginaAtual == 1
+          ? FloatingActionButton(
+              onPressed: () async {
+                // Abre a página para criar novo post
+                final resultado = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
+                );
+                if (resultado != null && mounted) {
+                  // Aqui você pode atualizar o feed com o novo post
+                }
+              },
+              backgroundColor: const Color(0xFF5E35B1),
+              elevation: 4,
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
+
+      // Barra de navegação inferior com gradiente
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         decoration: BoxDecoration(
@@ -170,12 +182,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               color: const Color(0xFF2196F3).withOpacity(0.4),
               offset: const Offset(0, 4),
               blurRadius: 12,
-              spreadRadius: 0,
             ),
           ],
         ),
         child: WillPopScope(
           onWillPop: () async {
+            // Impede o usuário de sair com o botão de voltar
             return false;
           },
           child: ClipRRect(
@@ -190,7 +202,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               type: BottomNavigationBarType.fixed,
               selectedFontSize: 12,
               unselectedFontSize: 11,
-              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+              selectedLabelStyle:
+                  const TextStyle(fontWeight: FontWeight.w600),
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_rounded),
@@ -209,7 +222,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   }
 }
 
-// Widget de pesquisa vazio - Estado inicial
+// ===================
+// Widget de placeholder de pesquisa
+// ===================
 class pesquisaWidget extends StatefulWidget {
   const pesquisaWidget({super.key});
 
@@ -228,7 +243,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Ícone em círculo com gradiente
+              // Ícone dentro de um círculo com gradiente
               Container(
                 width: 120,
                 height: 120,
@@ -249,7 +264,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
               ),
               const SizedBox(height: 32),
 
-              // Título
+              // Título principal
               const Text(
                 "Encontre Profissionais",
                 style: TextStyle(
@@ -261,7 +276,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
               ),
               const SizedBox(height: 16),
 
-              // Descrição
+              // Texto explicativo
               Text(
                 "Use a barra de pesquisa no topo da tela para encontrar os melhores profissionais da sua região.",
                 textAlign: TextAlign.center,
@@ -273,7 +288,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
               ),
               const SizedBox(height: 32),
 
-              // Botão de exemplo (opcional)
+              // Botão estilizado (não funcional aqui)
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:tcc/service_post.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
-// ------------------------ ALEATORIO FEED ------------------------
+/// Página principal que exibe o feed aleatório de postagens
 class AleatorioFeed extends StatefulWidget {
   const AleatorioFeed({super.key});
 
@@ -15,91 +15,99 @@ class AleatorioFeed extends StatefulWidget {
 }
 
 class _AleatorioFeedState extends State<AleatorioFeed> {
-  final List<ServicePostFeed> _posts = [];
-  final ScrollController _scrollController = ScrollController();
-  bool _isLoading = false;
+  final List<ServicePostFeed> _posts = []; // Lista de posts exibidos no feed
+  final ScrollController _scrollController = ScrollController(); // Controla a rolagem
+  bool _isLoading = false; // Indica se está carregando novos posts
 
   @override
   void initState() {
     super.initState();
-    _loadMorePosts();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-              _scrollController.position.maxScrollExtent - 200 &&
-          !_isLoading) {
-        _loadMorePosts();
-      }
-    });
+    _loadInitialPosts(); // Carrega os posts iniciais
   }
 
-  void _loadMorePosts() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-
-    List<ServicePostFeed> newPosts = List.generate(3, (index) {
-      int id = _posts.length + index + 1;
-
-      List<String> imageUrls = List.generate(
-        3,
-        (imgIndex) =>
-            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
-      );
-
-      // Vídeo de teste
-      String? videoUrl =
-          "https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_5MG.mp4";
-
-      return ServicePostFeed(
-        id: id.toString(),
-        providerName: "Prestador $id",
-        providerCompany: "Empresa $id",
-        providerAvatar: "https://picsum.photos/100/100?random=$id",
-        location: "Cidade $id",
-        description: "Descrição breve do serviço $id...",
-        fullDescription: "Descrição completa do serviço qr$id...",
-        images: imageUrls,
-        videoUrl: videoUrl != null ? [videoUrl] : null,
-        likes: 0,
+  /// Carrega alguns posts de exemplo (mock)
+  void _loadInitialPosts() {
+    List<ServicePostFeed> initialPosts = [
+      // 🔹 Post 1 — Somente texto
+      ServicePostFeed(
+        id: '1',
+        providerName: 'João Silva',
+        providerCompany: 'Serviços Gerais',
+        providerAvatar: 'https://picsum.photos/100/100?random=1',
+        location: 'São Paulo - SP',
+        description: 'Atendimento rápido e confiável!',
+        fullDescription:
+            'Ofereço serviços gerais residenciais com qualidade e preço justo.',
+        images: null,
+        videoUrl: null,
+        likes: 12,
         isLiked: false,
-      );
-    });
+      ),
+
+      // 🔹 Post 2 — Somente imagem
+      ServicePostFeed(
+        id: '2',
+        providerName: 'Maria Oliveira',
+        providerCompany: 'Jardinagem Pro',
+        providerAvatar: 'https://picsum.photos/100/100?random=2',
+        location: 'Rio de Janeiro - RJ',
+        description: 'Paisagismo moderno e criativo.',
+        fullDescription:
+            'Transforme seu jardim em um verdadeiro paraíso verde!',
+        images: [
+          'https://picsum.photos/600/400?random=20',
+          'https://picsum.photos/600/400?random=21'
+        ],
+        videoUrl: null,
+        likes: 30,
+        isLiked: false,
+      ),
+
+      // 🔹 Post 3 — Mistura (vídeo + imagem)
+      ServicePostFeed(
+        id: '3',
+        providerName: 'Carlos Mendes',
+        providerCompany: 'TechFix',
+        providerAvatar: 'https://picsum.photos/100/100?random=3',
+        location: 'Curitiba - PR',
+        description: 'Assistência técnica especializada!',
+        fullDescription:
+            'Reparo de celulares, notebooks e tablets. Garantia de qualidade!',
+        images: [
+          'https://picsum.photos/600/400?random=40',
+        ],
+        videoUrl: [
+          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'
+        ],
+        likes: 45,
+        isLiked: true,
+      ),
+    ];
 
     setState(() {
-      _posts.addAll(newPosts);
-      _isLoading = false;
+      _posts.addAll(initialPosts);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_posts.isEmpty && !_isLoading) {
-      return const Center(child: Text("Nenhum serviço encontrado."));
-    }
-
     return Container(
       color: const Color(0xFFF5F7FA),
       child: ListView.builder(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _posts.length + 1,
+        itemCount: _posts.length,
         itemBuilder: (context, index) {
-          if (index < _posts.length) {
-            return ServiceProviderFeed(post: _posts[index]);
-          } else {
-            return _isLoading
-                ? const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-                : const SizedBox.shrink();
-          }
+          // Cada item da lista é um card de serviço
+          return ServiceProviderFeed(post: _posts[index]);
         },
       ),
     );
   }
 }
 
+/// Widget responsável por exibir um card de postagem (com mídia, descrição, etc)
 class ServiceProviderFeed extends StatelessWidget {
   final ServicePostFeed post;
 
@@ -107,30 +115,36 @@ class ServiceProviderFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Combina vídeo e imagens em um único array de widgets
+    final hasVideo = post.videoUrl != null && post.videoUrl!.isNotEmpty;
+    final hasImages = post.images != null && post.images!.isNotEmpty;
+
+    // Lista que conterá as mídias do carrossel (imagens e/ou vídeos)
     List<Widget> carouselItems = [];
 
-    if (post.videoUrl != null) {
+    // Se tiver vídeo, adiciona ao carrossel
+    if (hasVideo) {
       carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
     }
 
-    carouselItems.addAll(
-      post.images!.map((url) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Image.network(
-              url,
-              fit: BoxFit.cover,
-              errorBuilder:
-                  (context, error, stackTrace) =>
-                      const Center(child: Icon(Icons.broken_image, size: 40)),
+    // Se tiver imagens, adiciona ao carrossel também
+    if (hasImages) {
+      carouselItems.addAll(
+        post.images!.map((url) {
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Image.network(
+                url,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Center(child: Icon(Icons.broken_image, size: 40)),
+              ),
             ),
-          ),
-        );
-      }),
-    );
+          );
+        }),
+      );
+    }
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -145,154 +159,126 @@ class ServiceProviderFeed extends StatelessWidget {
           ),
         ],
       ),
-      child: GestureDetector(
-        onTap:
-            () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const PerfilDeOutroUsuario(),
-              ),
-            ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Cabeçalho
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(post.providerAvatar!),
-                    radius: 28,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.providerName!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          post.providerCompany!,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              size: 14,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                post.location!,
-                                style: const TextStyle(color: Colors.grey),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Carrossel de imagens + vídeo
-            if (carouselItems.isNotEmpty)
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 240,
-                  viewportFraction: 1.0,
-                  enableInfiniteScroll: false,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 🔹 Cabeçalho do post (foto, nome, empresa, localização)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(post.providerAvatar!),
+                  radius: 28,
                 ),
-                items: carouselItems,
-              ),
-
-            // Descrição e botão "Ver mais"
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      post.description!,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black87,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post.providerName!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder:
-                                (context) => VerMaisPage(post: post.toDetail()),
+                      Text(
+                        post.providerCompany!,
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on,
+                              size: 14, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              post.location!,
+                              style: const TextStyle(color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // 🔹 Carrossel de imagens/vídeo (se existir)
+          if (carouselItems.isNotEmpty)
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 240,
+                viewportFraction: 1.0,
+                enableInfiniteScroll: false, // evita scroll infinito
+              ),
+              items: carouselItems,
+            ),
+
+          // 🔹 Descrição e botão "Ver mais"
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    post.description ?? "",
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (post.fullDescription != null)
+                  InkWell(
+                    onTap: () {
+                      // Abre a tela "Ver Mais"
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => VerMaisPage(post: post.toDetail()),
                         ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1A202C),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Ver mais',
-                              style: TextStyle(
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1A202C),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Ver mais",
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(
-                              Icons.arrow_forward,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ],
-                        ),
+                                fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward,
+                              color: Colors.white, size: 16),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-// ------------------- VIDEO WIDGET -------------------
+/// ------------------- WIDGET DE VÍDEO -------------------
 class _CarouselVideoItem extends StatefulWidget {
   final String videoUrl;
-
   const _CarouselVideoItem({required this.videoUrl});
 
   @override
@@ -300,16 +286,14 @@ class _CarouselVideoItem extends StatefulWidget {
 }
 
 class _CarouselVideoItemState extends State<_CarouselVideoItem> {
-  late VideoPlayerController _controller;
-  bool _isVisible = false;
+  late VideoPlayerController _controller; // Controlador do player
+  bool _isVisible = false; // Detecta se o vídeo está visível na tela
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
+      ..initialize().then((_) => setState(() {}));
   }
 
   @override
@@ -318,17 +302,18 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
     super.dispose();
   }
 
+  /// Função que controla quando o vídeo deve tocar ou pausar
   void _handleVisibility(double visibleFraction) {
     final wasVisible = _isVisible;
-    _isVisible = visibleFraction > 0.5; // mais de 50% visível
+    _isVisible = visibleFraction > 0.6;
 
+    // Toca ou pausa automaticamente dependendo da visibilidade
     if (_isVisible && !_controller.value.isPlaying) {
       _controller.play();
     } else if (!_isVisible && _controller.value.isPlaying) {
       _controller.pause();
     }
 
-    // Evita setState redundante
     if (wasVisible != _isVisible) setState(() {});
   }
 
@@ -350,8 +335,7 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
               aspectRatio: _controller.value.aspectRatio,
               child: VideoPlayer(_controller),
             ),
-
-            // Gradiente sutil para legibilidade
+            // Gradiente escuro para melhorar contraste
             Positioned.fill(
               child: IgnorePointer(
                 child: Container(
@@ -369,8 +353,7 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
                 ),
               ),
             ),
-
-            // Botão Play/Pause manual
+            // Botão de play/pausa
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -386,38 +369,13 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.6),
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
                   padding: const EdgeInsets.all(16),
-                  child: const Icon(
-                    Icons.play_arrow_rounded,
-                    color: Colors.white,
-                    size: 48,
-                  ),
+                  child: const Icon(Icons.play_arrow_rounded,
+                      color: Colors.white, size: 48),
                 ),
               ),
             ),
-
-            // Indicador de carregamento
-            if (_controller.value.isBuffering)
-              const Positioned(
-                bottom: 12,
-                right: 12,
-                child: SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                ),
-              ),
           ],
         ),
       ),

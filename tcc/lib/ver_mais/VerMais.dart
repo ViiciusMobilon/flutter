@@ -5,9 +5,9 @@ import 'package:video_player/video_player.dart';
 import 'package:tcc/service_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 
-// Página de detalhes do post
+// 📄 Página que mostra os detalhes completos de um post
 class VerMaisPage extends StatefulWidget {
-  final ServicePost post;
+  final ServicePost post; // Recebe o post selecionado
 
   const VerMaisPage({Key? key, required this.post}) : super(key: key);
 
@@ -16,9 +16,10 @@ class VerMaisPage extends StatefulWidget {
 }
 
 class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStateMixin {
-  int _currentMediaIndex = 0;
-  Map<int, VideoPlayerController?> _videoControllers = {};
+  int _currentMediaIndex = 0; // Índice do item atual no carrossel
+  Map<int, VideoPlayerController?> _videoControllers = {}; // Controladores dos vídeos
 
+  // Animações de entrada
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -27,6 +28,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
   void initState() {
     super.initState();
 
+    // Configura a animação de fade + slide
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
@@ -39,9 +41,11 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
     );
     _animationController.forward();
 
+    // Inicializa vídeos se houver
     _initializeVideoControllers();
   }
 
+  // Cria controladores para cada vídeo
   void _initializeVideoControllers() {
     if (widget.post.mediaUrls != null) {
       for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
@@ -56,12 +60,14 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
     }
   }
 
+  // Verifica se a URL é um vídeo
   bool _isVideoUrl(String url) {
     return url.toLowerCase().endsWith('.mp4') ||
         url.toLowerCase().endsWith('.mov') ||
         url.toLowerCase().endsWith('.avi');
   }
 
+  // Libera os controladores ao sair da tela
   @override
   void dispose() {
     _animationController.dispose();
@@ -69,9 +75,11 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
     super.dispose();
   }
 
+  // 🎥 Constrói um item de mídia (vídeo ou imagem)
   Widget _buildMediaItem(String mediaUrl, int index) {
     bool isVideo = _isVideoUrl(mediaUrl);
 
+    // --- Se for vídeo ---
     if (isVideo) {
       VideoPlayerController? controller = _videoControllers[index];
       if (controller == null || !controller.value.isInitialized) {
@@ -104,6 +112,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
         child: Stack(
           alignment: Alignment.center,
           children: [
+            // Vídeo em si
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: AspectRatio(
@@ -111,7 +120,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                 child: VideoPlayer(controller),
               ),
             ),
-            // Gradiente
+            // Gradiente escuro embaixo
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
@@ -123,7 +132,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                 ),
               ),
             ),
-            // Play/Pause central
+            // Botão de play/pause central
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -143,7 +152,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                 ),
               ),
             ),
-            // Controles inferiores
+            // Barra de progresso e botões
             Positioned(
               bottom: 0,
               left: 0,
@@ -157,6 +166,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Barra de tempo
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         trackHeight: 3,
@@ -174,12 +184,14 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                         },
                       ),
                     ),
+                    // Linha com botões e tempos
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(_formatDuration(position), style: const TextStyle(color: Colors.white, fontSize: 12)),
                         Row(
                           children: [
+                            // Volume
                             IconButton(
                               icon: Icon(controller.value.volume > 0 ? Icons.volume_up : Icons.volume_off, color: Colors.white, size: 22),
                               onPressed: () {
@@ -188,6 +200,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                                 });
                               },
                             ),
+                            // Replay
                             if (controller.value.position >= controller.value.duration)
                               IconButton(
                                 icon: const Icon(Icons.replay_rounded, color: Colors.white, size: 22),
@@ -196,6 +209,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
                                   controller.play();
                                 },
                               ),
+                            // Tela cheia
                             IconButton(
                               icon: const Icon(Icons.fullscreen, color: Colors.white, size: 22),
                               onPressed: () {
@@ -217,7 +231,10 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
           ],
         ),
       );
-    } else {
+    }
+
+    // --- Se for imagem ---
+    else {
       return Container(
         height: 300,
         decoration: BoxDecoration(
@@ -237,37 +254,37 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
     }
   }
 
-  Widget _buildMediaCarousel() {
-    if (widget.post.mediaUrls == null || widget.post.mediaUrls!.isEmpty) {
-      return Container(
-        height: 300,
-        color: const Color(0xFFF5F7FA),
-        child: const Center(child: Icon(Icons.image_not_supported, size: 64, color: Colors.grey)),
-      );
-    }
-
-    return CarouselSlider.builder(
-      itemCount: widget.post.mediaUrls!.length,
-      itemBuilder: (context, index, realIndex) {
-        return _buildMediaItem(widget.post.mediaUrls![index], index);
-      },
-      options: CarouselOptions(
-        height: 300,
-        viewportFraction: 1.0,
-        enableInfiniteScroll: widget.post.mediaUrls!.length > 1,
-        autoPlay: false,
-        onPageChanged: (index, reason) {
-          setState(() {
-            _currentMediaIndex = index;
-          });
-          _videoControllers.forEach((key, controller) {
-            if (controller != null && controller.value.isPlaying) controller.pause();
-          });
-        },
-      ),
-    );
+  // 🖼️ Cria o carrossel de imagens/vídeos
+ Widget _buildMediaCarousel() {
+  // Se não tiver mídia, retorna um SizedBox vazio (sem ícone, sem espaço)
+  if (widget.post.mediaUrls == null || widget.post.mediaUrls!.isEmpty) {
+    return const SizedBox.shrink();
   }
 
+  return CarouselSlider.builder(
+    itemCount: widget.post.mediaUrls!.length,
+    itemBuilder: (context, index, realIndex) {
+      return _buildMediaItem(widget.post.mediaUrls![index], index);
+    },
+    options: CarouselOptions(
+      
+      height: 300,
+      viewportFraction: 1.0,
+      enableInfiniteScroll: false,
+      autoPlay: false,
+      onPageChanged: (index, reason) {
+        setState(() {
+          _currentMediaIndex = index;
+        });
+        _videoControllers.forEach((key, controller) {
+          if (controller != null && controller.value.isPlaying) controller.pause();
+        });
+      },
+    ),
+  );
+}
+
+  // 👤 Informações do prestador
   Widget _buildProviderInfo() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -304,6 +321,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
     );
   }
 
+  // 📜 Descrição do serviço
   Widget _buildDescription() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
@@ -317,14 +335,14 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.post.serviceName != null)
-            Text(widget.post.serviceName!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(widget.post.serviceName!, style: const TextStyle(fontSize: 20)),
           const SizedBox(height: 12),
-          Text(widget.post.description ?? 'Sem descrição disponível.', style: const TextStyle(fontSize: 16, height: 1.5)),
         ],
       ),
     );
   }
 
+  // 🧱 Monta a página
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -357,7 +375,7 @@ class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStat
   }
 }
 
-// Tela cheia do vídeo
+// 📺 Página de vídeo em tela cheia
 class _FullscreenVideoPage extends StatelessWidget {
   final VideoPlayerController controller;
   const _FullscreenVideoPage({required this.controller});
@@ -388,6 +406,7 @@ class _FullscreenVideoPage extends StatelessWidget {
   }
 }
 
+// ⏱️ Função auxiliar pra formatar tempo do vídeo
 String _formatDuration(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
   return "${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";

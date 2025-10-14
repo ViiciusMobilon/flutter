@@ -188,7 +188,7 @@ class _VerMaisPageState extends State<VerMaisPageDono>
       options: CarouselOptions(
         height: 300,
         viewportFraction: 1.0,
-        enableInfiniteScroll: widget.post.mediaUrls!.length > 1,
+        enableInfiniteScroll: false,
         autoPlay: false,
         onPageChanged: (index, reason) {
           setState(() {
@@ -321,7 +321,7 @@ class _VerMaisPageState extends State<VerMaisPageDono>
             widget.post.serviceName!,
             style: const TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.bold,
+             
               color: Color(0xFF1A202C),
             ),
           ),
@@ -331,7 +331,6 @@ class _VerMaisPageState extends State<VerMaisPageDono>
           widget.post.description ?? 'Sem descrição disponível.',
           style: TextStyle(
             fontSize: 16,
-            height: 1.5,
             color: const Color(0xFF1A202C).withOpacity(0.8),
           ),
         ),

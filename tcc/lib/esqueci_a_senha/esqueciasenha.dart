@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 
+// Função principal que inicia o app
 void main() => runApp(Esqueciasenha());
 
+// ------------------ CLASSE PRINCIPAL ------------------
 class Esqueciasenha extends StatefulWidget {
   const Esqueciasenha({super.key});
 
@@ -16,25 +18,31 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height * 1,
-        width: MediaQuery.of(context).size.width * 1,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
+        // Ocupa toda a tela
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+
+        // Cor de fundo branca
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
         ),
+
+        // Permite rolar a tela caso o teclado apareça
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
+              // ---------------- LOGO ----------------
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.07,
                   ),
-                  child: imagem(),
+                  child: const imagem(), // Usa o widget personalizado da logo
                 ),
               ),
-              //texto sign
+
+              // ---------------- TÍTULO ----------------
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -44,7 +52,7 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
                     "Esqueceu a senha ?",
                     style: TextStyle(
                       fontSize: MediaQuery.of(context).size.width * 0.07,
-                      color: const Color.fromARGB(255, 8, 8, 8),
+                      color: Colors.black,
                       fontWeight: FontWeight.w800,
                       fontFamily: "Poppins",
                     ),
@@ -52,24 +60,20 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
                 ),
               ),
 
+              // ---------------- SUBTÍTULO ----------------
               Center(
-                child: Padding(
-                  padding: EdgeInsets.only(),
-                  child: Text(
-                    "Redefina a e duas etapas simples",
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.03,
-                      color: const Color.fromARGB(255, 8, 8, 8),
-                      fontWeight: FontWeight.w800,
-                      fontFamily: "Poppins",
-                    ),
+                child: Text(
+                  "Redefina-a em duas etapas simples",
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width * 0.035,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "Poppins",
                   ),
                 ),
               ),
 
-              //fim sign
-
-              //textfield de email
+              // ---------------- CAMPO DE EMAIL ----------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.04,
@@ -77,21 +81,16 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
                   left: MediaQuery.of(context).size.width * 0.08,
                   right: MediaQuery.of(context).size.width * 0.08,
                 ),
-                child: emailesqueci(),
+                child: const emailesqueci(), // Campo de texto para o e-mail
               ),
-              //fim email
-              //textfield senha
 
-              //botao
+              // ---------------- BOTÃO ----------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
-                child: Center(child: botao()),
+                child: const Center(child: botao()), // Botão "Próximo"
               ),
-
-              //fim botao
-              //escrita para o cadastro
             ],
           ),
         ),
@@ -100,6 +99,7 @@ class _EsqueciasenhaState extends State<Esqueciasenha> {
   }
 }
 
+// ------------------ CAMPO DE EMAIL ------------------
 class emailesqueci extends StatefulWidget {
   const emailesqueci({super.key});
 
@@ -112,35 +112,42 @@ class _emailesqueciState extends State<emailesqueci> {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
+        // Texto de dica dentro do campo
         hintText: "xxxxx@gmail.com",
         hintStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
-          fontFamily: "Poppins",
-        ),
-        labelText: "Email cadastrado",
-        labelStyle: TextStyle(
-          color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontSize: MediaQuery.of(context).size.width * 0.045,
           fontFamily: "Poppins",
         ),
 
+        // Rótulo acima do campo
+        labelText: "Email cadastrado",
+        labelStyle: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.width * 0.045,
+          fontFamily: "Poppins",
+        ),
+
+        // Borda quando o campo está em foco
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
+          borderSide: const BorderSide(
+            color: Color.fromRGBO(121, 180, 217, 1),
             width: 1.5,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.circular(10),
         ),
+
+        // Borda quando o campo não está em foco
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
   }
 }
 
+// ------------------ BOTÃO "PRÓXIMO" ------------------
 class botao extends StatefulWidget {
   const botao({super.key});
 
@@ -152,19 +159,25 @@ class _botaoState extends State<botao> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPage())),
+      // Ação ao clicar no botão
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const CodigoPage()),
+        );
+      },
+
+      // Estilo visual do botão
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
         decoration: BoxDecoration(
+          // Degradê azul
           gradient: const LinearGradient(
             colors: [Colors.blue, Colors.indigoAccent],
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(40)),
+          borderRadius: BorderRadius.circular(40),
           boxShadow: [
+            // Sombra suave no botão
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
               offset: const Offset(0, 4),
@@ -173,6 +186,8 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
+
+        // Conteúdo do botão: texto e ícone
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -183,7 +198,7 @@ class _botaoState extends State<botao> {
               child: Text(
                 "Próximo",
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 252, 251, 251),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,
@@ -198,17 +213,21 @@ class _botaoState extends State<botao> {
   }
 }
 
+// ------------------ LOGO ------------------
 class imagem extends StatelessWidget {
   const imagem({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      // Define o tamanho proporcional da logo
       width: MediaQuery.of(context).size.width * 0.4,
       height: MediaQuery.of(context).size.height * 0.25,
-      decoration: BoxDecoration(
+
+      // Define a imagem e o ajuste de exibição
+      decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/logo.png"), //fundo da imagem
+          image: AssetImage("assets/imagens/logo.png"),
           fit: BoxFit.fill,
         ),
       ),
