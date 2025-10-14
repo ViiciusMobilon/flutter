@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/service_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 
-// 📄 Página que mostra os detalhes completos de um post
 class VerMaisPage extends StatefulWidget {
-  final ServicePost post; // Recebe o post selecionado
+  final ServicePost post;
 
   const VerMaisPage({Key? key, required this.post}) : super(key: key);
 
@@ -15,399 +14,285 @@ class VerMaisPage extends StatefulWidget {
   State<VerMaisPage> createState() => _VerMaisPageState();
 }
 
-class _VerMaisPageState extends State<VerMaisPage> with SingleTickerProviderStateMixin {
-  int _currentMediaIndex = 0; // Índice do item atual no carrossel
-  Map<int, VideoPlayerController?> _videoControllers = {}; // Controladores dos vídeos
-
-  // Animações de entrada
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
+class _VerMaisPageState extends State<VerMaisPage> {
+  final Map<int, VideoPlayerController> _controllers = {};
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-
-    // Configura a animação de fade + slide
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
-    _animationController.forward();
-
-    // Inicializa vídeos se houver
-    _initializeVideoControllers();
+    _initVideos();
   }
 
-  // Cria controladores para cada vídeo
-  void _initializeVideoControllers() {
+  void _initVideos() {
     if (widget.post.mediaUrls != null) {
       for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
         final url = widget.post.mediaUrls![i];
-        if (_isVideoUrl(url)) {
-          _videoControllers[i] = VideoPlayerController.network(url)
+        if (_isVideo(url)) {
+          final controller = VideoPlayerController.network(url)
             ..initialize().then((_) {
               if (mounted) setState(() {});
             });
+          _controllers[i] = controller;
         }
       }
     }
   }
 
-  // Verifica se a URL é um vídeo
-  bool _isVideoUrl(String url) {
-    return url.toLowerCase().endsWith('.mp4') ||
-        url.toLowerCase().endsWith('.mov') ||
-        url.toLowerCase().endsWith('.avi');
+  bool _isVideo(String url) {
+    final lower = url.toLowerCase();
+    return lower.endsWith(".mp4") || lower.endsWith(".mov") || lower.endsWith(".avi");
   }
 
-  // Libera os controladores ao sair da tela
   @override
   void dispose() {
-    _animationController.dispose();
-    _videoControllers.forEach((_, controller) => controller?.dispose());
+    for (final c in _controllers.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
-  // 🎥 Constrói um item de mídia (vídeo ou imagem)
-  Widget _buildMediaItem(String mediaUrl, int index) {
-    bool isVideo = _isVideoUrl(mediaUrl);
-
-    // --- Se for vídeo ---
-    if (isVideo) {
-      VideoPlayerController? controller = _videoControllers[index];
-      if (controller == null || !controller.value.isInitialized) {
-        return Container(
-          height: 300,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF5F7FA),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: const Center(child: CircularProgressIndicator()),
-        );
-      }
-
-      Duration position = controller.value.position;
-      Duration duration = controller.value.duration;
-      double progress = duration.inMilliseconds > 0
-          ? position.inMilliseconds / duration.inMilliseconds
-          : 0;
-
-      return VisibilityDetector(
-        key: Key(mediaUrl),
-        onVisibilityChanged: (info) {
-          final visible = info.visibleFraction > 0.6;
-          if (visible && !controller.value.isPlaying) {
-            controller.play();
-          } else if (!visible && controller.value.isPlaying) {
-            controller.pause();
-          }
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Vídeo em si
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: VideoPlayer(controller),
-              ),
-            ),
-            // Gradiente escuro embaixo
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black.withOpacity(0.3), Colors.transparent],
-                  ),
-                ),
-              ),
-            ),
-            // Botão de play/pause central
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  controller.value.isPlaying ? controller.pause() : controller.play();
-                });
-              },
-              child: AnimatedOpacity(
-                opacity: controller.value.isPlaying ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 300),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.4),
-                    shape: BoxShape.circle,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 72),
-                ),
-              ),
-            ),
-            // Barra de progresso e botões
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Barra de tempo
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        trackHeight: 3,
-                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                        overlayShape: SliderComponentShape.noOverlay,
-                        activeTrackColor: Colors.white,
-                        inactiveTrackColor: Colors.white24,
-                        thumbColor: Colors.white,
-                      ),
-                      child: Slider(
-                        value: progress,
-                        onChanged: (value) {
-                          final newPosition = duration * value;
-                          controller.seekTo(newPosition);
-                        },
-                      ),
-                    ),
-                    // Linha com botões e tempos
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(_formatDuration(position), style: const TextStyle(color: Colors.white, fontSize: 12)),
-                        Row(
-                          children: [
-                            // Volume
-                            IconButton(
-                              icon: Icon(controller.value.volume > 0 ? Icons.volume_up : Icons.volume_off, color: Colors.white, size: 22),
-                              onPressed: () {
-                                setState(() {
-                                  controller.setVolume(controller.value.volume > 0 ? 0 : 1);
-                                });
-                              },
-                            ),
-                            // Replay
-                            if (controller.value.position >= controller.value.duration)
-                              IconButton(
-                                icon: const Icon(Icons.replay_rounded, color: Colors.white, size: 22),
-                                onPressed: () {
-                                  controller.seekTo(Duration.zero);
-                                  controller.play();
-                                },
-                              ),
-                            // Tela cheia
-                            IconButton(
-                              icon: const Icon(Icons.fullscreen, color: Colors.white, size: 22),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => _FullscreenVideoPage(controller: controller)),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        Text(_formatDuration(duration), style: const TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // --- Se for imagem ---
-    else {
-      return Container(
-        height: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: const Color(0xFFF5F7FA),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Image.network(
-          mediaUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
-            color: const Color(0xFFF5F7FA),
-            child: const Center(child: Icon(Icons.broken_image, size: 64, color: Colors.grey)),
-          ),
-        ),
-      );
-    }
-  }
-
-  // 🖼️ Cria o carrossel de imagens/vídeos
- Widget _buildMediaCarousel() {
-  // Se não tiver mídia, retorna um SizedBox vazio (sem ícone, sem espaço)
-  if (widget.post.mediaUrls == null || widget.post.mediaUrls!.isEmpty) {
-    return const SizedBox.shrink();
-  }
-
-  return CarouselSlider.builder(
-    itemCount: widget.post.mediaUrls!.length,
-    itemBuilder: (context, index, realIndex) {
-      return _buildMediaItem(widget.post.mediaUrls![index], index);
-    },
-    options: CarouselOptions(
-      
-      height: 300,
-      viewportFraction: 1.0,
-      enableInfiniteScroll: false,
-      autoPlay: false,
-      onPageChanged: (index, reason) {
-        setState(() {
-          _currentMediaIndex = index;
-        });
-        _videoControllers.forEach((key, controller) {
-          if (controller != null && controller.value.isPlaying) controller.pause();
-        });
-      },
-    ),
-  );
-}
-
-  // 👤 Informações do prestador
-  Widget _buildProviderInfo() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: GestureDetector(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PerfilDeOutroUsuario())),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              radius: 32,
-              backgroundColor: const Color(0xFFF5F7FA),
-              backgroundImage: widget.post.providerPhotoUrl != null ? NetworkImage(widget.post.providerPhotoUrl!) : null,
-              child: widget.post.providerPhotoUrl == null ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C)) : null,
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(widget.post.providerName ?? 'Prestador', overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  if (widget.post.providerCompany != null)
-                    Text(widget.post.providerCompany!, overflow: TextOverflow.ellipsis, maxLines: 1, style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 📜 Descrição do serviço
-  Widget _buildDescription() {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Row(
         children: [
-          if (widget.post.serviceName != null)
-            Text(widget.post.serviceName!, style: const TextStyle(fontSize: 20)),
-          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PerfilDeOutroUsuario()),
+            ),
+            child: CircleAvatar(
+              radius: 26,
+              backgroundImage: widget.post.providerPhotoUrl != null
+                  ? NetworkImage(widget.post.providerPhotoUrl!)
+                  : null,
+              backgroundColor: const Color(0xFFE6E8EB),
+              child: widget.post.providerPhotoUrl == null
+                  ? const Icon(Icons.person, color: Colors.white, size: 26)
+                  : null,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.post.providerName ?? "Prestador",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1A1A1A),
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                if (widget.post.providerCompany != null)
+                  Text(
+                    widget.post.providerCompany!,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF777777),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        
         ],
       ),
     );
   }
 
-  // 🧱 Monta a página
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      appBar: AppBar(
-        title: Text(widget.post.providerName ?? 'Detalhes do serviço'),
-        backgroundColor: Colors.blue,
-      ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildProviderInfo()),
-                const SizedBox(height: 16),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildMediaCarousel()),
-                const SizedBox(height: 16),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: _buildDescription()),
-                const SizedBox(height: 32),
-              ],
+  Widget _buildMedia(String url, int index) {
+    final isVideo = _isVideo(url);
+    if (isVideo) {
+      final controller = _controllers[index];
+      if (controller == null || !controller.value.isInitialized) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return VisibilityDetector(
+        key: Key(url),
+        onVisibilityChanged: (info) {
+          if (info.visibleFraction > 0.6) {
+            controller.play();
+          } else {
+            controller.pause();
+          }
+        },
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              controller.value.isPlaying
+                  ? controller.pause()
+                  : controller.play();
+            });
+          },
+          child: ClipRRect(
+          
+            child: AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: VideoPlayer(controller),
             ),
           ),
+        ),
+      );
+    }
+
+    return ClipRRect(
+     
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (_, __, ___) => Container(
+          color: const Color(0xFFE6E8EB),
+          child: const Icon(Icons.broken_image, size: 60, color: Colors.grey),
         ),
       ),
     );
   }
-}
 
-// 📺 Página de vídeo em tela cheia
-class _FullscreenVideoPage extends StatelessWidget {
-  final VideoPlayerController controller;
-  const _FullscreenVideoPage({required this.controller});
+  Widget _buildMediaCarousel() {
+    final media = widget.post.mediaUrls ?? [];
+    if (media.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: media.length,
+          itemBuilder: (context, index, _) => _buildMedia(media[index], index),
+          options: CarouselOptions(
+            height: 420,
+            viewportFraction: 1,
+            enableInfiniteScroll: false,
+            onPageChanged: (i, _) {
+              setState(() {
+                _currentIndex = i;
+              });
+              _controllers.forEach((_, c) => c.pause());
+            },
+          ),
+        ),
+        if (media.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                media.length,
+                (i) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentIndex == i ? 9 : 6,
+                  height: _currentIndex == i ? 9 : 6,
+                  decoration: BoxDecoration(
+                    color: _currentIndex == i
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDescription() {
+    final name = widget.post.providerName ?? 'Prestador';
+    final service = widget.post.serviceName ?? '';
+    final desc = widget.post.description ?? '';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "$name ",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    fontSize: 15.5,
+                  ),
+                ),
+                TextSpan(
+                  text: service,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 15.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (desc.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                desc,
+                style: const TextStyle(
+                  fontSize: 14.5,
+                  height: 1.4,
+                  color: Color(0xFF444444),
+                ),
+              ),
+            ),
+          const SizedBox(height: 8),
+          Text(
+            "Publicado há 2h",
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 12.5,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTap: () => controller.value.isPlaying ? controller.pause() : controller.play(),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Center(child: AspectRatio(aspectRatio: controller.value.aspectRatio, child: VideoPlayer(controller))),
-            if (!controller.value.isPlaying) const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 64),
-            Positioned(
-              top: 40,
-              right: 20,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 32),
-                onPressed: () => Navigator.pop(context),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
               ),
-            ),
+        elevation: 0.8,
+        title: const Text(
+          "Detalhes",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildMediaCarousel(),
+            _buildDescription(),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
-}
-
-// ⏱️ Função auxiliar pra formatar tempo do vídeo
-String _formatDuration(Duration duration) {
-  String twoDigits(int n) => n.toString().padLeft(2, '0');
-  return "${twoDigits(duration.inMinutes.remainder(60))}:${twoDigits(duration.inSeconds.remainder(60))}";
 }
