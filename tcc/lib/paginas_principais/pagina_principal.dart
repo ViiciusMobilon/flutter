@@ -24,7 +24,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [AleatorioFeed(), PerfilUser()];
+    _paginas = [AleatorioFeed(), PerfilUser(authController: widget.authcontroller,)];
   }
 
   @override
@@ -133,7 +133,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => settinspage(),
+                          builder: (context) => settinspage(authController: widget.authcontroller,),
                         ),
                       );
                     },

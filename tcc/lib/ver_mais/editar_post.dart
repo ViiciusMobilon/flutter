@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/service_post.dart';
 
@@ -14,7 +15,7 @@ class Midia {
 }
 
 class EditarPostPage extends StatefulWidget {
-  final ServicePost post;
+  final Portfolio post;
 
   const EditarPostPage({Key? key, required this.post}) : super(key: key);
 
@@ -32,24 +33,24 @@ class _EditarPostPageState extends State<EditarPostPage> {
   @override
   void initState() {
     super.initState();
-    _descricaoController.text = widget.post.description ?? '';
+    _descricaoController.text = widget.post.descricao ?? '';
 
     // Inicializa mídias existentes
-    if (widget.post.mediaUrls != null) {
-      for (var url in widget.post.mediaUrls!) {
-        bool isVideo = url.toLowerCase().endsWith('.mp4') ||
-            url.toLowerCase().endsWith('.mov') ||
-            url.toLowerCase().endsWith('.avi');
-        VideoPlayerController? controller;
-        if (isVideo) {
-          controller = VideoPlayerController.network(url)
-            ..initialize().then((_) {
-              if (mounted) setState(() {});
-            });
-        }
-        _midias.add(Midia(url: url, isVideo: isVideo, controller: controller));
-      }
-    }
+    // if (widget.post.mediaUrls != null) {
+    //   for (var url in widget.post.mediaUrls!) {
+    //     bool isVideo = url.toLowerCase().endsWith('.mp4') ||
+    //         url.toLowerCase().endsWith('.mov') ||
+    //         url.toLowerCase().endsWith('.avi');
+    //     VideoPlayerController? controller;
+    //     if (isVideo) {
+    //       controller = VideoPlayerController.network(url)
+    //         ..initialize().then((_) {
+    //           if (mounted) setState(() {});
+    //         });
+    //     }
+    //     _midias.add(Midia(url: url, isVideo: isVideo, controller: controller));
+    //   }
+    // }
   }
 
   @override
@@ -112,10 +113,10 @@ class _EditarPostPageState extends State<EditarPostPage> {
     await Future.delayed(const Duration(seconds: 1));
 
     // Atualiza post
-    final updatedPost = widget.post.copyWith(
-      description: _descricaoController.text,
-      mediaUrls: _midias.map((m) => m.arquivo?.path ?? m.url!).toList(),
-    );
+    // final updatedPost = widget.post.copyWith(
+    //   description: _descricaoController.text,
+    //   mediaUrls: _midias.map((m) => m.arquivo?.path ?? m.url!).toList(),
+    // );
 
     setState(() => _isLoading = false);
 
@@ -126,7 +127,7 @@ class _EditarPostPageState extends State<EditarPostPage> {
       ),
     );
 
-    Navigator.pop(context, updatedPost);
+    // Navigator.pop(context, updatedPost);
   }
 
   Widget _buildMidiaItem(Midia midia, int index) {

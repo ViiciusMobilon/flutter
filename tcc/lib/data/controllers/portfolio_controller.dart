@@ -5,14 +5,16 @@ import 'package:tcc/data/services/portfolio_service.dart';
 class PortfolioController extends ChangeNotifier {
   final PortfolioService _service = PortfolioService();
   List<Portfolio> _portfolios = [];
+  Portfolio? _post;
   int _page = 1;
   bool _loading = false;
   bool _hasMore = true;
 
   List<Portfolio> get portfolios => _portfolios;
+  Portfolio? get post => _post;
   bool get loading => _loading;
 
-  Future<void> fetchPortfolio({bool refresh = false}) async {
+  Future<void> fetchPortfolioAuth({bool refresh = false}) async {
     if (refresh) {
       _page = 1;
       _hasMore = true;
@@ -25,7 +27,7 @@ class PortfolioController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final newPosts = await _service.getPortfolio(page: _page);
+      final newPosts = await _service.getPortfolioAuth(page: _page);
       print("newPosts: ${newPosts.length}");
 
       if (newPosts.isEmpty) {
@@ -43,6 +45,18 @@ class PortfolioController extends ChangeNotifier {
 
   // 🔹 Esse método é o que a tela está tentando chamar
   Future<void> loadMorePosts() async {
-    await fetchPortfolio();
+    await fetchPortfolioAuth();
+  }
+
+  Future<void> getPortfolioId({int id = 2}) async {
+    try {
+       _post = await _service.getPortfolioId(id: id);
+    } catch (e) {
+      print("Erro ao buscar portfólio: $e");
+    } finally {
+      notifyListeners();
+      _loading = false;
+
+    }
   }
 }

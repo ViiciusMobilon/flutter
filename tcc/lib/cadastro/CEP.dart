@@ -420,7 +420,7 @@ class _botaoState extends State<botao> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TelaPrincipal(authcontroller: ,),
+                  builder: (_) => TelaPrincipal(authcontroller: _authController,),
                 ),
               );
             } else {

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
+import 'package:tcc/data/models/post.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/repositories/auth_repository.dart';

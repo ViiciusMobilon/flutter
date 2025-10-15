@@ -7,10 +7,11 @@ import 'package:video_player/video_player.dart';
 
 // Widget principal da página de detalhes do post
 class VerMaisPage extends StatefulWidget {
-  final ServicePost post; // Recebe os dados do post
+  final ServicePost? post; // Recebe os dados do post
+  
 
 
-  VerMaisPage({Key? key, required this.post}) : super(key: key);
+  VerMaisPage({Key? key, this.post}) : super(key: key);
 
   @override
   State<VerMaisPage> createState() => _VerMaisPageState();
@@ -30,8 +31,8 @@ class _VerMaisPageState extends State<VerMaisPage>
   @override
   void initState() {
     super.initState();
-    isLiked = widget.post.isLiked ?? false; // Inicializa o like
-    likeCount = widget.post.likeCount ?? 0; // Inicializa contagem de likes
+    isLiked = widget.post?.isLiked ?? false; // Inicializa o like
+    likeCount = widget.post?.likeCount ?? 0; // Inicializa contagem de likes
 
     // Configura animações
     _animationController = AnimationController(
@@ -56,9 +57,9 @@ class _VerMaisPageState extends State<VerMaisPage>
 
   // Inicializa controladores de vídeo para cada URL de vídeo
   void _initializeVideoControllers() {
-    if (widget.post.mediaUrls != null) {
-      for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
-        String url = widget.post.mediaUrls![i];
+    if (widget.post?.mediaUrls != null) {
+      for (int i = 0; i < widget.post!.mediaUrls!.length; i++) {
+        String url = widget.post!.mediaUrls![i];
         if (_isVideoUrl(url)) {
           _videoControllers[i] = VideoPlayerController.network(url)
             ..initialize().then((_) {
@@ -171,7 +172,7 @@ class _VerMaisPageState extends State<VerMaisPage>
 
   // Carrossel de imagens/vídeos
   Widget _buildMediaCarousel() {
-    if (widget.post.mediaUrls == null || widget.post.mediaUrls!.isEmpty) {
+    if (widget.post?.mediaUrls == null || widget.post!.mediaUrls!.isEmpty) {
       return Container(
         height: 300,
         color: const Color(0xFFF5F7FA),
@@ -182,14 +183,14 @@ class _VerMaisPageState extends State<VerMaisPage>
     }
 
     return CarouselSlider.builder(
-      itemCount: widget.post.mediaUrls!.length,
+      itemCount: widget.post?.mediaUrls!.length,
       itemBuilder: (context, index, realIndex) {
-        return _buildMediaItem(widget.post.mediaUrls![index], index);
+        return _buildMediaItem(widget.post!.mediaUrls![index], index);
       },
       options: CarouselOptions(
         height: 300,
         viewportFraction: 1.0,
-        enableInfiniteScroll: widget.post.mediaUrls!.length > 1,
+        enableInfiniteScroll: widget.post!.mediaUrls!.length > 1,
         autoPlay: false,
         onPageChanged: (index, reason) {
           setState(() {
@@ -234,10 +235,10 @@ class _VerMaisPageState extends State<VerMaisPage>
                 CircleAvatar(
                   radius: 32,
                   backgroundColor: const Color(0xFFF5F7FA),
-                  backgroundImage: widget.post.providerPhotoUrl != null
-                      ? NetworkImage(widget.post.providerPhotoUrl!)
+                  backgroundImage: widget.post?.providerPhotoUrl != null
+                      ? NetworkImage(widget.post?.providerPhotoUrl ?? '')
                       : null,
-                  child: widget.post.providerPhotoUrl == null
+                  child: widget.post?.providerPhotoUrl == null
                       ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C))
                       : null,
                 ),
@@ -247,7 +248,7 @@ class _VerMaisPageState extends State<VerMaisPage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.post.providerName ?? 'Prestador',
+                        widget.post?.providerName ?? 'Prestador',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: const TextStyle(
@@ -256,10 +257,10 @@ class _VerMaisPageState extends State<VerMaisPage>
                           color: Color(0xFF1A202C),
                         ),
                       ),
-                      if (widget.post.providerCompany != null) ...[
+                      if (widget.post?.providerCompany != null) ...[
                         const SizedBox(height: 4),
                         Text(
-                          widget.post.providerCompany!,
+                          widget.post?.providerCompany ?? '',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
@@ -271,11 +272,11 @@ class _VerMaisPageState extends State<VerMaisPage>
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          if (widget.post.providerRating != null) ...[
+                          if (widget.post?.providerRating != null) ...[
                             const Icon(Icons.star, size: 16, color: Colors.amber),
                             const SizedBox(width: 4),
                             Text(
-                              widget.post.providerRating!.toStringAsFixed(1),
+                              widget.post?.providerRating!.toStringAsFixed(1) ?? '',
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -284,12 +285,12 @@ class _VerMaisPageState extends State<VerMaisPage>
                             ),
                             const SizedBox(width: 16),
                           ],
-                          if (widget.post.providerCity != null) ...[
+                          if (widget.post?.providerCity != null) ...[
                             const Icon(Icons.location_on,
                                 size: 16, color: Color(0xFF1A202C)),
                             const SizedBox(width: 4),
                             Text(
-                              widget.post.providerCity!,
+                              widget.post?.providerCity ?? '',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: const Color(0xFF1A202C).withOpacity(0.7),
@@ -328,9 +329,9 @@ class _VerMaisPageState extends State<VerMaisPage>
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.post.serviceName != null) ...[
+        if (widget.post?.serviceName != null) ...[
           Text(
-            widget.post.serviceName!,
+            widget.post?.serviceName ?? '',
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -340,7 +341,7 @@ class _VerMaisPageState extends State<VerMaisPage>
           const SizedBox(height: 12),
         ],
         Text(
-          widget.post.description ?? 'Sem descrição disponível.',
+          widget.post?.description ?? 'Sem descrição disponível.',
           style: TextStyle(
             fontSize: 16,
             height: 1.5,
@@ -374,7 +375,7 @@ class _VerMaisPageState extends State<VerMaisPage>
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          widget.post.providerName ?? 'Detalhes do Serviço',
+          widget.post?.providerName ?? 'Detalhes do Serviço',
           style: const TextStyle(
             color: Color.fromARGB(255, 255, 255, 255),
             fontSize: 18,

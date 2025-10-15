@@ -11,7 +11,7 @@ class PortfolioRepository {
   final _storage = FlutterSecureStorage();
 
 
-  Future<List<Portfolio>> getPortfolioUser({int page =1 }) async {
+  Future<List<Portfolio>> getPortfolioAuth({int page =1 }) async {
     try {
       final token = await _storage.read(key: 'token');
       
@@ -28,6 +28,37 @@ class PortfolioRepository {
       final List data = response.data['data'];
 
       return data.map((json) => Portfolio.fromJson(json)).toList();
+
+    }    catch (e) {
+      print('Error fetching portfolio: $e');
+      rethrow;
+    }
+  
+  }
+  Future<Portfolio> getPortfolioId({required int id}) async {
+    try {
+      // final token = await _storage.read(key: 'token');
+      
+      final response = await _dio.get(
+        '/portfolio/$id',
+        // options: Options(
+        //   headers: {
+        //   'Authorization': 'Bearer $token',
+        // },),
+      );
+
+      // Se o backend retornar um objeto:
+      if (response.data['portfolio'] is Map) {
+        return Portfolio.fromJson(response.data['portfolio']);
+      }
+
+      // Se retornar uma lista com 1 item:
+      final data = response.data['portfolio'];
+      if (data is List && data.isNotEmpty) {
+        return Portfolio.fromJson(data[0]);
+      }
+
+      throw Exception('Portfolio não encontrado:, ${response.data}' );
 
     }    catch (e) {
       print('Error fetching portfolio: $e');

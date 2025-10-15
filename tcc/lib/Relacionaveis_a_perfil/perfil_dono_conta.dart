@@ -26,7 +26,7 @@ class _PerfilUserState extends State<PerfilUser> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    Future.microtask(() => context.read<PortfolioController>().fetchPortfolio());
+    Future.microtask(() => context.read<PortfolioController>().fetchPortfolioAuth());
   }
 
   @override
@@ -145,7 +145,7 @@ class _PerfilUserState extends State<PerfilUser> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 6),
                     child: FeedPerfilPortfolio(
-                      // post: post,
+                      post: post,
                       authController: widget.authController,
                     ),
                   );
