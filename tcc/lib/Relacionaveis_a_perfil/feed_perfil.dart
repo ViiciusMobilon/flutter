@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/ver_mais/VerMais.dart';
+import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:tcc/service_post.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -220,7 +220,7 @@ class ServiceProviderFeed extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
-                                VerMaisPage(post: post.toDetail()),
+                                VerMaisPageDono(post: post.toDetail()),
                           ),
                         );
                       },

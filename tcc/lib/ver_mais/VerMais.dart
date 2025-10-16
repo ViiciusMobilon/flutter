@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/service_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:intl/intl.dart';
 
 class VerMaisPage extends StatefulWidget {
   final ServicePost post;
@@ -41,7 +42,9 @@ class _VerMaisPageState extends State<VerMaisPage> {
 
   bool _isVideo(String url) {
     final lower = url.toLowerCase();
-    return lower.endsWith(".mp4") || lower.endsWith(".mov") || lower.endsWith(".avi");
+    return lower.endsWith(".mp4") ||
+        lower.endsWith(".mov") ||
+        lower.endsWith(".avi");
   }
 
   @override
@@ -50,6 +53,13 @@ class _VerMaisPageState extends State<VerMaisPage> {
       c.dispose();
     }
     super.dispose();
+  }
+
+  String _formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(d.inMinutes.remainder(60));
+    final seconds = twoDigits(d.inSeconds.remainder(60));
+    return "$minutes:$seconds";
   }
 
   Widget _buildHeader() {
@@ -98,7 +108,6 @@ class _VerMaisPageState extends State<VerMaisPage> {
               ],
             ),
           ),
-        
         ],
       ),
     );
@@ -122,6 +131,22 @@ class _VerMaisPageState extends State<VerMaisPage> {
           }
         },
         child: GestureDetector(
+          onDoubleTapDown: (details) async {
+            final width = MediaQuery.of(context).size.width;
+            final dx = details.globalPosition.dx;
+            final current = await controller.position ?? Duration.zero;
+            final duration = controller.value.duration;
+
+            if (dx < width / 2) {
+              controller.seekTo(Duration(
+                seconds: (current.inSeconds - 5).clamp(0, duration.inSeconds),
+              ));
+            } else {
+              controller.seekTo(Duration(
+                seconds: (current.inSeconds + 5).clamp(0, duration.inSeconds),
+              ));
+            }
+          },
           onTap: () {
             setState(() {
               controller.value.isPlaying
@@ -129,26 +154,114 @@ class _VerMaisPageState extends State<VerMaisPage> {
                   : controller.play();
             });
           },
-          child: ClipRRect(
-          
-            child: AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: VideoPlayer(controller),
-            ),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: controller.value.size.width,
+                    height: controller.value.size.height,
+                    child: VideoPlayer(controller),
+                  ),
+                ),
+              ),
+
+              // Barra de progresso + tempo
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    VideoProgressIndicator(
+                      controller,
+                      allowScrubbing: true,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.blueAccent,
+                        backgroundColor: Colors.black26,
+                        bufferedColor: Colors.white38,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _formatDuration(
+                                controller.value.position),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                          Text(
+                            _formatDuration(
+                                controller.value.duration),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Ícone play/pause central
+              if (!controller.value.isPlaying)
+                Center(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.black45,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: const Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 48,
+                    ),
+                  ),
+                ),
+
+              // Botão de expandir
+              Positioned(
+                right: 8,
+                bottom: 40,
+                child: IconButton(
+                  icon: const Icon(Icons.fullscreen,
+                      color: Colors.white, size: 28),
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            FullScreenVideoPlayer(controller: controller),
+                      ),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       );
     }
 
     return ClipRRect(
-     
       child: Image.network(
         url,
         fit: BoxFit.cover,
         width: double.infinity,
         errorBuilder: (_, __, ___) => Container(
           color: const Color(0xFFE6E8EB),
-          child: const Icon(Icons.broken_image, size: 60, color: Colors.grey),
+          child: const Icon(Icons.broken_image,
+              size: 60, color: Colors.grey),
         ),
       ),
     );
@@ -162,9 +275,10 @@ class _VerMaisPageState extends State<VerMaisPage> {
       children: [
         CarouselSlider.builder(
           itemCount: media.length,
-          itemBuilder: (context, index, _) => _buildMedia(media[index], index),
+          itemBuilder: (context, index, _) =>
+              _buildMedia(media[index], index),
           options: CarouselOptions(
-            height: 420,
+            height: MediaQuery.of(context).size.height * 0.3,
             viewportFraction: 1,
             enableInfiniteScroll: false,
             onPageChanged: (i, _) {
@@ -264,14 +378,14 @@ class _VerMaisPageState extends State<VerMaisPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
         elevation: 0.8,
         title: const Text(
           "Detalhes",
@@ -290,6 +404,137 @@ class _VerMaisPageState extends State<VerMaisPage> {
             _buildMediaCarousel(),
             _buildDescription(),
             const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenVideoPlayer extends StatefulWidget {
+  final VideoPlayerController controller;
+
+  const FullScreenVideoPlayer({Key? key, required this.controller})
+      : super(key: key);
+
+  @override
+  State<FullScreenVideoPlayer> createState() =>
+      _FullScreenVideoPlayerState();
+}
+
+class _FullScreenVideoPlayerState
+    extends State<FullScreenVideoPlayer> {
+  late VideoPlayerController controller;
+
+  String _formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(d.inMinutes.remainder(60));
+    final seconds = twoDigits(d.inSeconds.remainder(60));
+    return "$minutes:$seconds";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller;
+    controller.play();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: GestureDetector(
+        onDoubleTapDown: (details) async {
+          final width = MediaQuery.of(context).size.width;
+          final dx = details.globalPosition.dx;
+          final current = await controller.position ?? Duration.zero;
+          final duration = controller.value.duration;
+
+          if (dx < width / 2) {
+            controller.seekTo(Duration(
+              seconds: (current.inSeconds - 5).clamp(0, duration.inSeconds),
+            ));
+          } else {
+            controller.seekTo(Duration(
+              seconds: (current.inSeconds + 5).clamp(0, duration.inSeconds),
+            ));
+          }
+        },
+        onTap: () {
+          setState(() {
+            controller.value.isPlaying
+                ? controller.pause()
+                : controller.play();
+          });
+        },
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Center(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: controller.value.size.width,
+                  height: controller.value.size.height,
+                  child: VideoPlayer(controller),
+                ),
+              ),
+            ),
+            VideoProgressIndicator(
+              controller,
+              allowScrubbing: true,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              colors: const VideoProgressColors(
+                playedColor: Colors.blueAccent,
+                backgroundColor: Colors.black26,
+                bufferedColor: Colors.white38,
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatDuration(controller.value.position),
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  Text(
+                    _formatDuration(controller.value.duration),
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            if (!controller.value.isPlaying)
+              Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black45,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ),
+            Positioned(
+              top: 40,
+              left: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close,
+                    color: Colors.white, size: 28),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
           ],
         ),
       ),
