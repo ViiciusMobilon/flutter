@@ -20,6 +20,17 @@ class PortfolioService {
 
   }
 
+  Future<List<Portfolio>> getPortfolios({int page =1 }) async {
+    try {
+      final posts = await _repository.getPortfolios();
+      print('portfolio geral service: ${posts.length}');
+      return posts;
+    } catch (e) {
+      print("Erro no Portfolio service: $e");
+      rethrow;
+    }
+  }
+
   Future<Portfolio> getPortfolioId({required int id}) async {
     try{
       final post = await _repository.getPortfolioId(id: id);

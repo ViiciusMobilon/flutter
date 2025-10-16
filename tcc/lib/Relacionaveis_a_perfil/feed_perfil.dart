@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/data/config.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
+import 'package:tcc/data/models/post.dart';
+import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
@@ -7,106 +11,110 @@ import 'package:tcc/service_post.dart';
 
 // ------------------------ FEED DE PERFIL ------------------------
 class FeedPerfil extends StatefulWidget {
-  final ServicePostFeed post;
-  const FeedPerfil({super.key, required this.post});
+  final Portfolio post;
+  final AuthController authController;
+  FeedPerfil({super.key, required this.post, required this.authController});
 
   @override
   State<FeedPerfil> createState() => _FeedPerfilState();
 }
 
-class _FeedPerfilState extends State<FeedPerfil> {
-  final List<ServicePostFeed> _posts = [];
-  bool _isLoading = false;
+// class _FeedPerfilState extends State<FeedPerfil> {
+//   // final List<ServicePostFeed> _posts = [];
+//   // bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadMorePosts();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     // _loadMorePosts();
+//   }
 
-  void _loadMorePosts() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
+//   // void _loadMorePosts() async {
+//   //   setState(() => _isLoading = true);
+//   //   await Future.delayed(const Duration(seconds: 2));
 
-    List<ServicePostFeed> newPosts = List.generate(3, (index) {
-      int id = _posts.length + index + 1;
+//   //   List<ServicePostFeed> newPosts = List.generate(3, (index) {
+//   //     int id = _posts.length + index + 1;
 
-      List<String> imageUrls = List.generate(
-        3,
-        (imgIndex) => "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
-      );
+//   //     List<String> imageUrls = List.generate(
+//   //       3,
+//   //       (imgIndex) => "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+//   //     );
 
-      String videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+//   //     String videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
 
-      return ServicePostFeed(
-        id: id.toString(),
-        providerName: "Prestador $id",
-        providerCompany: "Empresa $id",
-        providerAvatar: "https://picsum.photos/100/100?random=$id",
-        location: "Cidade $id",
-        description: "Descrição breve do serviço $id...",
-        fullDescription: "Descrição completa do serviço $id...",
-        images: imageUrls,
-        videoUrl: [videoUrl],
-        likes: 0,
-        isLiked: false,
-      );
-    });
+//   //     return ServicePostFeed(
+//   //       id: id.toString(),
+//   //       providerName: "Prestador $id",
+//   //       providerCompany: "Empresa $id",
+//   //       providerAvatar: "https://picsum.photos/100/100?random=$id",
+//   //       location: "Cidade $id",
+//   //       description: "Descrição breve do serviço $id...",
+//   //       fullDescription: "Descrição completa do serviço $id...",
+//   //       images: imageUrls,
+//   //       videoUrl: [videoUrl],
+//   //       likes: 0,
+//   //       isLiked: false,
+//   //     );
+//   //   });
 
-    setState(() {
-      _posts.addAll(newPosts);
-      _isLoading = false;
-    });
-  }
+//   //   setState(() {
+//   //     _posts.addAll(newPosts);
+//   //     _isLoading = false;
+//   //   });
+//   // }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_posts.isEmpty && !_isLoading) {
-      return const Center(child: Text("Nenhum serviço encontrado."));
-    }
+//   @override
+//   Widget build(BuildContext context) {
+//     if (_posts.isEmpty && !_isLoading) {
+//       return const Center(child: Text("Nenhum serviço encontrado."));
+//     }
 
-    return Container(
-      color: const Color(0xFFF5F7FA),
-      child: Column(
-        children: [
-          for (var post in _posts) ServiceProviderFeed(post: post),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       color: const Color(0xFFF5F7FA),
+//       child: Column(
+//         children: [
+//           for (var post in _posts) ServiceProviderFeed(post: widget.post, authController: widget.authController,),
+//           if (_isLoading)
+//             const Padding(
+//               padding: EdgeInsets.all(16),
+//               child: Center(child: CircularProgressIndicator()),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 // ------------------------ COMPONENTE DE CADA CARD ------------------------
-class ServiceProviderFeed extends StatelessWidget {
-  final ServicePostFeed post;
+class _FeedPerfilState extends State<FeedPerfil> {
+  // final Portfolio post;
+  // final AuthController authController;
 
-  const ServiceProviderFeed({super.key, required this.post});
+  // _FeedPerfilState({super.key, required this.post, required this.authController});
 
   @override
   Widget build(BuildContext context) {
+    final user = widget.authController.usuario;
+    final post = widget.post;
     List<Widget> carouselItems = [];
-
-    if (post.videoUrl != null) {
-      carouselItems.add(_CarouselVideoItem(videoUrl: post.videoUrl![0]));
+    //videos
+    if (post.videos.isNotEmpty) {
+      for (var v in post.videos) {
+        carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
+      }
     }
 
-    carouselItems.addAll(post.images!.map((url) {
+    //fotos
+     carouselItems.addAll(post.fotos.map((f) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Image.network(
-            url,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => const Center(
-              child: Icon(Icons.broken_image, size: 40),
-            ),
-          ),
+        child: Image.network(
+          '${URLAPISTORAGE}${f.url}',
+          width: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) =>
+              const Center(child: Icon(Icons.broken_image, size: 40)),
         ),
       );
     }));
@@ -139,7 +147,7 @@ class ServiceProviderFeed extends StatelessWidget {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(post.providerAvatar!),
+                    backgroundImage: NetworkImage(user!.fotoURL!),
                     radius: 28,
                   ),
                   const SizedBox(width: 12),
@@ -148,7 +156,7 @@ class ServiceProviderFeed extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          post.providerName!,
+                          user.nome!,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -156,7 +164,7 @@ class ServiceProviderFeed extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          post.providerCompany!,
+                          user.nome ?? user.razao_social ?? 'sem nome',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -169,7 +177,7 @@ class ServiceProviderFeed extends StatelessWidget {
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                post.location!,
+                                user.cidade!,
                                 style: const TextStyle(color: Colors.grey),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -201,7 +209,7 @@ class ServiceProviderFeed extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      post.description!,
+                      post.descricao!,
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black87,
@@ -216,7 +224,7 @@ class ServiceProviderFeed extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => VerMaisPage(post: post.toDetail()),
+                            builder: (context) => VerMaisPageDono(post: post, authController: widget.authController,),
                           ),
                         );
                       },

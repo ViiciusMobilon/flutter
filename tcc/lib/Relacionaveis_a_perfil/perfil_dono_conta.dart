@@ -144,7 +144,11 @@ class _PerfilUserState extends State<PerfilUser> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 6),
-                    child: FeedPerfilPortfolio(
+                    // child: FeedPerfilPortfolio(
+                    //   post: post,
+                    //   authController: widget.authController,
+                    // ),
+                    child: FeedPerfil(
                       post: post,
                       authController: widget.authController,
                     ),

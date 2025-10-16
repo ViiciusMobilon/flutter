@@ -35,6 +35,23 @@ class PortfolioRepository {
     }
   
   }
+
+  Future<List<Portfolio>> getPortfolios({int page =1 }) async {
+    try {
+      final response = await _dio.get(
+        '/Portfolio?page=$page'
+      );
+
+      print('Portfolio de geral: ${response.data}');
+
+      final List data = response.data['data'];
+
+      return data.map((json) => Portfolio.fromJson(json)).toList();
+    } catch (e) {
+      print('Error portfolio geral: $e');
+      rethrow;
+    }
+  }
   Future<Portfolio> getPortfolioId({required int id}) async {
     try {
       // final token = await _storage.read(key: 'token');

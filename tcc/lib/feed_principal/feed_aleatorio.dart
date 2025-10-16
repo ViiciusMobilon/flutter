@@ -7,7 +7,7 @@ import 'package:tcc/service_post.dart';
 
 // ------------------------ ALEATORIO FEED ------------------------
 class AleatorioFeed extends StatefulWidget {
-  const AleatorioFeed({super.key});
+  AleatorioFeed({super.key});
 
   @override
   State<AleatorioFeed> createState() => _AleatorioFeedState();

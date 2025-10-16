@@ -49,6 +49,7 @@ class FeedPerfilPortfolio extends StatelessWidget {
     }));
 
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 3,
@@ -71,16 +72,7 @@ class FeedPerfilPortfolio extends StatelessWidget {
             ),
           ),
 
-          // 🔹 Descrição do post
-          if (post.descricao != null && post.descricao!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                post.descricao!,
-                style: const TextStyle(fontSize: 15, color: Colors.black87),
-              ),
-            ),
-
+        
           // 🔹 Carrossel de imagens/vídeos
           if (carouselItems.isNotEmpty)
             CarouselSlider(
@@ -91,6 +83,19 @@ class FeedPerfilPortfolio extends StatelessWidget {
               ),
               items: carouselItems,
             ),
+          // 🔹 Descrição do post
+          if (post.descricao != null && post.descricao!.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    post.descricao!,
+                    style: const TextStyle(fontSize: 15, color: Colors.black87),
+                  ),
+                ),
+            
 
           // 🔹 Botão "Ver mais"
           Padding(
@@ -131,7 +136,8 @@ class FeedPerfilPortfolio extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ),  ],
+            ),
         ],
       ),
     );
@@ -184,9 +190,9 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
           ),
           Icon(
             _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-            color: Colors.white70,
+            color: const Color(0xB3FFFFFF),
             size: 50,
-          ),
+      ),
         ],
       ),
     );

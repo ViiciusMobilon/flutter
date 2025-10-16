@@ -145,7 +145,8 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           SliverList.builder(
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index < posts.length) return FeedPerfil(post: posts[index]);
+              if (index < posts.length) ; //a linha de baixo é a anterior
+              // if (index < posts.length) return FeedPerfil(post: posts[index]);
               return const Padding(
                 padding: EdgeInsets.all(20),
                 child: Center(child: CircularProgressIndicator()),
