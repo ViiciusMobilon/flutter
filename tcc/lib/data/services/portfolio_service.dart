@@ -20,7 +20,7 @@ class PortfolioService {
 
   }
 
-  Future<List<Portfolio>> getPortfolios({int page =1 }) async {
+  Future<List<Portfolio>?> getPortfolios({int page =1 }) async {
     try {
       final posts = await _repository.getPortfolios();
       print('portfolio geral service: ${posts.length}');

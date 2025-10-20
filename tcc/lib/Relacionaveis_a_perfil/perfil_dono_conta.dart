@@ -131,16 +131,16 @@ class _PerfilUserState extends State<PerfilUser> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                if (_portfolioController.loading &&
-                    _portfolioController.portfolios.isEmpty) {
+                if (_portfolioController.loadingAuth &&
+                    _portfolioController.portfoliosAuth.isEmpty) {
                   return const Padding(
                     padding: EdgeInsets.all(20),
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
 
-                if (index < _portfolioController.portfolios.length) {
-                  final post = _portfolioController.portfolios[index];
+                if (index < _portfolioController.portfoliosAuth.length) {
+                  final post = _portfolioController.portfoliosAuth[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 6),
@@ -160,7 +160,7 @@ class _PerfilUserState extends State<PerfilUser> {
                   );
                 }
               },
-              childCount: _portfolioController.portfolios.length,
+              childCount: _portfolioController.portfoliosAuth.length,
             ),
           ),
         ],

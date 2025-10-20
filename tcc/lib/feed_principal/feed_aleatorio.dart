@@ -25,17 +25,18 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
   @override
   void initState() {
     super.initState();
+    final controller = Provider.of<PortfolioController>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final controller = Provider.of<PortfolioController>(context, listen: false);
-      controller.fetchPortfolios(refresh: true);
+      if (controller.portfoliosGeral.isEmpty) { // 🔹 evita repetir
+        controller.fetchPortfolios(refresh: true);
+      }
     });
 
     _scrollController = ScrollController();
-    final controller = Provider.of<PortfolioController>(context, listen: false);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        if(!controller.loading && controller.hasMore) {
+        if(!controller.loadingGeral && controller.hasMoreGeral) {
           controller.fetchPortfolios();
         }
       }
@@ -52,8 +53,8 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
     
     return Consumer<PortfolioController>(
         builder: (context, controller, child) { 
-          final _posts = controller.portfolios;   
-          if (_posts.isEmpty && !controller.loading) {
+          final _posts = controller.portfoliosGeral;   
+          if (_posts.isEmpty && !controller.loadingGeral) {
             return const Center(child: Text("Nenhum serviço encontrado."));
           }
 

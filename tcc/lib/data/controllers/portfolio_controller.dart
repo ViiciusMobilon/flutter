@@ -4,44 +4,50 @@ import 'package:tcc/data/services/portfolio_service.dart';
 
 class PortfolioController extends ChangeNotifier {
   final PortfolioService _service = PortfolioService();
-  List<Portfolio> _portfolios = [];
-  // List<Portfolio> _portfoliosG = [];
+  List<Portfolio> _portfoliosGeral = [];
+  List<Portfolio> _portfoliosAuth = [];
   Portfolio? _post;
-  int _page = 1;
-  bool _loading = false;
-  bool _hasMore = true;
+  int _pageAuth = 1;
+  int _pageGeral = 1;
+  bool _loadingAuth = false;
+  bool _hasMoreAuth = true;
+  bool _loadingGeral = false;
+  bool _hasMoreGeral = true;
 
-  List<Portfolio> get portfolios => _portfolios;
-  // List<Portfolio> get portfoliosG => _portfoliosG;
+  List<Portfolio> get portfoliosAuth => _portfoliosAuth;
+  List<Portfolio> get portfoliosGeral => _portfoliosGeral;
   Portfolio? get post => _post;
-  bool get loading => _loading;
-  bool get hasMore => _hasMore;
+  bool get loadingAuth => _loadingAuth;
+  bool get hasMoreAuth => _hasMoreAuth;
+
+  bool get loadingGeral => _loadingGeral;
+  bool get hasMoreGeral => _hasMoreGeral;
 
   Future<void> fetchPortfolioAuth({bool refresh = false}) async {
     if (refresh) {
-      _page = 1;
-      _hasMore = true;
-      _portfolios = [];
+      _pageAuth = 1;
+      _hasMoreAuth = true;
+      _portfoliosAuth = [];
     }
 
-    if (_loading || !_hasMore) return;
+    if (_loadingAuth || !_hasMoreAuth) return;
 
-    _loading = true;
+    _loadingAuth = true;
     notifyListeners();
 
     try {
-      final newPosts = await _service.getPortfolioAuth(page: _page);
+      final newPosts = await _service.getPortfolioAuth(page: _pageAuth);
       print("newPosts: ${newPosts.length}");
 
       if (newPosts.isEmpty) {
-        _hasMore = false;
+        _hasMoreAuth = false;
       } else {
-        _portfolios.addAll(newPosts);
-        _page++;
+        _portfoliosAuth.addAll(newPosts);
+        _pageAuth++;
       }
       print("portfolio controller: ${newPosts}");
     } finally {
-      _loading = false;
+      _loadingAuth = false;
       notifyListeners();
     }
   }
@@ -51,47 +57,50 @@ class PortfolioController extends ChangeNotifier {
     await fetchPortfolioAuth();
   }
 
-  Future<void> getPortfolioId({int id = 2}) async {
-    try {
-       _post = await _service.getPortfolioId(id: id);
-    } catch (e) {
-      print("Erro ao buscar portfólio: $e");
-    } finally {
-      notifyListeners();
-      _loading = false;
+  // Future<void> getPortfolioId({int id = 2}) async {
+  //   try {
+  //      _post = await _service.getPortfolioId(id: id);
+  //   } catch (e) {
+  //     print("Erro ao buscar portfólio: $e");
+  //   } finally {
+  //     notifyListeners();
+  //     _loading = false;
 
-    }
-  }
+  //   }
+  // }
 
 
   Future<void> fetchPortfolios({bool refresh = false}) async {
-    if(_loading) return;
+    if(_loadingGeral || !_hasMoreGeral) return;
 
     if (refresh) {
-      _page = 1;
-      _hasMore = true;
-      _portfolios = [];
+      _pageGeral = 1;
+      _hasMoreGeral = true;
+      _portfoliosGeral = [];
     }
 
-    if (!_hasMore) return;
-
-    _loading = true;
+    _loadingGeral = true;
     notifyListeners();
+    print('fetchPortfolios chamado em ${DateTime.now()} com refresh=$refresh');
 
     try {
-      final newPosts = await _service.getPortfolios(page: _page);
-      print("newPosts: ${newPosts.length}");
+      final newPosts = await _service.getPortfolios(page: _pageGeral);
+      print("newPosts: ${newPosts!.length}");
 
       if (newPosts.isEmpty || newPosts.length < 3) {
-        _hasMore = false;
+        _hasMoreGeral = false;
       } else {
-        _portfolios.addAll(newPosts);
-        _page++;
+        for (var p in newPosts) {
+          if (!_portfoliosGeral.any((e) => e.id == p.id)) {
+            _portfoliosGeral.add(p);
+          }
+        }
+        _pageGeral++;
         
       }
       print("portfolio controller: ${newPosts}");
     } finally {
-      _loading = false;
+      _loadingGeral = false;
       notifyListeners();
     }
   }

@@ -41,10 +41,11 @@ class PortfolioRepository {
       final response = await _dio.get(
         '/portfolio?page=$page'
       );
+      print('URL PORTFOLIO: ${response.realUri}');
 
       print('Portfolio de geral: ${response.data}');
 
-      final List data = response.data['portfolios'];
+      final List data = response.data['portfolios']['data'];
 
       return data.map((json) => Portfolio.fromJson(json)).toList();
     } catch (e) {
