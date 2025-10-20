@@ -5,12 +5,14 @@ import 'package:tcc/data/services/portfolio_service.dart';
 class PortfolioController extends ChangeNotifier {
   final PortfolioService _service = PortfolioService();
   List<Portfolio> _portfolios = [];
+  // List<Portfolio> _portfoliosG = [];
   Portfolio? _post;
   int _page = 1;
   bool _loading = false;
   bool _hasMore = true;
 
   List<Portfolio> get portfolios => _portfolios;
+  // List<Portfolio> get portfoliosG => _portfoliosG;
   Portfolio? get post => _post;
   bool get loading => _loading;
   bool get hasMore => _hasMore;
@@ -80,7 +82,7 @@ class PortfolioController extends ChangeNotifier {
       final newPosts = await _service.getPortfolios(page: _page);
       print("newPosts: ${newPosts.length}");
 
-      if (newPosts.isEmpty || newPosts.length < 5) {
+      if (newPosts.isEmpty || newPosts.length < 3) {
         _hasMore = false;
       } else {
         _portfolios.addAll(newPosts);

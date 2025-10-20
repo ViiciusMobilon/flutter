@@ -88,10 +88,6 @@ class FeedPerfil extends StatefulWidget {
 
 // ------------------------ COMPONENTE DE CADA CARD ------------------------
 class _FeedPerfilState extends State<FeedPerfil> {
-  // final Portfolio post;
-  // final AuthController authController;
-
-  // _FeedPerfilState({super.key, required this.post, required this.authController});
 
   @override
   Widget build(BuildContext context) {

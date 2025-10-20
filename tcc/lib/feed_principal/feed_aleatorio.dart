@@ -27,7 +27,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller = Provider.of<PortfolioController>(context, listen: false);
-      controller.fetchPortfolioAuth(refresh: true);
+      controller.fetchPortfolios(refresh: true);
     });
 
     _scrollController = ScrollController();
@@ -99,11 +99,12 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
     if (widget.post.videos.isNotEmpty) {
       for (var v in widget.post.videos) {
         carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
+        print('url video: ${URLAPISTORAGE}${v.url}');
       }
     }
 
     carouselItems.addAll(
-      widget.post.fotos!.map((f) {
+      widget.post.fotos.map((f) {
         return ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           child: SizedBox(
