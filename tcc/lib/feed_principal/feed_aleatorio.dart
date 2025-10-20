@@ -159,118 +159,126 @@ class ServiceProviderFeed extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 🔹 Cabeçalho do post (foto, nome, empresa, localização)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(post.providerAvatar!),
-                  radius: 28,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        post.providerName!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 16),
-                      ),
-                      Text(
-                        post.providerCompany!,
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on,
-                              size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              post.location!,
-                              style: const TextStyle(color: Colors.grey),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PerfilDeOutroUsuario(),
           ),
-
-          // 🔹 Carrossel de imagens/vídeo (se existir)
-          if (carouselItems.isNotEmpty)
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 240,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: false, // evita scroll infinito
-              ),
-              items: carouselItems,
-            ),
-
-          // 🔹 Descrição e botão "Ver mais"
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    post.description ?? "",
-                    style: const TextStyle(fontSize: 14, color: Colors.black87),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 🔹 Cabeçalho do post (foto, nome, empresa, localização)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(post.providerAvatar!),
+                    radius: 28,
                   ),
-                ),
-                if (post.fullDescription != null)
-                  InkWell(
-                    onTap: () {
-                      // Abre a tela "Ver Mais"
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => VerMaisPage(post: post.toDetail()),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          post.providerName!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
                         ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A202C),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Ver mais",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 16),
-                        ],
-                      ),
+                        Text(
+                          post.providerCompany!,
+                          style:
+                              const TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                post.location!,
+                                style: const TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+        
+            // 🔹 Carrossel de imagens/vídeo (se existir)
+            if (carouselItems.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 240,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false, // evita scroll infinito
+                ),
+                items: carouselItems,
+              ),
+        
+            // 🔹 Descrição e botão "Ver mais"
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      post.description ?? "",
+                      style: const TextStyle(fontSize: 14, color: Colors.black87),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (post.fullDescription != null)
+                    InkWell(
+                      onTap: () {
+                        // Abre a tela "Ver Mais"
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => VerMaisPage(post: post.toDetail()),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1A202C),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "Ver mais",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward,
+                                color: Colors.white, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

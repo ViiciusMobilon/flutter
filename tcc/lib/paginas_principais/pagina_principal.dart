@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/Relacionaveis_a_perfil/favoritos.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
@@ -130,6 +131,17 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               foregroundColor: Colors.white,
               elevation: 0,
               actions: [
+                 IconButton(
+                  icon: const Icon(Icons.favorite,),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FavoritosPage(),
+                      ),
+                    );
+                  },
+                ),
                 // Ícone de configurações no canto direito
                 IconButton(
                   icon: const Icon(Icons.more_vert_outlined),

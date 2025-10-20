@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
+import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/service_post.dart';
 import 'system_star.dart';
@@ -123,6 +124,8 @@ class _PerfilDonoState extends State<PerfilDono> {
       height: height * 0.40,
       child: Stack(
         children: [
+     
+         
           Container(
             height: height * 0.16,
             decoration: const BoxDecoration(
@@ -193,6 +196,11 @@ class _PerfilDonoState extends State<PerfilDono> {
               ),
             ),
           ),
+           Positioned(
+          
+            bottom: MediaQuery.of(context).size.height * 0.25,
+            right: MediaQuery.of(context).size.width * 0.05,
+            child: IconButton(onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) => imagem(),)), icon: Icon(Icons.photo_camera_back, color:Color.fromARGB(255, 255, 255, 255) ))),
         ],
       ),
     );
