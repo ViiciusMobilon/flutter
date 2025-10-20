@@ -71,6 +71,7 @@ class _LoginState extends State<Login> {
   try {
       final usuarioLogado = await _authController.login(email, password);
       print("Usuario Login tela:${usuarioLogado}"); 
+      print("Usuario Login controller:${_authController.usuario}");
 
       if (usuarioLogado?.token?.isNotEmpty ?? false) {
         // Redireciona só se token existe
@@ -81,6 +82,7 @@ class _LoginState extends State<Login> {
           ),
         );
       } else {
+        print('Login falhou: ${usuarioLogado}, ${usuarioLogado?.token}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Email ou senha inválidos')),
         );

@@ -13,6 +13,7 @@ class PortfolioController extends ChangeNotifier {
   List<Portfolio> get portfolios => _portfolios;
   Portfolio? get post => _post;
   bool get loading => _loading;
+  bool get hasMore => _hasMore;
 
   Future<void> fetchPortfolioAuth({bool refresh = false}) async {
     if (refresh) {
@@ -59,4 +60,38 @@ class PortfolioController extends ChangeNotifier {
 
     }
   }
+
+
+  Future<void> fetchPortfolios({bool refresh = false}) async {
+    if(_loading) return;
+
+    if (refresh) {
+      _page = 1;
+      _hasMore = true;
+      _portfolios = [];
+    }
+
+    if (!_hasMore) return;
+
+    _loading = true;
+    notifyListeners();
+
+    try {
+      final newPosts = await _service.getPortfolios(page: _page);
+      print("newPosts: ${newPosts.length}");
+
+      if (newPosts.isEmpty || newPosts.length < 5) {
+        _hasMore = false;
+      } else {
+        _portfolios.addAll(newPosts);
+        _page++;
+        
+      }
+      print("portfolio controller: ${newPosts}");
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
+  }
+
 }
