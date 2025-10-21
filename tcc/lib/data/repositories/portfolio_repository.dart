@@ -22,6 +22,8 @@ class PortfolioRepository {
           'Authorization': 'Bearer $token',
         },),
       );
+      print('URL PORTFOLIO AUTH: ${response.realUri}');
+
 
       print('Portfolio:: ${response.data}');
 
@@ -41,7 +43,7 @@ class PortfolioRepository {
       final response = await _dio.get(
         '/portfolio?page=$page'
       );
-      print('URL PORTFOLIO: ${response.realUri}');
+      print('URL PORTFOLIO all: ${response.realUri}');
 
       print('Portfolio de geral: ${response.data}');
 

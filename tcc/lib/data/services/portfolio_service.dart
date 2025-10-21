@@ -22,11 +22,11 @@ class PortfolioService {
 
   Future<List<Portfolio>?> getPortfolios({int page =1 }) async {
     try {
-      final posts = await _repository.getPortfolios();
+      final posts = await _repository.getPortfolios(page: page);
       print('portfolio geral service: ${posts.length}');
       return posts;
     } catch (e) {
-      print("Erro no Portfolio service: $e");
+      print("Erro no Portfolio service Geral: $e");
       rethrow;
     }
   }

@@ -37,7 +37,8 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
         if(!controller.loadingGeral && controller.hasMoreGeral) {
-          controller.fetchPortfolios();
+          controller.loadMorePostsAll();
+          print('Fui chamado');
         }
       }
     });
@@ -65,8 +66,10 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(vertical: 8),
               itemCount: _posts.length + 1,
+              // itemCount: _posts.length + (controller.loadingGeral ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < _posts.length) {
+                  print('novo post geral: ${_posts[index]}');
                   return ServiceProviderFeed(post: _posts[index]);
                 } else {
                   return const Padding(

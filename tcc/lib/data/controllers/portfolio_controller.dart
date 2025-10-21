@@ -53,8 +53,11 @@ class PortfolioController extends ChangeNotifier {
   }
 
   // 🔹 Esse método é o que a tela está tentando chamar
-  Future<void> loadMorePosts() async {
+  Future<void> loadMorePostsAuth() async {
     await fetchPortfolioAuth();
+  }
+  Future<void> loadMorePostsAll() async {
+    await fetchPortfolios();
   }
 
   // Future<void> getPortfolioId({int id = 2}) async {
@@ -71,13 +74,14 @@ class PortfolioController extends ChangeNotifier {
 
 
   Future<void> fetchPortfolios({bool refresh = false}) async {
-    if(_loadingGeral || !_hasMoreGeral) return;
 
     if (refresh) {
       _pageGeral = 1;
       _hasMoreGeral = true;
       _portfoliosGeral = [];
     }
+
+    if(_loadingGeral || !_hasMoreGeral) return;
 
     _loadingGeral = true;
     notifyListeners();
@@ -87,18 +91,15 @@ class PortfolioController extends ChangeNotifier {
       final newPosts = await _service.getPortfolios(page: _pageGeral);
       print("newPosts: ${newPosts!.length}");
 
-      if (newPosts.isEmpty || newPosts.length < 3) {
+      if (newPosts.isEmpty) {
         _hasMoreGeral = false;
       } else {
-        for (var p in newPosts) {
-          if (!_portfoliosGeral.any((e) => e.id == p.id)) {
-            _portfoliosGeral.add(p);
-          }
-        }
+        _portfoliosGeral.addAll(newPosts);
         _pageGeral++;
-        
       }
-      print("portfolio controller: ${newPosts}");
+
+
+      print("portfolio controller geral: ${newPosts}");
     } finally {
       _loadingGeral = false;
       notifyListeners();

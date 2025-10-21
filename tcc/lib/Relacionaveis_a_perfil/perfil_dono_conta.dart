@@ -38,7 +38,7 @@ class _PerfilUserState extends State<PerfilUser> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<PortfolioController>().loadMorePosts();
+      context.read<PortfolioController>().loadMorePostsAuth();
     }
   }
 
