@@ -24,9 +24,7 @@ class _settinspageState extends State<settinspage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
+              Navigator.of(context).pop();
             },
           ),
           title: Text(
