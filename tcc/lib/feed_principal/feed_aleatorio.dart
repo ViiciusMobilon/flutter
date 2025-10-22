@@ -171,7 +171,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          widget.post.ramo ?? 'Sem ramo',
+                          widget.post.user_ramo ?? 'Sem ramo',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
