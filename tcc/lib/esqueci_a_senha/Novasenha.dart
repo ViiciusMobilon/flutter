@@ -101,7 +101,7 @@ class _NovaSenhaPageState extends State<NovaSenhaPage> {
                   onTap: () {
                     // Ao clicar, leva o usuário de volta à tela principal
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const Main()),
+                      MaterialPageRoute(builder: (context) => MainApp()),
                     );
                   },
                   child: const botao(),

@@ -364,10 +364,8 @@ class cnpj extends StatefulWidget {
 
   @override
   State<cnpj> createState() => _cnpjState();
-  State<cnpj> createState() => _cnpjState();
 }
 
-class _cnpjState extends State<cnpj> {
 class _cnpjState extends State<cnpj> {
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 // Importação da tela "Escolha", para navegação após o cadastro
 import 'package:tcc/cadastro/Escolha.dart';

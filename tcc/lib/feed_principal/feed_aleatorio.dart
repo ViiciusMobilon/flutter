@@ -98,8 +98,8 @@ class ServiceProviderFeed extends StatefulWidget {
 class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
   @override
   Widget build(BuildContext context) {
-    final hasVideo = post.videoUrl != null && post.videoUrl!.isNotEmpty;
-    final hasImages = post.images != null && post.images!.isNotEmpty;
+    // final hasVideo = widget.post.videos != null && widget.post.videos!.isNotEmpty;
+    // final hasImages = widget.post.images != null && widget.post.images!.isNotEmpty;
 
     // Lista que conterá as mídias do carrossel (imagens e/ou vídeos)
     List<Widget> carouselItems = [];
@@ -227,7 +227,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (post.fullDescription != null)
+                  if (widget.post.descricao != null)
                     InkWell(
                       onTap: () {
                         // Abre a tela "Ver Mais"

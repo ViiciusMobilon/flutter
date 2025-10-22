@@ -4,7 +4,6 @@ import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_portfolio.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
-import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
@@ -21,14 +20,14 @@ class PerfilUser extends StatefulWidget {
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 1247;
-
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    Future.microtask(() => context.read<PortfolioController>().fetchPortfolioAuth());
+    Future.microtask(() =>
+        context.read<PortfolioController>().fetchPortfolioAuth());
   }
 
   @override
@@ -126,10 +125,12 @@ class _PerfilUserState extends State<PerfilUser> {
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader(user)),
           SliverToBoxAdapter(
-              child: _buildDescription(
-                  'Desenvolvedor mobile apaixonado por criar experiências incríveis. '
-                  'Especialista em Flutter e React Native, sempre buscando as melhores práticas. '
-                  'Adoro trabalhar em equipe e compartilhar conhecimento com a comunidade.')),
+            child: _buildDescription(
+              'Desenvolvedor mobile apaixonado por criar experiências incríveis. '
+              'Especialista em Flutter e React Native, sempre buscando as melhores práticas. '
+              'Adoro trabalhar em equipe e compartilhar conhecimento com a comunidade.',
+            ),
+          ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -144,12 +145,8 @@ class _PerfilUserState extends State<PerfilUser> {
                 if (index < _portfolioController.portfoliosAuth.length) {
                   final post = _portfolioController.portfoliosAuth[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 6),
-                    // child: FeedPerfilPortfolio(
-                    //   post: post,
-                    //   authController: widget.authController,
-                    // ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     child: FeedPerfil(
                       post: post,
                       authController: widget.authController,
@@ -171,18 +168,20 @@ class _PerfilUserState extends State<PerfilUser> {
   }
 
   Widget _buildProfileHeader(user) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return SizedBox(
       height: 300,
       child: Stack(
         children: [
-     
-         
           Container(
             height: 180,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'),
+                  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+                ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -213,7 +212,9 @@ class _PerfilUserState extends State<PerfilUser> {
                 Text(
                   '${user?.nome ?? user?.razao_social ?? 'Não definido'}',
                   style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.bold),
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text('${user?.ramoNome ?? ''}',
@@ -232,7 +233,8 @@ class _PerfilUserState extends State<PerfilUser> {
             top: height * 0.17,
             child: IconButton(
               onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => TelaPrincipal())),
+                MaterialPageRoute(builder: (context) => TelaPrincipal(authcontroller: widget.authController,)),
+              ),
               icon: Icon(
                 Icons.photo_camera,
                 color: Colors.white,
@@ -240,37 +242,18 @@ class _PerfilUserState extends State<PerfilUser> {
               ),
             ),
           ),
-           Positioned(
-          
-            bottom: MediaQuery.of(context).size.height * 0.25,
-            right: MediaQuery.of(context).size.width * 0.05,
-            child: IconButton(onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) => imagem(),)), icon: Icon(Icons.photo_camera_back, color:Color.fromARGB(255, 255, 255, 255) ))),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoveButton() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.favorite, color: Colors.white, size: 18),
-          const SizedBox(width: 6),
-          const Text(
-            'Curtidas',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '$loveCount',
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          Positioned(
+            bottom: height * 0.25,
+            right: width * 0.05,
+            child: IconButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const imagem()),
+              ),
+              icon: const Icon(
+                Icons.photo_camera_back,
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),

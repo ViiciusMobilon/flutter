@@ -18,7 +18,7 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 class Editar_Perfil extends StatefulWidget {
   final AuthController authController;
   
-   Editar_Perfil({super.key, required this.authController});
+  Editar_Perfil({super.key, required this.authController});
 
   @override
   State<Editar_Perfil> createState() => _Editar_PerfilState();
@@ -41,8 +41,8 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
         color: Colors.white,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          children: const [
-            Center(child: Perfil()),
+          children: [
+            Center(child: Perfil(authController: widget.authController)),
             SizedBox(height: 30),
             Nome(),
             

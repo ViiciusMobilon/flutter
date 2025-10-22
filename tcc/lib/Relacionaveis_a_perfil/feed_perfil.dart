@@ -6,149 +6,42 @@ import 'package:tcc/data/models/post.dart';
 import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/ver_mais/VerMaisDono.dart';
-import 'package:tcc/service_post.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // ------------------------ FEED DE PERFIL ------------------------
 class FeedPerfil extends StatefulWidget {
   final Portfolio post;
   final AuthController authController;
-  FeedPerfil({super.key, required this.post, required this.authController});
+  const FeedPerfil({
+    super.key,
+    required this.post,
+    required this.authController,
+  });
 
   @override
   State<FeedPerfil> createState() => _FeedPerfilState();
 }
 
-// class _FeedPerfilState extends State<FeedPerfil> {
-//   // final List<ServicePostFeed> _posts = [];
-//   // bool _isLoading = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     // _loadMorePosts();
-//   }
-
-//   // void _loadMorePosts() async {
-//   //   setState(() => _isLoading = true);
-//   //   await Future.delayed(const Duration(seconds: 2));
-
-//   //   List<ServicePostFeed> newPosts = List.generate(3, (index) {
-//   //     int id = _posts.length + index + 1;
-
-//   //     List<String> imageUrls = List.generate(
-//   //       3,
-//   //       (imgIndex) => "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
-//   //     );
-
-//   //     String videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
-
-//   //     return ServicePostFeed(
-//   //       id: id.toString(),
-//   //       providerName: "Prestador $id",
-//   //       providerCompany: "Empresa $id",
-//   //       providerAvatar: "https://picsum.photos/100/100?random=$id",
-//   //       location: "Cidade $id",
-//   //       description: "Descrição breve do serviço $id...",
-//   //       fullDescription: "Descrição completa do serviço $id...",
-//   //       images: imageUrls,
-//   //       videoUrl: [videoUrl],
-//   //       likes: 0,
-//   //       isLiked: false,
-//   //     );
-//   //   });
-
-//   //   setState(() {
-//   //     _posts.addAll(newPosts);
-//   //     _isLoading = false;
-//   //   });
-//   // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     if (_posts.isEmpty && !_isLoading) {
-//       return const Center(child: Text("Nenhum serviço encontrado."));
-//     }
-
-//     return Container(
-//       color: const Color(0xFFF5F7FA),
-//       child: Column(
-//         children: [
-//           for (var post in _posts) ServiceProviderFeed(post: widget.post, authController: widget.authController,),
-//           if (_isLoading)
-//             const Padding(
-//               padding: EdgeInsets.all(16),
-//               child: Center(child: CircularProgressIndicator()),
-//             ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 // ------------------------ COMPONENTE DE CADA CARD ------------------------
 class _FeedPerfilState extends State<FeedPerfil> {
-  final List<ServicePostFeed> _posts = [];
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMorePosts();
-  }
-
-  void _loadMorePosts() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-
-    List<ServicePostFeed> newPosts = List.generate(3, (index) {
-      int id = _posts.length + index + 1;
-
-      List<String> imageUrls = List.generate(
-        3,
-        (imgIndex) =>
-            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
-      );
-
-      String videoUrl =
-          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
-
-      return ServicePostFeed(
-        id: id.toString(),
-        providerName: "Prestador $id",
-        providerCompany: "Empresa $id",
-        providerAvatar: "https://picsum.photos/100/100?random=$id",
-        location: "Cidade $id",
-        description: "Descrição breve do serviçoassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $id...",
-        fullDescription: "Descrição completa do serviçoassssssssssssssssssssssss $id...",
-        images: imageUrls,
-        videoUrl: [videoUrl],
-        likes: 0,
-        isLiked: false,
-      );
-    });
-
-    setState(() {
-      _posts.addAll(newPosts);
-      _isLoading = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = widget.authController.usuario;
     final post = widget.post;
+
     List<Widget> carouselItems = [];
-    //videos
+
+    // vídeos
     if (post.videos.isNotEmpty) {
       for (var v in post.videos) {
-        carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
+        carouselItems.add(
+          _CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'),
+        );
       }
     }
 
-    //fotos
-     carouselItems.addAll(post.fotos.map((f) {
+    // fotos
+    carouselItems.addAll(post.fotos.map((f) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         child: Image.network(
@@ -215,7 +108,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
@@ -251,7 +145,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                 children: [
                   Expanded(
                     child: Text(
-                      post.descricao!,
+                      post.descricao ?? '',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.black87,
@@ -266,15 +160,17 @@ class _FeedPerfilState extends State<FeedPerfil> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                VerMaisPageDono(post: post.toDetail()),
-                            builder: (context) => VerMaisPageDono(post: post, authController: widget.authController,),
+                            builder: (context) => VerMaisPageDono(
+                              post: post,
+                              authController: widget.authController,
+                            ),
                           ),
                         );
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A202C),
                           borderRadius: BorderRadius.circular(20),
@@ -291,7 +187,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
                               ),
                             ),
                             SizedBox(width: 4),
-                            Icon(Icons.arrow_forward, color: Colors.white, size: 16),
+                            Icon(Icons.arrow_forward,
+                                color: Colors.white, size: 16),
                           ],
                         ),
                       ),
@@ -310,7 +207,6 @@ class _FeedPerfilState extends State<FeedPerfil> {
 // ------------------------ COMPONENTE DE VÍDEO ------------------------
 class _CarouselVideoItem extends StatefulWidget {
   final String videoUrl;
-
   const _CarouselVideoItem({required this.videoUrl});
 
   @override
@@ -325,9 +221,7 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
+      ..initialize().then((_) => setState(() {}));
   }
 
   @override
@@ -338,7 +232,7 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
 
   void _handleVisibility(double visibleFraction) {
     final wasVisible = _isVisible;
-    _isVisible = visibleFraction > 0.5; // mais de 50% visível
+    _isVisible = visibleFraction > 0.5;
 
     if (_isVisible && !_controller.value.isPlaying) {
       _controller.play();
@@ -346,7 +240,6 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
       _controller.pause();
     }
 
-    // Evita setState redundante
     if (wasVisible != _isVisible) setState(() {});
   }
 
@@ -368,8 +261,6 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
               aspectRatio: _controller.value.aspectRatio,
               child: VideoPlayer(_controller),
             ),
-
-            // Gradiente sutil para legibilidade
             Positioned.fill(
               child: IgnorePointer(
                 child: Container(
@@ -387,12 +278,12 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
                 ),
               ),
             ),
-
-            // Botão Play/Pause manual
             GestureDetector(
               onTap: () {
                 setState(() {
-                  _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
                 });
               },
               child: AnimatedOpacity(
@@ -402,13 +293,6 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.6),
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
                   padding: const EdgeInsets.all(16),
                   child: const Icon(
@@ -419,8 +303,6 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
                 ),
               ),
             ),
-
-            // Indicador de carregamento
             if (_controller.value.isBuffering)
               const Positioned(
                 bottom: 12,
@@ -436,16 +318,6 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
               ),
           ],
         ),
-              child: Center(
-                child: Icon(
-                  _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white70,
-                  size: 50,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
