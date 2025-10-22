@@ -9,6 +9,7 @@ import 'package:tcc/data/controllers/verificar_controller.dart';
 import 'package:tcc/cadastro/dropdown.dart';
 import 'package:tcc/data/models/userForm.dart';
 
+// Máscaras de formatação
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
   filter: { "#": RegExp(r'[0-9]') },
@@ -170,6 +171,7 @@ class _EmpresaState extends State<Empresa> {
   }
 }
 
+// Componente de foto do perfil
 class Perfil extends StatefulWidget {
   final File? image;
   final void Function(File?) OnImageSelected;
@@ -256,6 +258,7 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
+// Campo de texto: Nome
 class Nome extends StatefulWidget {
   final TextEditingController controller;
   final String? erroNome;
@@ -302,6 +305,7 @@ class _NomeState extends State<Nome> {
   }
 }
 
+// Campo de texto: Telefone
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
   final String? erroTel;
@@ -360,8 +364,10 @@ class cnpj extends StatefulWidget {
 
   @override
   State<cnpj> createState() => _cnpjState();
+  State<cnpj> createState() => _cnpjState();
 }
 
+class _cnpjState extends State<cnpj> {
 class _cnpjState extends State<cnpj> {
   @override
   Widget build(BuildContext context) {
@@ -382,7 +388,6 @@ class _cnpjState extends State<cnpj> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -525,11 +530,10 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -545,12 +549,7 @@ class _botaoState extends State<botao> {
               child: Text(
                 "Proximo",
                 style: TextStyle(
-                  color: const Color.from(
-                    alpha: 1,
-                    red: 0.988,
-                    green: 0.984,
-                    blue: 0.984,
-                  ),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,

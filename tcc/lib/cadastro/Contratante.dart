@@ -8,10 +8,13 @@ import 'package:tcc/cadastro/Escolha.dart';
 import 'package:tcc/data/controllers/verificar_controller.dart';
 import 'package:tcc/data/models/userForm.dart';
 
+// Máscara para telefone (ex: (14) 99999-9999)
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
   filter: { "#": RegExp(r'[0-9]') },
 );
+
+// Máscara para CPF (ex: 000.000.000-00)
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
   filter: { "#": RegExp(r'[0-9]') },
@@ -55,6 +58,7 @@ class _ContratanteState extends State<Contratante>{
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: Scaffold(
+        // AppBar branca com título e botão de voltar
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEF7FD),
            leading: IconButton(
@@ -141,6 +145,7 @@ class _ContratanteState extends State<Contratante>{
   }
 }
 
+// Widget para foto de perfil
 class Perfil extends StatefulWidget {
   final File? image;
   final void Function(File?) OnImageSelected;
@@ -153,6 +158,7 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   final ImagePicker _picker = ImagePicker();
 
+  // Função para escolher a imagem da câmera ou galeria
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -161,6 +167,7 @@ class _PerfilState extends State<Perfil> {
     }
   }
 
+  // Mostra diálogo para escolher fonte da imagem
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -191,6 +198,7 @@ class _PerfilState extends State<Perfil> {
     );
   }
 
+  // Construção do widget
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -225,6 +233,7 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
+// Campo de Nome
 class Nome extends StatefulWidget {
   final TextEditingController controller;
   const Nome({super.key, required this.controller});
@@ -265,6 +274,7 @@ class _NomeState extends State<Nome> {
   }
 }
 
+// Campo de Telefone
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
   final String? erroTelefone;
@@ -314,6 +324,7 @@ class _TelefoneState extends State<Telefone> {
   }
 }
 
+// Campo de CPF
 class cpf extends StatefulWidget {
   final TextEditingController controller;
   final String? erroCPF;
@@ -332,7 +343,7 @@ class _cpfState extends State<cpf> {
       inputFormatters: [cpfMaskFormatter],
       controller: widget.controller,
       decoration: InputDecoration(
-        hintText: "000.000.000.00",
+        hintText: "000.000.000-00",
         hintStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
@@ -344,7 +355,6 @@ class _cpfState extends State<cpf> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -457,11 +467,10 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -475,14 +484,9 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Proximo",
+                "Próximo",
                 style: TextStyle(
-                  color: const Color.from(
-                    alpha: 1,
-                    red: 0.988,
-                    green: 0.984,
-                    blue: 0.984,
-                  ),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,

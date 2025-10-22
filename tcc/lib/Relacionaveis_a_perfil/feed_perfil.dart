@@ -6,8 +6,9 @@ import 'package:tcc/data/models/post.dart';
 import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/ver_mais/VerMais.dart';
+import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:tcc/service_post.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 // ------------------------ FEED DE PERFIL ------------------------
 class FeedPerfil extends StatefulWidget {
@@ -88,6 +89,51 @@ class FeedPerfil extends StatefulWidget {
 
 // ------------------------ COMPONENTE DE CADA CARD ------------------------
 class _FeedPerfilState extends State<FeedPerfil> {
+  final List<ServicePostFeed> _posts = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMorePosts();
+  }
+
+  void _loadMorePosts() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(seconds: 2));
+
+    List<ServicePostFeed> newPosts = List.generate(3, (index) {
+      int id = _posts.length + index + 1;
+
+      List<String> imageUrls = List.generate(
+        3,
+        (imgIndex) =>
+            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
+      );
+
+      String videoUrl =
+          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
+
+      return ServicePostFeed(
+        id: id.toString(),
+        providerName: "Prestador $id",
+        providerCompany: "Empresa $id",
+        providerAvatar: "https://picsum.photos/100/100?random=$id",
+        location: "Cidade $id",
+        description: "Descrição breve do serviçoassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $id...",
+        fullDescription: "Descrição completa do serviçoassssssssssssssssssssssss $id...",
+        images: imageUrls,
+        videoUrl: [videoUrl],
+        likes: 0,
+        isLiked: false,
+      );
+    });
+
+    setState(() {
+      _posts.addAll(newPosts);
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +266,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
+                            builder: (context) =>
+                                VerMaisPageDono(post: post.toDetail()),
                             builder: (context) => VerMaisPageDono(post: post, authController: widget.authController,),
                           ),
                         );
@@ -262,6 +310,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
 // ------------------------ COMPONENTE DE VÍDEO ------------------------
 class _CarouselVideoItem extends StatefulWidget {
   final String videoUrl;
+
   const _CarouselVideoItem({required this.videoUrl});
 
   @override
@@ -270,12 +319,15 @@ class _CarouselVideoItem extends StatefulWidget {
 
 class _CarouselVideoItemState extends State<_CarouselVideoItem> {
   late VideoPlayerController _controller;
+  bool _isVisible = false;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) => setState(() {}));
+      ..initialize().then((_) {
+        setState(() {});
+      });
   }
 
   @override
@@ -284,27 +336,106 @@ class _CarouselVideoItemState extends State<_CarouselVideoItem> {
     super.dispose();
   }
 
+  void _handleVisibility(double visibleFraction) {
+    final wasVisible = _isVisible;
+    _isVisible = visibleFraction > 0.5; // mais de 50% visível
+
+    if (_isVisible && !_controller.value.isPlaying) {
+      _controller.play();
+    } else if (!_isVisible && _controller.value.isPlaying) {
+      _controller.pause();
+    }
+
+    // Evita setState redundante
+    if (wasVisible != _isVisible) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_controller.value.isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-      child: Stack(
-        children: [
-          AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          ),
-          Positioned.fill(
-            child: GestureDetector(
+    return VisibilityDetector(
+      key: Key(widget.videoUrl),
+      onVisibilityChanged: (info) => _handleVisibility(info.visibleFraction),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            ),
+
+            // Gradiente sutil para legibilidade
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.black26,
+                        Colors.black45,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Botão Play/Pause manual
+            GestureDetector(
               onTap: () {
                 setState(() {
                   _controller.value.isPlaying ? _controller.pause() : _controller.play();
                 });
               },
+              child: AnimatedOpacity(
+                opacity: _controller.value.isPlaying ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ),
+            ),
+
+            // Indicador de carregamento
+            if (_controller.value.isBuffering)
+              const Positioned(
+                bottom: 12,
+                right: 12,
+                child: SizedBox(
+                  height: 22,
+                  width: 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
+          ],
+        ),
               child: Center(
                 child: Icon(
                   _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,

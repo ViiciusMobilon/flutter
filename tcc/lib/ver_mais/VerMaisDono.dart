@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/ver_mais/editar_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:tcc/ver_mais/editar_post.dart' show EditarPostPage;
 import 'package:video_player/video_player.dart';
-  import 'package:tcc/service_post.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:tcc/service_post.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/editar_servico/editar.dart';
 
-// Widget principal da página de detalhes do post
 class VerMaisPageDono extends StatefulWidget {
+  final ServicePost post;
+
+  const VerMaisPageDono({Key? key, required this.post}) : super(key: key);
   
   final Portfolio post; // Recebe os dados do post
   final AuthController authController;
@@ -20,20 +26,14 @@ class VerMaisPageDono extends StatefulWidget {
   State<VerMaisPageDono> createState() => _VerMaisPageState();
 }
 
-class _VerMaisPageState extends State<VerMaisPageDono>
-    with SingleTickerProviderStateMixin {
-  bool isLiked = false; // Estado do like
-  int likeCount = 0; // Contador de likes
-  int _currentMediaIndex = 0; // Índice atual do carrossel
-  Map<int, VideoPlayerController?> _videoControllers = {}; // Controladores de vídeo
-
-  late AnimationController _animationController; // Controlador de animação
-  late Animation<double> _fadeAnimation; // Animação de fade
-  late Animation<Offset> _slideAnimation; // Animação de slide
+class _VerMaisPageState extends State<VerMaisPageDono> {
+  final Map<int, VideoPlayerController> _controllers = {};
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _initVideos();
 
     // Configura animações
     _animationController = AnimationController(
@@ -56,6 +56,12 @@ class _VerMaisPageState extends State<VerMaisPageDono>
     _initializeVideoControllers(); // Inicializa vídeos
   }
 
+  void _initVideos() {
+    if (widget.post.mediaUrls != null) {
+      for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
+        final url = widget.post.mediaUrls![i];
+        if (_isVideo(url)) {
+          final controller = VideoPlayerController.network(url)
   // Inicializa controladores de vídeo para cada URL de vídeo
   void _initializeVideoControllers() {
     if (widget.post.videos != null) {
@@ -66,27 +72,28 @@ class _VerMaisPageState extends State<VerMaisPageDono>
             ..initialize().then((_) {
               if (mounted) setState(() {});
             });
+          _controllers[i] = controller;
         }
       }
     }
   }
 
-  // Checa se o arquivo é vídeo
-  bool _isVideoUrl(String url) {
-    return url.toLowerCase().endsWith('.mp4') ||
-        url.toLowerCase().endsWith('.mov') ||
-        url.toLowerCase().endsWith('.avi');
+  bool _isVideo(String url) {
+    final lower = url.toLowerCase();
+    return lower.endsWith(".mp4") || lower.endsWith(".mov") || lower.endsWith(".avi");
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _videoControllers.forEach((key, controller) {
-      controller?.dispose();
-    });
+    for (final c in _controllers.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
   // Alterna o estado do like
   void _toggleLike() {
     setState(() {
@@ -245,8 +252,22 @@ class _VerMaisPageState extends State<VerMaisPageDono>
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PerfilDeOutroUsuario()),
+            ),
+            child: CircleAvatar(
+              radius: 26,
+              backgroundImage: widget.post.providerPhotoUrl != null
+                  ? NetworkImage(widget.post.providerPhotoUrl!)
+                  : null,
+              backgroundColor: const Color(0xFFE6E8EB),
+              child: widget.post.providerPhotoUrl == null
+                  ? const Icon(Icons.person, color: Colors.white, size: 26)
+                  : null,
+            ),
           CircleAvatar(
             radius: 32,
             backgroundColor: const Color(0xFFF5F7FA),
@@ -257,24 +278,33 @@ class _VerMaisPageState extends State<VerMaisPageDono>
                 ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C))
                 : null,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
+                  widget.post.providerName ?? "Prestador",
                   user?.nome ?? user?.razao_social ?? 'sem nome',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A202C),
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1A1A1A),
+                    letterSpacing: -0.3,
                   ),
                 ),
+                if (widget.post.providerCompany != null)
                 if (user?.ramoNome != null) ...[
                   const SizedBox(height: 4),
                   Text(
+                    widget.post.providerCompany!,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF777777),
+                    ),
+                  ),
                     user!.ramoNome!,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -318,11 +348,42 @@ class _VerMaisPageState extends State<VerMaisPageDono>
               ],
             ),
           ),
+        
         ],
       ),
     );
   }
 
+  Widget _buildMedia(String url, int index) {
+    final isVideo = _isVideo(url);
+    if (isVideo) {
+      final controller = _controllers[index];
+      if (controller == null || !controller.value.isInitialized) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return VisibilityDetector(
+        key: Key(url),
+        onVisibilityChanged: (info) {
+          if (info.visibleFraction > 0.6) {
+            controller.play();
+          } else {
+            controller.pause();
+          }
+        },
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              controller.value.isPlaying
+                  ? controller.pause()
+                  : controller.play();
+            });
+          },
+          child: ClipRRect(
+          
+            child: AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: VideoPlayer(controller),
   // Descrição do serviço
   Widget _buildDescription() {
   return Container(
@@ -350,6 +411,23 @@ class _VerMaisPageState extends State<VerMaisPageDono>
               color: Color(0xFF1A202C),
             ),
           ),
+        ),
+      );
+    }
+
+    return ClipRRect(
+     
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (_, __, ___) => Container(
+          color: const Color(0xFFE6E8EB),
+          child: const Icon(Icons.broken_image, size: 60, color: Colors.grey),
+        ),
+      ),
+    );
+  }
           const SizedBox(height: 12),
         Text(
           widget.post.descricao ?? 'Sem descrição disponível.',
@@ -364,94 +442,103 @@ class _VerMaisPageState extends State<VerMaisPageDono>
   );
 }
 
+  Widget _buildMediaCarousel() {
+    final media = widget.post.mediaUrls ?? [];
+    if (media.isEmpty) return const SizedBox.shrink();
 
-  // Botões de ação (like e compartilhar)
-  Widget _buildActionButtons() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: media.length,
+          itemBuilder: (context, index, _) => _buildMedia(media[index], index),
+          options: CarouselOptions(
+            height: 420,
+            viewportFraction: 1,
+            enableInfiniteScroll: false,
+            onPageChanged: (i, _) {
+              setState(() {
+                _currentIndex = i;
+              });
+              _controllers.forEach((_, c) => c.pause());
+            },
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: InkWell(
-                onTap: _toggleLike,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 16),
+        ),
+        if (media.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                media.length,
+                (i) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentIndex == i ? 9 : 6,
+                  height: _currentIndex == i ? 9 : 6,
                   decoration: BoxDecoration(
-                    color: isLiked
-                        ? const Color(0xFF1A202C)
-                        : const Color(0xFFF5F7FA),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: isLiked ? Colors.white : const Color(0xFF1A202C),
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '$likeCount',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color:
-                              isLiked ? Colors.white : const Color(0xFF1A202C),
-                        ),
-                      ),
-                    ],
+                    color: _currentIndex == i
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                    shape: BoxShape.circle,
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: InkWell(
-               
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF5F7FA),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.share, color: Color(0xFF1A202C), size: 24),
-                      SizedBox(width: 8),
-                      Text(
-                        'Compartilhar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1A202C),
-                        ),
-                      ),
-                    ],
+      ],
+    );
+  }
+
+  Widget _buildDescription() {
+    final name = widget.post.providerName ?? 'Prestador';
+    final service = widget.post.serviceName ?? '';
+    final desc = widget.post.description ?? '';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "$name ",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    fontSize: 15.5,
                   ),
                 ),
+                TextSpan(
+                  text: service,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 15.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (desc.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                desc,
+                style: const TextStyle(
+                  fontSize: 14.5,
+                  height: 1.4,
+                  color: Color(0xFF444444),
+                ),
               ),
+            ),
+          const SizedBox(height: 8),
+          Text(
+            "Publicado há 2h",
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 12.5,
+              letterSpacing: -0.2,
             ),
           ),
         ],
@@ -459,10 +546,46 @@ class _VerMaisPageState extends State<VerMaisPageDono>
     );
   }
 
-  // Build principal
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+        elevation: 0.8,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Detalhes",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+             IconButton(onPressed:() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => EditarPostPage(post: ServicePost(),))), icon: Icon(Icons.edit_note_outlined, color: Colors.black,size: MediaQuery.of(context).size.width *0.1,))
+          ],
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildMediaCarousel(),
+            _buildDescription(),
+            const SizedBox(height: 30),
+          ],
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar( flexibleSpace: Container(
                     decoration: const BoxDecoration(
@@ -535,5 +658,3 @@ class _VerMaisPageState extends State<VerMaisPageDono>
     );
   }
 }
-
-// Modelo de dados do post

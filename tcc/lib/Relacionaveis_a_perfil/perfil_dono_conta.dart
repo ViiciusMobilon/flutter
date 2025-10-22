@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_portfolio.dart';
+import 'package:tcc/cadastro/cadastro1.dart';
+import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/service_post.dart';
 import 'system_star.dart';
 import 'package:provider/provider.dart';
@@ -173,6 +175,8 @@ class _PerfilUserState extends State<PerfilUser> {
       height: 300,
       child: Stack(
         children: [
+     
+         
           Container(
             height: 180,
             decoration: const BoxDecoration(
@@ -222,6 +226,51 @@ class _PerfilUserState extends State<PerfilUser> {
                 _buildLoveButton(),
               ],
             ),
+          ),
+          Positioned(
+            left: width * 0.87,
+            top: height * 0.17,
+            child: IconButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => TelaPrincipal())),
+              icon: Icon(
+                Icons.photo_camera,
+                color: Colors.white,
+                size: width * 0.06,
+              ),
+            ),
+          ),
+           Positioned(
+          
+            bottom: MediaQuery.of(context).size.height * 0.25,
+            right: MediaQuery.of(context).size.width * 0.05,
+            child: IconButton(onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context) => imagem(),)), icon: Icon(Icons.photo_camera_back, color:Color.fromARGB(255, 255, 255, 255) ))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoveButton() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.favorite, color: Colors.white, size: 18),
+          const SizedBox(width: 6),
+          const Text(
+            'Curtidas',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$loveCount',
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ],
       ),

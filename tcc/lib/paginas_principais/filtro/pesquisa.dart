@@ -78,17 +78,18 @@ class BarraDePesquisa extends SearchDelegate<String> {
 
   // Tema visual da barra de pesquisa
   @override
-  ThemeData appBarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.indigoAccent,
-        foregroundColor: Colors.white,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.white70),
-      ),
-    );
-  }
+ThemeData appBarTheme(BuildContext context) {
+  return Theme.of(context).copyWith(
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF1976D2),
+      foregroundColor: Colors.white,
+      elevation: 0,
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      hintStyle: TextStyle(color: Colors.white70),
+    ),
+  );
+}
 
   // -------------------- BOTÃO DE FILTROS --------------------
   @override

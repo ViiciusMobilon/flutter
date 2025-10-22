@@ -23,6 +23,7 @@ final numeromaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
+// Tela principal da página de endereço (CEP)
 class CEP extends StatefulWidget {
   final Userform usuario;
   CEP({super.key, required this.usuario});
@@ -69,6 +70,9 @@ class _CEPState extends State<CEP> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
       home: Scaffold(
+        backgroundColor: Colors.white,
+
+        // AppBar no topo da tela
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEF7FD),
            leading: IconButton(
@@ -89,6 +93,8 @@ class _CEPState extends State<CEP> {
           ),
           centerTitle: true,
         ),
+
+        // Corpo da tela (rolável)
         body: ListView(
           children: <Widget>[
             
@@ -130,6 +136,7 @@ class _CEPState extends State<CEP> {
               ),
             ),
 
+            // Campo de rua / avenida
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -140,6 +147,7 @@ class _CEPState extends State<CEP> {
               child: RuaWidget(controller: ruaController,),
             ),
 
+            // Campo de número
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -300,6 +308,7 @@ class _RuaState extends State<RuaWidget> {
   }
 }
 
+// Campo de texto para número da residência
 class numero extends StatefulWidget {
   final TextEditingController controller;
    numero({super.key, required this.controller});
@@ -323,13 +332,12 @@ class _numeroState extends State<numero> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-        labelText: "numero",
+        labelText: "Número",
         labelStyle: TextStyle(
           color: Colors.black,
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -441,11 +449,10 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],
@@ -459,14 +466,9 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Proximo",
+                "Próximo",
                 style: TextStyle(
-                  color: const Color.from(
-                    alpha: 1,
-                    red: 0.988,
-                    green: 0.984,
-                    blue: 0.984,
-                  ),
+                  color: Colors.white,
                   fontSize: MediaQuery.of(context).size.width * 0.05,
                   fontFamily: "Poppins",
                   fontWeight: FontWeight.w800,
@@ -507,7 +509,6 @@ class _adicionaisState extends State<adicionais> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
-import 'package:tcc/esqueci_a_senha/Novasenha.dart';
+import 'package:pinput/pinput.dart'; // Pacote usado para criar campos de PIN (código)
+import 'package:tcc/esqueci_a_senha/Novasenha.dart'; // Import da próxima tela
 
+// --------------------------- TELA PRINCIPAL ---------------------------
 class CodigoPage extends StatefulWidget {
   const CodigoPage({super.key});
 
@@ -10,7 +11,7 @@ class CodigoPage extends StatefulWidget {
 }
 
 class _CodigoPageState extends State<CodigoPage> {
-  String codigo = "";
+  String codigo = ""; // Armazena o código digitado pelo usuário
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +19,19 @@ class _CodigoPageState extends State<CodigoPage> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(color: Colors.white),
-        child: SingleChildScrollView(
+        decoration: const BoxDecoration(color: Colors.white), // Fundo branco
+        child: SingleChildScrollView( // Permite rolagem caso o conteúdo ultrapasse a tela
           child: Column(
             children: [
-              // Logo
+              // --------------------------- LOGO ---------------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.07,
                 ),
-                child: const Imagem(),
+                child: imagem(), // Chama o widget de imagem do logo
               ),
 
-              // Título
+              // --------------------------- TÍTULO ---------------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.05,
@@ -46,7 +47,7 @@ class _CodigoPageState extends State<CodigoPage> {
                 ),
               ),
 
-              // Subtítulo
+              // --------------------------- SUBTÍTULO ---------------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.01,
@@ -61,7 +62,7 @@ class _CodigoPageState extends State<CodigoPage> {
                 ),
               ),
 
-              // Campo código
+              // --------------------------- CAMPO DE CÓDIGO ---------------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.06,
@@ -69,8 +70,8 @@ class _CodigoPageState extends State<CodigoPage> {
                   right: MediaQuery.of(context).size.width * 0.15,
                 ),
                 child: Pinput(
-                  length: 6,
-                  onCompleted: (value) => codigo = value,
+                  length: 6, // Define que o código terá 6 dígitos
+                  onCompleted: (value) => codigo = value, // Salva o código quando completo
                   defaultPinTheme: PinTheme(
                     width: MediaQuery.of(context).size.width * 0.12,
                     height: MediaQuery.of(context).size.width * 0.12,
@@ -87,14 +88,16 @@ class _CodigoPageState extends State<CodigoPage> {
                 ),
               ),
 
-              // Botão próximo
+              // --------------------------- BOTÃO "PRÓXIMO" ---------------------------
               Padding(
                 padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.08,
                 ),
                 child: GestureDetector(
                   onTap: () {
+                    // Verifica se o código possui 6 dígitos antes de continuar
                     if (codigo.length == 6) {
+                      // Vai para a próxima página (NovaSenhaPage)
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -102,6 +105,7 @@ class _CodigoPageState extends State<CodigoPage> {
                         ),
                       );
                     } else {
+                      // Mostra uma mensagem de erro se o código estiver incompleto
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Digite o código completo"),
@@ -109,7 +113,7 @@ class _CodigoPageState extends State<CodigoPage> {
                       );
                     }
                   },
-                  child: const Botao(texto: "Próximo"),
+                  child: botao(texto: "Próximo"), // Chama o widget de botão
                 ),
               ),
             ],
@@ -120,8 +124,9 @@ class _CodigoPageState extends State<CodigoPage> {
   }
 }
 
-class Imagem extends StatelessWidget {
-  const Imagem({super.key});
+// --------------------------- WIDGET IMAGEM ---------------------------
+class imagem extends StatelessWidget {
+  const imagem({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -130,17 +135,18 @@ class Imagem extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/logo.png"),
-          fit: BoxFit.fill,
+          image: AssetImage("assets/imagens/logo.png"), // Caminho da imagem
+          fit: BoxFit.fill, // Preenche o espaço completamente
         ),
       ),
     );
   }
 }
 
-class Botao extends StatelessWidget {
-  final String texto;
-  const Botao({super.key, required this.texto});
+// --------------------------- WIDGET BOTÃO ---------------------------
+class botao extends StatelessWidget {
+  final String texto; // Texto que aparece dentro do botão
+  const botao({super.key, required this.texto});
 
   @override
   Widget build(BuildContext context) {
@@ -149,28 +155,31 @@ class Botao extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.08,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Colors.blue, Colors.indigoAccent],
+          colors: [Colors.blue, Colors.indigoAccent], // Gradiente azul
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(40)),
+        borderRadius: const BorderRadius.all(Radius.circular(40)), // Bordas arredondadas
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.6),
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 4), // Sombra projetada para baixo
             blurRadius: 8,
             spreadRadius: 1,
           ),
         ],
       ),
-      child: Center(
-        child: Text(
-          texto,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: MediaQuery.of(context).size.width * 0.05,
-            fontFamily: "Poppins",
-            fontWeight: FontWeight.w800,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            texto, // Exibe o texto recebido no construtor
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: MediaQuery.of(context).size.width * 0.05,
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w800,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

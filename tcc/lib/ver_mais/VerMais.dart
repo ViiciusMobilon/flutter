@@ -1,419 +1,543 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/ver_mais/editar_post.dart' show EditarPostPage;
 import 'package:video_player/video_player.dart';
-  import 'package:tcc/service_post.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+import 'package:tcc/service_post.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:intl/intl.dart';
 
-// Widget principal da página de detalhes do post
 class VerMaisPage extends StatefulWidget {
-  final ServicePost? post; // Recebe os dados do post
-  
+  final ServicePost post;
 
-
-  VerMaisPage({Key? key, this.post}) : super(key: key);
+  const VerMaisPage({Key? key, required this.post}) : super(key: key);
 
   @override
   State<VerMaisPage> createState() => _VerMaisPageState();
 }
 
-class _VerMaisPageState extends State<VerMaisPage>
-    with SingleTickerProviderStateMixin {
-  bool isLiked = false; // Estado do like
-  int likeCount = 0; // Contador de likes
-  int _currentMediaIndex = 0; // Índice atual do carrossel
-  Map<int, VideoPlayerController?> _videoControllers = {}; // Controladores de vídeo
-
-  late AnimationController _animationController; // Controlador de animação
-  late Animation<double> _fadeAnimation; // Animação de fade
-  late Animation<Offset> _slideAnimation; // Animação de slide
+class _VerMaisPageState extends State<VerMaisPage> {
+  final Map<int, VideoPlayerController> _controllers = {};
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    isLiked = widget.post?.isLiked ?? false; // Inicializa o like
-    likeCount = widget.post?.likeCount ?? 0; // Inicializa contagem de likes
-
-    // Configura animações
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
-
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
-
-    _animationController.forward(); // Inicia animação
-    _initializeVideoControllers(); // Inicializa vídeos
+    _initVideos();
   }
 
-  // Inicializa controladores de vídeo para cada URL de vídeo
-  void _initializeVideoControllers() {
-    if (widget.post?.mediaUrls != null) {
-      for (int i = 0; i < widget.post!.mediaUrls!.length; i++) {
-        String url = widget.post!.mediaUrls![i];
-        if (_isVideoUrl(url)) {
-          _videoControllers[i] = VideoPlayerController.network(url)
+  void _initVideos() {
+    if (widget.post.mediaUrls != null) {
+      for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
+        final url = widget.post.mediaUrls![i];
+        if (_isVideo(url)) {
+          final controller = VideoPlayerController.network(url)
             ..initialize().then((_) {
               if (mounted) setState(() {});
             });
+          _controllers[i] = controller;
         }
       }
     }
   }
 
-  // Checa se o arquivo é vídeo
-  bool _isVideoUrl(String url) {
-    return url.toLowerCase().endsWith('.mp4') ||
-        url.toLowerCase().endsWith('.mov') ||
-        url.toLowerCase().endsWith('.avi');
+  bool _isVideo(String url) {
+    final lower = url.toLowerCase();
+    return lower.endsWith(".mp4") ||
+        lower.endsWith(".mov") ||
+        lower.endsWith(".avi");
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _videoControllers.forEach((key, controller) {
-      controller?.dispose();
-    });
+    for (final c in _controllers.values) {
+      c.dispose();
+    }
     super.dispose();
   }
 
-  // Alterna o estado do like
-  void _toggleLike() {
-    setState(() {
-      isLiked = !isLiked;
-      likeCount = isLiked ? likeCount + 1 : likeCount - 1;
-    });
+  String _formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(d.inMinutes.remainder(60));
+    final seconds = twoDigits(d.inSeconds.remainder(60));
+    return "$minutes:$seconds";
   }
 
-  // Compartilha informações do post
-  
-  // Cria cada item do carrossel com borda
-  Widget _buildMediaItem(String mediaUrl, int index) {
-    bool isVideo = _isVideoUrl(mediaUrl);
-
-    if (isVideo) {
-      VideoPlayerController? controller = _videoControllers[index];
-      if (controller != null && controller.value.isInitialized) {
-        return Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: 300,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.blue, width: 2),
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const PerfilDeOutroUsuario()),
+            ),
+            child: CircleAvatar(
+              radius: 26,
+              backgroundImage: widget.post.providerPhotoUrl != null
+                  ? NetworkImage(widget.post.providerPhotoUrl!)
+                  : null,
+              backgroundColor: const Color(0xFFE6E8EB),
+              child: widget.post.providerPhotoUrl == null
+                  ? const Icon(Icons.person, color: Colors.white, size: 26)
+                  : null,
+            ),
           ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: VideoPlayer(controller),
-              ),
-              IconButton(
-                icon: Icon(
-                  controller.value.isPlaying
-                      ? Icons.pause_circle
-                      : Icons.play_circle,
-                  size: 64,
-                  color: Colors.white.withOpacity(0.9),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.post.providerName ?? "Prestador",
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1A1A1A),
+                    letterSpacing: -0.3,
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    controller.value.isPlaying
-                        ? controller.pause()
-                        : controller.play();
-                  });
-                },
-              ),
-            ],
+                if (widget.post.providerCompany != null)
+                  Text(
+                    widget.post.providerCompany!,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF777777),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        );
-      } else {
-        return Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.3,
-          color: const Color(0xFFF5F7FA),
-          child: const Center(child: CircularProgressIndicator()),
-        );
-      }
-    } else {
-      return Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.3,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F7FA),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Image.network(
-          mediaUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: const Color(0xFFF5F7FA),
-              child: const Center(
-                child: Icon(Icons.broken_image, size: 64, color: Colors.grey),
-              ),
-            );
-          },
-        ),
-      );
-    }
-  }
-
-  // Carrossel de imagens/vídeos
-  Widget _buildMediaCarousel() {
-    if (widget.post?.mediaUrls == null || widget.post!.mediaUrls!.isEmpty) {
-      return Container(
-        height: 300,
-        color: const Color(0xFFF5F7FA),
-        child: const Center(
-          child: Icon(Icons.image_not_supported, size: 64, color: Colors.grey),
-        ),
-      );
-    }
-
-    return CarouselSlider.builder(
-      itemCount: widget.post?.mediaUrls!.length,
-      itemBuilder: (context, index, realIndex) {
-        return _buildMediaItem(widget.post!.mediaUrls![index], index);
-      },
-      options: CarouselOptions(
-        height: 300,
-        viewportFraction: 1.0,
-        enableInfiniteScroll: widget.post!.mediaUrls!.length > 1,
-        autoPlay: false,
-        onPageChanged: (index, reason) {
-          setState(() {
-            _currentMediaIndex = index;
-          });
-          _videoControllers.forEach((key, controller) {
-            if (controller != null && controller.value.isPlaying) {
-              controller.pause();
-            }
-          });
-        },
+        ],
       ),
     );
   }
 
-  // Informações do prestador
-  Widget _buildProviderInfo() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: GestureDetector(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const PerfilDeOutroUsuario(),
-          ),
-        ),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: const Color(0xFFF5F7FA),
-                  backgroundImage: widget.post?.providerPhotoUrl != null
-                      ? NetworkImage(widget.post?.providerPhotoUrl ?? '')
-                      : null,
-                  child: widget.post?.providerPhotoUrl == null
-                      ? const Icon(Icons.person, size: 32, color: Color(0xFF1A202C))
-                      : null,
+  Widget _buildMedia(String url, int index) {
+    final isVideo = _isVideo(url);
+    if (isVideo) {
+      final controller = _controllers[index];
+      if (controller == null || !controller.value.isInitialized) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return VisibilityDetector(
+        key: Key(url),
+        onVisibilityChanged: (info) {
+          if (info.visibleFraction > 0.6) {
+            controller.play();
+          } else {
+            controller.pause();
+          }
+        },
+        child: GestureDetector(
+          onDoubleTapDown: (details) async {
+            final width = MediaQuery.of(context).size.width;
+            final dx = details.globalPosition.dx;
+            final current = await controller.position ?? Duration.zero;
+            final duration = controller.value.duration;
+
+            if (dx < width / 2) {
+              controller.seekTo(Duration(
+                seconds: (current.inSeconds - 5).clamp(0, duration.inSeconds),
+              ));
+            } else {
+              controller.seekTo(Duration(
+                seconds: (current.inSeconds + 5).clamp(0, duration.inSeconds),
+              ));
+            }
+          },
+          onTap: () {
+            setState(() {
+              controller.value.isPlaying
+                  ? controller.pause()
+                  : controller.play();
+            });
+          },
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: controller.value.size.width,
+                    height: controller.value.size.height,
+                    child: VideoPlayer(controller),
+                  ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.post?.providerName ?? 'Prestador',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1A202C),
-                        ),
+              ),
+
+              // Barra de progresso + tempo
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Column(
+                  children: [
+                    VideoProgressIndicator(
+                      controller,
+                      allowScrubbing: true,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.blueAccent,
+                        backgroundColor: Colors.black26,
+                        bufferedColor: Colors.white38,
                       ),
-                      if (widget.post?.providerCompany != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.post?.providerCompany ?? '',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: const Color(0xFF1A202C).withOpacity(0.7),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 8),
-                      Row(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (widget.post?.providerRating != null) ...[
-                            const Icon(Icons.star, size: 16, color: Colors.amber),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.post?.providerRating!.toStringAsFixed(1) ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF1A202C),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                          if (widget.post?.providerCity != null) ...[
-                            const Icon(Icons.location_on,
-                                size: 16, color: Color(0xFF1A202C)),
-                            const SizedBox(width: 4),
-                            Text(
-                              widget.post?.providerCity ?? '',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: const Color(0xFF1A202C).withOpacity(0.7),
-                              ),
-                            ),
-                          ],
+                          Text(
+                            _formatDuration(
+                                controller.value.position),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                          Text(
+                            _formatDuration(
+                                controller.value.duration),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
                         ],
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Ícone play/pause central
+              if (!controller.value.isPlaying)
+                Center(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.black45,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: const Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 48,
+                    ),
+                  ),
+                ),
+
+              // Botão de expandir
+              Positioned(
+                right: 8,
+                bottom: 40,
+                child: IconButton(
+                  icon: const Icon(Icons.fullscreen,
+                      color: Colors.white, size: 28),
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            FullScreenVideoPlayer(controller: controller),
+                      ),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return ClipRRect(
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (_, __, ___) => Container(
+          color: const Color(0xFFE6E8EB),
+          child: const Icon(Icons.broken_image,
+              size: 60, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMediaCarousel() {
+    final media = widget.post.mediaUrls ?? [];
+    if (media.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: media.length,
+          itemBuilder: (context, index, _) =>
+              _buildMedia(media[index], index),
+          options: CarouselOptions(
+            height: MediaQuery.of(context).size.height * 0.3,
+            viewportFraction: 1,
+            enableInfiniteScroll: false,
+            onPageChanged: (i, _) {
+              setState(() {
+                _currentIndex = i;
+              });
+              _controllers.forEach((_, c) => c.pause());
+            },
+          ),
+        ),
+        if (media.length > 1)
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                media.length,
+                (i) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentIndex == i ? 9 : 6,
+                  height: _currentIndex == i ? 9 : 6,
+                  decoration: BoxDecoration(
+                    color: _currentIndex == i
+                        ? Colors.black
+                        : Colors.black.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDescription() {
+    final name = widget.post.providerName ?? 'Prestador';
+    final service = widget.post.serviceName ?? '';
+    final desc = widget.post.description ?? '';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "$name ",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                    fontSize: 15.5,
+                  ),
+                ),
+                TextSpan(
+                  text: service,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 15.5,
                   ),
                 ),
               ],
+            ),
+          ),
+          if (desc.trim().isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                desc,
+                style: const TextStyle(
+                  fontSize: 14.5,
+                  height: 1.4,
+                  color: Color(0xFF444444),
+                ),
+              ),
+            ),
+          const SizedBox(height: 8),
+          Text(
+            "Publicado há 2h",
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 12.5,
+              letterSpacing: -0.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 0.8,
+        title: const Text(
+          "Detalhes",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildMediaCarousel(),
+            _buildDescription(),
+            const SizedBox(height: 30),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FullScreenVideoPlayer extends StatefulWidget {
+  final VideoPlayerController controller;
+
+  const FullScreenVideoPlayer({Key? key, required this.controller})
+      : super(key: key);
+
+  @override
+  State<FullScreenVideoPlayer> createState() =>
+      _FullScreenVideoPlayerState();
+}
+
+class _FullScreenVideoPlayerState
+    extends State<FullScreenVideoPlayer> {
+  late VideoPlayerController controller;
+
+  String _formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(d.inMinutes.remainder(60));
+    final seconds = twoDigits(d.inSeconds.remainder(60));
+    return "$minutes:$seconds";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller;
+    controller.play();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: GestureDetector(
+        onDoubleTapDown: (details) async {
+          final width = MediaQuery.of(context).size.width;
+          final dx = details.globalPosition.dx;
+          final current = await controller.position ?? Duration.zero;
+          final duration = controller.value.duration;
+
+          if (dx < width / 2) {
+            controller.seekTo(Duration(
+              seconds: (current.inSeconds - 5).clamp(0, duration.inSeconds),
+            ));
+          } else {
+            controller.seekTo(Duration(
+              seconds: (current.inSeconds + 5).clamp(0, duration.inSeconds),
+            ));
+          }
+        },
+        onTap: () {
+          setState(() {
+            controller.value.isPlaying
+                ? controller.pause()
+                : controller.play();
+          });
+        },
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Center(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: controller.value.size.width,
+                  height: controller.value.size.height,
+                  child: VideoPlayer(controller),
+                ),
+              ),
+            ),
+            VideoProgressIndicator(
+              controller,
+              allowScrubbing: true,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              colors: const VideoProgressColors(
+                playedColor: Colors.blueAccent,
+                backgroundColor: Colors.black26,
+                bufferedColor: Colors.white38,
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatDuration(controller.value.position),
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                  Text(
+                    _formatDuration(controller.value.duration),
+                    style:
+                        const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            if (!controller.value.isPlaying)
+              Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.black45,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 48,
+                  ),
+                ),
+              ),
+            Positioned(
+              top: 40,
+              left: 10,
+              child: IconButton(
+                icon: const Icon(Icons.close,
+                    color: Colors.white, size: 28),
+                onPressed: () => Navigator.pop(context),
+              ),
             ),
           ],
         ),
       ),
     );
   }
-
-  // Descrição do serviço
-  Widget _buildDescription() {
-  return Container(
-    width: MediaQuery.of(context).size.width * 0.9, // largura fixa a 90% da tela
-    padding: const EdgeInsets.all(16.0),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (widget.post?.serviceName != null) ...[
-          Text(
-            widget.post?.serviceName ?? '',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1A202C),
-            ),
-          ),
-          const SizedBox(height: 12),
-        ],
-        Text(
-          widget.post?.description ?? 'Sem descrição disponível.',
-          style: TextStyle(
-            fontSize: 16,
-            height: 1.5,
-            color: const Color(0xFF1A202C).withOpacity(0.8),
-          ),
-        ),
-      ],
-    ),
-  );
 }
-
-
-  // Botões de ação (like e compartilhar)
-
-  // Build principal
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      appBar: AppBar( flexibleSpace: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    )),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          widget.post?.providerName ?? 'Detalhes do Serviço',
-          style: const TextStyle(
-            color: Color.fromARGB(255, 255, 255, 255),
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        
-      ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              _buildProviderInfo(), 
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    children: [
-                       _buildMediaCarousel(),
-                      const SizedBox(height: 16),
-                      _buildDescription(),
-                  
-                     
-                      
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Modelo de dados do post

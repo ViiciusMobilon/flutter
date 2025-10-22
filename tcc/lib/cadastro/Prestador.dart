@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'dart:io'; // Para manipulação de arquivos (imagem)
+import 'package:image_picker/image_picker.dart'; // Para escolher imagens da galeria ou câmera
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart'; // Para máscaras de input
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 // ignore: unused_import
@@ -10,6 +10,7 @@ import 'package:tcc/data/controllers/verificar_controller.dart';
 import 'package:tcc/cadastro/dropdown.dart';
 import 'package:tcc/data/models/userForm.dart';
 
+// Máscaras para telefone e CPF
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
   filter: { "#": RegExp(r'[0-9]') },
@@ -57,7 +58,7 @@ class _PrestadorState extends State<Prestador> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, // Remove faixa de DEBUG
       theme: ThemeData(),
       home: Scaffold(
         appBar: AppBar(
@@ -166,6 +167,7 @@ class _PrestadorState extends State<Prestador> {
   }
 }
 
+// Widget para escolher e mostrar a imagem de perfil
 class Perfilimagem extends StatefulWidget {
   final File? image;
   final void Function(File?) OnImageSelected;
@@ -178,6 +180,7 @@ class Perfilimagem extends StatefulWidget {
 class _PerfilimagemState extends State<Perfilimagem> {
   final ImagePicker _picker = ImagePicker();
 
+  // Função para escolher imagem
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -186,6 +189,7 @@ class _PerfilimagemState extends State<Perfilimagem> {
     }
   }
 
+  // Mostra opções de Galeria ou Câmera
   void _showImageSourceDialog() {
     showModalBottomSheet(
       context: context,
@@ -250,6 +254,7 @@ class _PerfilimagemState extends State<Perfilimagem> {
   }
 }
 
+// Campo de Nome
 class Nome extends StatefulWidget {
   final TextEditingController controller; 
   Nome({super.key, required this.controller});
@@ -290,6 +295,7 @@ class _NomeState extends State<Nome> {
   }
 }
 
+// Campo de Telefone com máscara
 class Telefone extends StatefulWidget {
   final TextEditingController controller;
   final String? erroTel;
@@ -341,6 +347,7 @@ class _TelefoneState extends State<Telefone> {
   }
 }
 
+// Campo de CPF com máscara
 class cpf extends StatefulWidget {
   final TextEditingController controller;
   final String? erroCPF;
@@ -371,7 +378,6 @@ class _cpfState extends State<cpf> {
           fontSize: MediaQuery.of(context).size.width * 0.05,
           fontFamily: "Poppins",
         ),
-
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: const Color.fromRGBO(121, 180, 217, 1),
@@ -392,6 +398,7 @@ class _cpfState extends State<cpf> {
   }
 }
 
+// Botão "Próximo"
 class botao extends StatefulWidget {
   final Userform usuario;
   final int? idramo;
@@ -495,11 +502,10 @@ class _botaoState extends State<botao> {
           gradient: LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
           borderRadius: BorderRadius.all(Radius.circular(40)),
           boxShadow: <BoxShadow>[
-            //para todas as caracteristicas do boxshadow
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
-              offset: Offset(0, 4), //posição
-              blurRadius: 8, //fumaça
+              offset: Offset(0, 4),
+              blurRadius: 8,
               spreadRadius: 1,
             ),
           ],

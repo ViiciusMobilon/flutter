@@ -37,21 +37,23 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
           },
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        children: [
-          Center(child: Perfil(authController: widget.authController,)),
-          SizedBox(height: 30),
-          Nome(),
-          SizedBox(height: 20),
-          Telefone(),
-          SizedBox(height: 20),
-          Descricao(),
-          SizedBox(height: 20),
-          Area(),
-          SizedBox(height: 50),
-          Center(child: botao()),
-        ],
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          children: const [
+            Center(child: Perfil()),
+            SizedBox(height: 30),
+            Nome(),
+            
+            SizedBox(height: 20),
+            Descricao(),
+            SizedBox(height: 20),
+            Area(),
+            SizedBox(height: 50),
+            Center(child: botao()),
+          ],
+        ),
       ),
     );
   }
@@ -213,32 +215,7 @@ class Nome extends StatelessWidget {
   }
 }
 
-class Telefone extends StatelessWidget {
-  const Telefone({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      inputFormatters: [maskFormatter],
-      keyboardType: TextInputType.phone,
-      decoration: InputDecoration(
-        labelText: "Telefone",
-        hintText: "(14) 99999-9999",
-        labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-      ),
-    );
-  }
-}
 
 class botao extends StatelessWidget {
   const botao({super.key});
