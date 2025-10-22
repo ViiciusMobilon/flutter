@@ -1,11 +1,11 @@
 class Portfolio {
   final int? id;
   final String? descricao;
-  final String? nome;
-  final String? avatar;
+  final String? user_nome;
+  final String? user_foto;
   final String? user_ramo;
-  final String? cidade;
-  final String? estado;
+  final String? user_cidade;
+  final String? user_estado;
   final int? userId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -18,11 +18,11 @@ class Portfolio {
     this.userId,
     this.createdAt,
     this.updatedAt,
-    this.nome,
-    this.avatar,
+    this.user_nome,
+    this.user_foto,
     this.user_ramo,
-    this.cidade,
-    this.estado,
+    this.user_cidade,
+    this.user_estado,
     required this.fotos,
     required this.videos,
   });
@@ -32,11 +32,11 @@ class Portfolio {
       id: json['id'] as int?,
       descricao: json['descricao'] as String?,
       userId: json['user_id'] as int?,
-      nome: json['nome'] as String?,
-      avatar: json['avatar'] as String?,
+      user_nome: json['user_nome'] as String?,
+      user_foto: json['user_foto'] as String?,
       user_ramo: json['user_ramo'] as String?,
-      cidade: json['cidade'] as String?,
-      estado: json['estado'] as String?,
+      user_cidade: json['user_cidade'] as String?,
+      user_estado: json['user_estado'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'])
           : null,

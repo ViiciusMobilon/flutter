@@ -134,7 +134,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
           elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.close),
-             onPressed:() =>  Navigator.pop(context, ) ,
+             onPressed:() =>  Navigator.pop(context) ,
           ),
           title: const Text(
             "Novo Post",

@@ -158,7 +158,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(widget.post.avatar ?? ''),
+                    backgroundImage: NetworkImage(widget.post.user_foto ?? ''),
                     radius: 28,
                   ),
                   const SizedBox(width: 12),
@@ -167,7 +167,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.post.nome ?? 'Sem nome',
+                          widget.post.user_nome ?? 'Sem nome',
                           style: const TextStyle(
                               fontWeight: FontWeight.w600, fontSize: 16),
                         ),
@@ -186,7 +186,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                widget.post.cidade ?? 'Sem localização',
+                                '${widget.post.user_cidade}, ${widget.post.user_estado}' ?? 'Sem localização',
                                 style: const TextStyle(color: Colors.grey),
                                 overflow: TextOverflow.ellipsis,
                               ),
