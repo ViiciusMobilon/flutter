@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(const Main());
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Main(), // Tela principal do app
+    );
+  }
 }
 
 class Main extends StatelessWidget {
@@ -18,29 +28,27 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return WillPopScope(
+      onWillPop: () async => false, // Bloqueia completamente o botão voltar
+      child: Scaffold(
         body: Container(
-          height: MediaQuery.of(context).size.height * 1,
-          width: MediaQuery.of(context).size.width * 1,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            color: Colors.white,
           ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.07,
                     ),
-                    child: imagem(),
+                    child: const imagem(),
                   ),
                 ),
-                //texto sign
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -50,62 +58,46 @@ class Main extends StatelessWidget {
                       "Acessar!",
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.07,
-                        color: const Color.fromARGB(255, 8, 8, 8),
+                        color: Colors.black,
                         fontWeight: FontWeight.w800,
                         fontFamily: "Poppins",
                       ),
                     ),
                   ),
                 ),
-                //fim sign
-
-                //textfield de email
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.04,
-                    bottom: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.08,
-                    right: MediaQuery.of(context).size.width * 0.08,
+                  padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.04,
+                    horizontal: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(),
+                  child: const email(),
                 ),
-                //fim email
-                //textfield senha
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.08,
-                    right: MediaQuery.of(context).size.width * 0.08,
-                    top: MediaQuery.of(context).size.height * 0.04,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: senha(),
+                  child: const senha(),
                 ),
-
-                // fim senha
-                //esqueci a senha
                 GestureDetector(
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.08,
+                      top: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    child: esqueci(),
+                    child: const esqueci(),
                   ),
                 ),
-                //fim esqueci a senha
-                //botao
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: const Center(child: botao()),
                 ),
-
-                //fim botao
-                //escrita para o cadastro
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  child: Center(child: texcadastro()),
+                  child: const Center(child: texcadastro()),
                 ),
               ],
             ),
@@ -115,6 +107,10 @@ class Main extends StatelessWidget {
     );
   }
 }
+
+// Suas outras classes (nome, email, senha, botao, imagem, etc.) ficam IGUAIS
+// Não precisa alterar nada nelas.
+
 
 class nome extends StatefulWidget {
   const nome({super.key});

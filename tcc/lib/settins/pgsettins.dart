@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/main.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/settins/editarperfil.dart';
-import 'package:tcc/settins/seguranca/email/email.dart';
 import 'package:tcc/settins/segurancap.dart';
 
 class settinspage extends StatefulWidget {
@@ -16,17 +16,17 @@ class _settinspageState extends State<settinspage> {
   double get screenHeigth => MediaQuery.of(context).size.height;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) =>TelaPrincipal()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => TelaPrincipal()));
             },
           ),
           title: Text(
@@ -43,6 +43,8 @@ class _settinspageState extends State<settinspage> {
         body: Container(
           color: Colors.white,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+
             children: [
               ListTile(
                 leading: Icon(Icons.person),
@@ -55,7 +57,7 @@ class _settinspageState extends State<settinspage> {
                       MaterialPageRoute(builder: (context) => Editar_Perfil()),
                     ),
               ),
-          
+
               ListTile(
                 leading: Icon(Icons.info),
                 title: Text('Acesso e segurança'),
@@ -67,15 +69,14 @@ class _settinspageState extends State<settinspage> {
                       MaterialPageRoute(builder: (context) => Seguranca()),
                     ),
               ),
-          
+
               ListTile(
                 leading: Icon(Icons.info),
                 title: Text('Sobre'),
                 subtitle: Text('Informações sobre o aplicativo'),
                 trailing: Icon(Icons.arrow_forward_ios),
-              
               ),
-          
+
               ListTile(
                 leading: Icon(Icons.help),
                 title: Text('Central de ajuda'),
@@ -103,7 +104,7 @@ class _settinspageState extends State<settinspage> {
                   // Ação ao clicar na opção
                 },
               ),
-          
+
               ListTile(
                 leading: Icon(Icons.assignment),
                 title: Text('Contrato do Usuário'),
@@ -113,24 +114,38 @@ class _settinspageState extends State<settinspage> {
                   // Ação ao clicar na opção
                 },
               ),
-          
+
               Padding(
-                padding: EdgeInsets.only(top: screenHeigth * 0.08),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 17, 0),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  width: screenWidth * 0.8,
-                  height: 50,
-          
-                  child: Center(
-                    child: Text(
-                      'Encerrar sessão',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: screenWidth * 0.07,
-                        fontWeight: FontWeight.bold,
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.2,
+                  vertical: 25,
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  splashColor: Colors.red.withOpacity(0.2),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Main()),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.red, width: 1.8),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Encerrar sessão",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontFamily: "Poppins",
+                        ),
                       ),
                     ),
                   ),
