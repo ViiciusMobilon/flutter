@@ -172,11 +172,11 @@ class _PerfilUserState extends State<PerfilUser> {
     final height = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: 300,
+      height:height*0.40,
       child: Stack(
         children: [
           Container(
-            height: 180,
+            height: height*0.16,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -228,20 +228,7 @@ class _PerfilUserState extends State<PerfilUser> {
               ],
             ),
           ),
-          Positioned(
-            left: width * 0.87,
-            top: height * 0.17,
-            child: IconButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => TelaPrincipal(authcontroller: widget.authController,)),
-              ),
-              icon: Icon(
-                Icons.photo_camera,
-                color: Colors.white,
-                size: width * 0.06,
-              ),
-            ),
-          ),
+         
           Positioned(
             bottom: height * 0.25,
             right: width * 0.05,
