@@ -60,23 +60,28 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
             return const Center(child: Text("Nenhum serviço encontrado."));
           }
 
-          return Container(
+          return RefreshIndicator(
+            onRefresh: () async {
+              await controller.fetchPortfolios(refresh: true);
+            },
             color: const Color(0xFFF5F7FA),
             child: ListView.builder(
               controller: _scrollController,
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: _posts.length + 1,
-              // itemCount: _posts.length + (controller.loadingGeral ? 1 : 0),
+              // itemCount: _posts.length + 1,
+              itemCount: _posts.length + (controller.loadingGeral && controller.hasMoreGeral ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index < _posts.length) {
                   print('novo post geral: ${_posts[index]}');
                   return ServiceProviderFeed(post: _posts[index]);
-                } else {
+                } else if (controller.hasMoreGeral) {
                   return const Padding(
                         padding: EdgeInsets.all(16),
                         child: Center(child: CircularProgressIndicator()),
                       );
+                } else{
+                  return const SizedBox.shrink();
                 }
               },
             ),

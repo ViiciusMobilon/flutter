@@ -1,10 +1,10 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:tcc/data/config.dart';
 import 'package:tcc/data/http/dio_client.dart';
+import 'package:tcc/data/models/paginate.dart';
 import 'package:tcc/data/models/post.dart';
+import 'package:tcc/data/models/postForm.dart';
 
 class PortfolioRepository {
   final Dio _dio = DioClient.dio;
@@ -38,7 +38,7 @@ class PortfolioRepository {
   
   }
 
-  Future<List<Portfolio>> getPortfolios({int page =1 }) async {
+  Future<PaginationResult<Portfolio>> getPortfolios({int page =1 }) async {
     try {
       final response = await _dio.get(
         '/portfolio?page=$page'
@@ -47,9 +47,17 @@ class PortfolioRepository {
 
       print('Portfolio de geral: ${response.data}');
 
-      final List data = response.data['portfolios']['data'];
+      final json = response.data;
+      final List data = response.data['data'];
+      final last_page = response.data['last_page'] ?? 1;
+      print('last: ${last_page}');
 
-      return data.map((json) => Portfolio.fromJson(json)).toList();
+      return PaginationResult<Portfolio>(
+        data: data.map((e) => Portfolio.fromJson(e)).toList(),
+        currentPage: json['current_page'] ?? 1,
+        lastPage: json['last_page'] ?? 1,
+      );
+      
     } catch (e) {
       print('Error portfolio geral repo: $e');
       rethrow;
@@ -87,4 +95,15 @@ class PortfolioRepository {
     }
   
   }
+
+  // Future<Portfolio> register(Postform post) async{
+  //   try {
+  //     final map = post.toMap();
+
+  //   } catch (e) {
+      
+  //   }
+  // }
+
+
 }

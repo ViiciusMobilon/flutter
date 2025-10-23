@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:tcc/data/models/paginate.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:tcc/data/repositories/portfolio_repository.dart';
 
@@ -20,10 +21,10 @@ class PortfolioService {
 
   }
 
-  Future<List<Portfolio>?> getPortfolios({int page =1 }) async {
+  Future<PaginationResult<Portfolio>?> getPortfolios({int page =1 }) async {
     try {
       final posts = await _repository.getPortfolios(page: page);
-      print('portfolio geral service: ${posts.length}');
+      print('portfolio geral service: ${posts.data.length}');
       return posts;
     } catch (e) {
       print("Erro no Portfolio service Geral: $e");

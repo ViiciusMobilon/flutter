@@ -56,8 +56,8 @@ class PortfolioController extends ChangeNotifier {
   Future<void> loadMorePostsAuth() async {
     await fetchPortfolioAuth();
   }
-  Future<void> loadMorePostsAll() async {
-    await fetchPortfolios();
+  Future<void> loadMorePostsAll({bool refresh = false}) async {
+    await fetchPortfolios(refresh: refresh);
   }
 
   // Future<void> getPortfolioId({int id = 2}) async {
@@ -89,13 +89,14 @@ class PortfolioController extends ChangeNotifier {
 
     try {
       final newPosts = await _service.getPortfolios(page: _pageGeral);
-      print("newPosts: ${newPosts!.length}");
+      print("newPosts: ${newPosts!.data}");
 
-      if (newPosts.isEmpty) {
+      if (newPosts.data.isEmpty) {
         _hasMoreGeral = false;
       } else {
-        _portfoliosGeral.addAll(newPosts);
-        _pageGeral++;
+        _portfoliosGeral.addAll(newPosts.data);
+        _pageGeral = newPosts.currentPage + 1;
+        _hasMoreGeral = newPosts.currentPage < newPosts.lastPage;
       }
 
 
