@@ -37,18 +37,34 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
       body: Container(
         color: Colors.white,
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          children: const [
+          padding:  EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          children:  [
             Center(child: Perfil()),
-            SizedBox(height: 30),
-            Nome(),
+        
             
             SizedBox(height: 20),
             Descricao(),
             SizedBox(height: 20),
             Area(),
+           
+            SizedBox(height: 50),
+            Center(child: Text("Contatos", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
+            
+            SizedBox(height: 30),
+            Telefone(),
+
+             SizedBox(height: 30),
+            Whatsapp(),
+
+             SizedBox(height: 30),
+            Insta(), 
+
+            SizedBox(height: 30),
+            site(),
+            
             SizedBox(height: 50),
             Center(child: botao()),
+
           ],
         ),
       ),
@@ -171,14 +187,14 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
-class Nome extends StatelessWidget {
-  const Nome({super.key});
+class Telefone extends StatelessWidget {
+  const Telefone({super.key});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        labelText: "Nome",
+        labelText: "Telefone",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
@@ -196,7 +212,79 @@ class Nome extends StatelessWidget {
   }
 }
 
+class Whatsapp extends StatelessWidget {
+  const Whatsapp({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: "Whatsapp",
+        labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
+        hintText: "Fulano de Tal",
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+            color: Color.fromRGBO(121, 180, 217, 1),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+class site extends StatelessWidget {
+  const site({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: "site",
+        labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
+        hintText: "Fulano de Tal",
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+            color: Color.fromRGBO(121, 180, 217, 1),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class Insta extends StatelessWidget {
+  const Insta({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: "Insta",
+        labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
+        hintText: "Fulano de Tal",
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: const BorderSide(
+            color: Color.fromRGBO(121, 180, 217, 1),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
 
 class botao extends StatelessWidget {
   const botao({super.key});

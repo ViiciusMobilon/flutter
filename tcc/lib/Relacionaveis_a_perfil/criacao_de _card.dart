@@ -26,6 +26,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
   List<Midia> _midias = [];
   bool _tecladoAberto = false;
   bool _abrindoGaleria = false;
+  bool _fechandoManualmente = false; // Flag para controlar fechamento manual
 
   PageController _pageController = PageController();
 
@@ -57,7 +58,8 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     final estavaAberto = _tecladoAberto;
     _tecladoAberto = bottomInset > 0.0;
 
-    if (estavaAberto && !_tecladoAberto && !_abrindoGaleria) {
+    // Só fecha automaticamente se não estiver fechando manualmente
+    if (estavaAberto && !_tecladoAberto && !_abrindoGaleria && !_fechandoManualmente) {
       if (mounted) Navigator.of(context).pop();
     }
   }
@@ -118,6 +120,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
       ),
     );
 
+    _fechandoManualmente = true; // Marca como fechamento manual
     Navigator.pop(context, "post_publicado");
   }
 
@@ -133,7 +136,10 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
           elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.close),
-             onPressed:() =>  Navigator.pop(context, ) ,
+            onPressed: () {
+              _fechandoManualmente = true; // Marca como fechamento manual
+              Navigator.pop(context);
+            },
           ),
           
           title: const Text(

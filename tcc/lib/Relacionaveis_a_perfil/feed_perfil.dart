@@ -21,52 +21,14 @@ class _FeedPerfilState extends State<FeedPerfil> {
   @override
   void initState() {
     super.initState();
-    _loadMorePosts();
+   
   }
 
-  void _loadMorePosts() async {
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-
-    List<ServicePostFeed> newPosts = List.generate(3, (index) {
-      int id = _posts.length + index + 1;
-
-      List<String> imageUrls = List.generate(
-        3,
-        (imgIndex) =>
-            "https://picsum.photos/600/400?random=${id * 100 + imgIndex}",
-      );
-
-      String videoUrl =
-          "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
-
-      return ServicePostFeed(
-        id: id.toString(),
-        providerName: "Prestador $id",
-        providerCompany: "Empresa $id",
-        providerAvatar: "https://picsum.photos/100/100?random=$id",
-        location: "Cidade $id",
-        description: "Descrição breve do serviçoassssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss $id...",
-        fullDescription: "Descrição completa do serviçoassssssssssssssssssssssss $id...",
-        images: imageUrls,
-        videoUrl: [videoUrl],
-        likes: 0,
-        isLiked: false,
-      );
-    });
-
-    setState(() {
-      _posts.addAll(newPosts);
-      _isLoading = false;
-    });
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
-    if (_posts.isEmpty && !_isLoading) {
-      return const Center(child: Text("Nenhum serviço encontrado."));
-    }
-
+  
     return Container(
       color: const Color(0xFFF5F7FA),
       child: Column(
