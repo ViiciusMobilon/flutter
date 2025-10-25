@@ -420,7 +420,7 @@ class _botaoState extends State<botao> {
           print( "ramo: ${widget.usuario.ramo}");
           print("tipo:${widget.usuario.tipo}");
 
-          try {
+          try { 
             final usuariofinal = await _authController.cadastro(widget.usuario);
             if (usuariofinal.token!.isNotEmpty) {
               

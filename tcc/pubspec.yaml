@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.2.2
   visibility_detector: ^0.4.0+2
   shared_preferences: ^2.2.2
   path_provider: ^2.1.2

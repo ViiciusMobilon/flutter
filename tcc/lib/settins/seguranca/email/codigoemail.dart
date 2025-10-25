@@ -113,7 +113,7 @@ class _CodigoPageState extends State<CodigoPageEmail> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => settinspage(authController: widget.controller,),
+                          builder: (_) => SettinsPage(authController: widget.controller,),
                         ),
                       );
                     } else {

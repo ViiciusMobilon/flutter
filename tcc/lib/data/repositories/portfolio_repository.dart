@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tcc/data/http/dio_client.dart';
 import 'package:tcc/data/models/paginate.dart';
@@ -96,14 +97,57 @@ class PortfolioRepository {
   
   }
 
-  // Future<Portfolio> register(Postform post) async{
-  //   try {
-  //     final map = post.toMap();
+  Future<Portfolio> createPortfolio(Postform post) async{
+      final token = await _storage.read(key: 'token');
+    try {
+      final map = post.toMap();
 
-  //   } catch (e) {
+
+      FormData formData = FormData.fromMap({
+        ...map,
+        if (post.foto != null)
+          "imagens[]": [
+            for (final f in post.foto!)
+              if (f != null)
+                await MultipartFile.fromFile(
+                  f.path,
+                  filename: f.path.split('/').last,
+                )
+          ],
+
+          if (post.video != null)
+          "videos[]":[
+            for(final v in post.video!)
+              if(v != null)
+                await MultipartFile.fromFile(
+                  v.path,
+                  filename: v.path.split('/').last,
+                )
+          ]
+      });
+
+      final response = await _dio.post('/portfolio/cadastro', data: formData, options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },)
+        );
+
+
+      print('Cadastro Portfolio response.data: ${response.data}');
+      final code = response.statusCode;
+      print('Cadastro Portfolio response.code: ${code}');
       
-  //   }
-  // }
+      return Portfolio.fromJson(response.data);
+
+    } on DioException catch (e) {
+      if (e.response != null) {
+        throw Exception(e.response?.data['message'] ?? 'Erro no cadastro do portfolio');
+      } else {
+        throw Exception('Erro de conexão');
+      }
+      
+    }
+  }
 
 
 }

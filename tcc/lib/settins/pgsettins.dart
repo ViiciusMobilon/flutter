@@ -1,136 +1,156 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/settins/editarperfil.dart';
 import 'package:tcc/settins/seguranca/email.dart';
 import 'package:tcc/settins/segurancap.dart';
+import 'package:tcc/main.dart'; // caso Main() esteja aqui
 
-class settinspage extends StatefulWidget {
-    final AuthController authController;
+class SettinsPage extends StatefulWidget {
+  final AuthController authController;
 
-  const settinspage({super.key, required this.authController});
+  const SettinsPage({super.key, required this.authController});
 
   @override
-  State<settinspage> createState() => _settinspageState();
-  
+  State<SettinsPage> createState() => _SettinsPageState();
 }
 
-class _settinspageState extends State<settinspage> {
+class _SettinsPageState extends State<SettinsPage> {
   double get screenWidth => MediaQuery.of(context).size.width;
-   double get screenHeigth => MediaQuery.of(context).size.height;
+  double get screenHeight => MediaQuery.of(context).size.height;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEF7FD),
-           leading: IconButton(
-      icon: Icon(Icons.arrow_back, color: Colors.black),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-),
-          title:  Text(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text(
             "Configurações",
-            style: TextStyle(color: Colors.black,
-            fontSize: MediaQuery.of(context).size.width*0.07,
-            fontWeight: FontWeight.w800,
-            fontFamily: "Poppins",),
-             
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: screenWidth * 0.07,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins",
+            ),
           ),
           centerTitle: true,
         ),
-        body:Column(
+        body: Column(
           children: [
             ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Conta'),
-              subtitle: Text('Gerenciar sua conta'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: ()=> Navigator.push(
+              leading: const Icon(Icons.person),
+              title: const Text('Conta'),
+              subtitle: const Text('Gerenciar sua conta'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Editar_Perfil(authController: widget.authController,)),)
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Editar_Perfil(authController: widget.authController),
+                ),
+              ),
             ),
-         
             ListTile(
-              leading: Icon(Icons.info),
-              title: Text('Acesso e segurança'),
-              subtitle: Text('Configurações de segurança'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap:  ()=> Navigator.push(
+              leading: const Icon(Icons.info),
+              title: const Text('Acesso e segurança'),
+              subtitle: const Text('Configurações de segurança'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Seguranca()),)
+                MaterialPageRoute(builder: (context) => const Seguranca()),
+              ),
             ),
-           
             ListTile(
-              leading: Icon(Icons.info),
-              title: Text('Sobre'),
-              subtitle: Text('Informações sobre o aplicativo'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: ()=> Navigator.push(
+              leading: const Icon(Icons.info),
+              title: const Text('Sobre'),
+              subtitle: const Text('Informações sobre o aplicativo'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => TrocarEmail()),)
+                MaterialPageRoute(builder: (context) => const TrocarEmail()),
+              ),
             ),
-        
-
-            
-                ListTile(
-                leading: Icon(Icons.help),
-                title: Text('Central de ajuda'),
-                subtitle: Text('Obtenha suporte e ajuda'),
-                trailing: Icon(Icons.arrow_forward_ios),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Central de ajuda'),
+              subtitle: const Text('Obtenha suporte e ajuda'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                // ação futura
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.description),
+              title: const Text('Termos de serviço'),
+              subtitle: const Text('Leia os termos de uso'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                // ação futura
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip),
+              title: const Text('Política de privacidade'),
+              subtitle: const Text('Saiba mais sobre nossa política'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                // ação futura
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: const Text('Contrato do Usuário'),
+              subtitle: const Text('Leia o contrato do usuário'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                // ação futura
+              },
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.2,
+                vertical: 25,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                splashColor: Colors.red.withOpacity(0.2),
                 onTap: () {
-                  // Ação ao clicar na opção
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainApp()),
+                  );
                 },
-                ),
-                ListTile(
-                leading: Icon(Icons.description),
-                title: Text('Termos de serviço'),
-                subtitle: Text('Leia os termos de uso'),
-                trailing: Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Ação ao clicar na opção
-                },
-                ),
-                ListTile(
-                leading: Icon(Icons.privacy_tip),
-                title: Text('Política de privacidade'),
-                subtitle: Text('Saiba mais sobre nossa política'),
-                trailing: Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Ação ao clicar na opção
-                },
-                ),
-                
-              
-                ListTile(
-                leading: Icon(Icons.assignment),
-                title: Text('Contrato do Usuário'),
-                subtitle: Text('Leia o contrato do usuário'),
-                trailing: Icon(Icons.arrow_forward_ios),
-                onTap: () {
-                  // Ação ao clicar na opção
-                },
-                ),
-
-                Padding(
-                  padding:  EdgeInsets.only(top: screenHeigth * 0.08),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 255, 17, 0),
-                      borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.red, width: 1.8),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "Encerrar sessão",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        fontFamily: "Poppins",
+                      ),
                     ),
-                   width: screenWidth * 0.8,
-                    height: 50,
-                  
-                    child: Center(child: Text( 'Encerrar sessão', 
-                    style: TextStyle(color: Colors.white, fontSize:screenWidth * 0.07 , fontWeight: FontWeight.bold),)),
                   ),
                 ),
-
+              ),
+            ),
           ],
-        )
+        ),
       ),
     );
   }

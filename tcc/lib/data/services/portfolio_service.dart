@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tcc/data/models/paginate.dart';
 import 'package:tcc/data/models/post.dart';
+import 'package:tcc/data/models/postForm.dart';
 import 'package:tcc/data/repositories/portfolio_repository.dart';
 
 class PortfolioService {
@@ -30,6 +31,18 @@ class PortfolioService {
       print("Erro no Portfolio service Geral: $e");
       rethrow;
     }
+  }
+
+  Future<Portfolio> createPortfolio(Postform form) async {
+    try{
+      final post = await _repository.createPortfolio(form);
+      print('Portfolio criado service: ${post.id}');
+      return post;
+    } catch (e) {
+      print("Erro no Portfolio service: $e");
+      rethrow;
+    }
+
   }
 
   Future<Portfolio> getPortfolioId({required int id}) async {

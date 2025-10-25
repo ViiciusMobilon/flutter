@@ -137,7 +137,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => settinspage(authController: widget.authcontroller,),
+                          builder: (context) => SettinsPage(authController: widget.authcontroller,),
                         ),
                       );
                     },
@@ -153,7 +153,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 // Abre a página para criar novo post
                 final resultado = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
+                  MaterialPageRoute(builder: (ctx) => NovoPostPage(authController: widget.authcontroller,)),
                 );
                 if (resultado != null && mounted) {
                   // Aqui você pode atualizar o feed com o novo post
@@ -305,25 +305,7 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(
-                      Icons.touch_app_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Começar Busca",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+             
               ),
             ],
           ),

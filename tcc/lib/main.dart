@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/post.dart';
@@ -100,25 +99,23 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          height: MediaQuery.of(context).size.height * 1,
-          width: MediaQuery.of(context).size.width * 1,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            color: Colors.white,
           ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.07,
                     ),
-                    child: imagem(),
+                    child: const imagem(),
                   ),
                 ),
-                //texto sign
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -128,48 +125,35 @@ class _LoginState extends State<Login> {
                       "Acessar!",
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.width * 0.07,
-                        color: const Color.fromARGB(255, 8, 8, 8),
+                        color: Colors.black,
                         fontWeight: FontWeight.w800,
                         fontFamily: "Poppins",
                       ),
                     ),
                   ),
                 ),
-                //fim sign
-
-                //textfield de email
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.04,
-                    bottom: MediaQuery.of(context).size.height * 0.01,
-                    left: MediaQuery.of(context).size.width * 0.08,
-                    right: MediaQuery.of(context).size.width * 0.08,
+                  padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.height * 0.04,
+                    horizontal: MediaQuery.of(context).size.width * 0.08,
                   ),
                   child: email(controller: emailController,),
                 ),
-                //fim email
-                //textfield senha
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.08,
-                    right: MediaQuery.of(context).size.width * 0.08,
-                    top: MediaQuery.of(context).size.height * 0.04,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.08,
                   ),
                   child: senha(controller: passwordController,),
                 ),
-
-                // fim senha
-                //esqueci a senha
                 GestureDetector(
                   child: Padding(
                     padding: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.08,
+                      top: MediaQuery.of(context).size.height * 0.01,
                     ),
-                    child: esqueci(),
+                    child: const esqueci(),
                   ),
                 ),
-                //fim esqueci a senha
-                //botao
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
@@ -177,14 +161,11 @@ class _LoginState extends State<Login> {
                   child: Center(child: botao(onPressed:login)
                     ),
                 ),
-
-                //fim botao
-                //escrita para o cadastro
                 Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  child: Center(child: texcadastro()),
+                  child: const Center(child: texcadastro()),
                 ),
               ],
             ),
@@ -193,6 +174,10 @@ class _LoginState extends State<Login> {
       );
   }
 }
+
+// Suas outras classes (nome, email, senha, botao, imagem, etc.) ficam IGUAIS
+// Não precisa alterar nada nelas.
+
 
 class nome extends StatefulWidget {
   const nome({super.key});

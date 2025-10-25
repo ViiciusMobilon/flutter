@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
+import 'package:tcc/data/controllers/portfolio_controller.dart';
+import 'package:tcc/data/models/postForm.dart';
 import 'package:video_player/video_player.dart';
 
 class Midia {
@@ -12,21 +15,25 @@ class Midia {
 }
 
 class NovoPostPage extends StatefulWidget {
+  final AuthController authController;
   final String? foto;
 
-  const NovoPostPage({super.key, this.foto});
+  NovoPostPage({super.key, this.foto, required this.authController});
 
   @override
   State<NovoPostPage> createState() => _NovoPostPageState();
 }
 
 class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver {
-  final TextEditingController _postController = TextEditingController();
+  final PortfolioController portfolioController = PortfolioController();
+  final Postform postForm = Postform();
+  final TextEditingController _descController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   List<Midia> _midias = [];
   bool _tecladoAberto = false;
   bool _abrindoGaleria = false;
+  bool _fechandoManualmente = false; // Flag para controlar fechamento manual
 
   PageController _pageController = PageController();
 
@@ -44,7 +51,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _focusNode.dispose();
-    _postController.dispose();
+    _descController.dispose();
     for (var midia in _midias) {
       midia.controller?.dispose();
     }
@@ -58,7 +65,8 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     final estavaAberto = _tecladoAberto;
     _tecladoAberto = bottomInset > 0.0;
 
-    if (estavaAberto && !_tecladoAberto && !_abrindoGaleria) {
+    // Só fecha automaticamente se não estiver fechando manualmente
+    if (estavaAberto && !_tecladoAberto && !_abrindoGaleria && !_fechandoManualmente) {
       if (mounted) Navigator.of(context).pop();
     }
   }
@@ -101,8 +109,8 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     });
   }
 
-  void _publicarPost() {
-    if (_postController.text.isEmpty && _midias.isEmpty) {
+  void _publicarPost() async {
+    if (_descController.text.isEmpty && _midias.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Digite algo ou selecione uma mídia"),
@@ -111,19 +119,40 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
       );
       return;
     }
+    postForm.descricao = _descController.text;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Post publicado!"),
-        backgroundColor: Colors.green,
-      ),
-    );
+    postForm.foto = _midias.where((m) => !m.isVideo).map((m) => m.arquivo).toList();
+    postForm.video = _midias.where((m) => m.isVideo).map((m) => m.arquivo).toList();
+    
+    try {
+      final postFinal = await portfolioController.create(postForm);
 
+      if (postFinal != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Post publicado com sucesso!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+
+    } catch (e) {
+      print('erro post: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erro ao publicar post: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+
+    _fechandoManualmente = true; // Marca como fechamento manual
     Navigator.pop(context, "post_publicado");
   }
 
   @override
   Widget build(BuildContext context) {
+  final user = widget.authController.usuario;
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(
@@ -134,7 +163,10 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
           elevation: 1,
           leading: IconButton(
             icon: const Icon(Icons.close),
-             onPressed:() =>  Navigator.pop(context) ,
+            onPressed: () {
+              _fechandoManualmente = true; // Marca como fechamento manual
+              Navigator.pop(context);
+            },
           ),
           title: const Text(
             "Novo Post",
@@ -168,17 +200,17 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
                 children: [
                   CircleAvatar(
                     radius: 24,
-                    backgroundImage: (widget.foto != null && widget.foto!.isNotEmpty)
-                        ? NetworkImage(widget.foto!)
+                    backgroundImage: (user!.fotoURL != null)
+                        ? NetworkImage(user.fotoURL!)
                         : null,
-                    child: (widget.foto == null || widget.foto!.isEmpty)
+                    child: (user.fotoURL == null || user.fotoURL!.isEmpty)
                         ? const Icon(Icons.person, size: 40)
                         : null,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextField(
-                      controller: _postController,
+                      controller: _descController,
                       focusNode: _focusNode,
                       maxLength: 280,
                       maxLines: null,

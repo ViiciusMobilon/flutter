@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/data/models/post.dart';
+import 'package:tcc/data/models/postForm.dart';
 import 'package:tcc/data/services/portfolio_service.dart';
 
 class PortfolioController extends ChangeNotifier {
@@ -50,6 +51,12 @@ class PortfolioController extends ChangeNotifier {
       _loadingAuth = false;
       notifyListeners();
     }
+  }
+
+  Future<Portfolio> create(Postform form) async{
+    print("Portfolio Controller: $form");
+    final portfolio = await _service.createPortfolio(form);
+    return portfolio;
   }
 
   // 🔹 Esse método é o que a tela está tentando chamar

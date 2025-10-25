@@ -34,7 +34,7 @@ class AuthController extends ChangeNotifier{
   }
 
   AuthController(this._authService);
-/**contratante */
+
    Future<UsuarioGeral> cadastro(Userform form) async {
     print("Cadastro controller: $form");
     final usuario = await _authService.register(form);
