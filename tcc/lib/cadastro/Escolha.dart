@@ -210,7 +210,7 @@ class _button_prestadorState extends State<button_prestador> {
 // Botão Contratante
 class _button_contratante extends StatefulWidget {
   final Userform usuario;
-  const _button_contratante({super.key,  required this.usuario});
+  _button_contratante({super.key,  required this.usuario});
 
   @override
   State<_button_contratante> createState() => __button_contratanState();
