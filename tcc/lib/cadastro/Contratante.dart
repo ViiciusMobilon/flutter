@@ -6,6 +6,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 import 'package:tcc/data/controllers/verificar_controller.dart';
+// import 'package:tcc/data/models/user.dart';
 import 'package:tcc/data/models/userForm.dart';
 
 // Máscara para telefone (ex: (14) 99999-9999)
@@ -20,7 +21,7 @@ final cpfMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-// void main() => runApp( Contratante(usuario: UsuarioGeral(),));
+void main() => runApp( Contratante(usuario: Userform(),));
 
 class Contratante extends StatefulWidget {
   final Userform usuario;
@@ -32,21 +33,25 @@ class Contratante extends StatefulWidget {
 
 class _ContratanteState extends State<Contratante>{
   File? foto;
+  bool semImagem = false;
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
+  String? erroNome;
   String? erroCPF;
   String? erroTelefone;
-  void limparCPF(){
+  void limaparErro(){
     if(erroCPF != null){
       setState(() => erroCPF = null);
     }
-  }
-  void limparTel(){
-    if(erroTelefone != null){
+     if(erroTelefone != null){
       setState(() => erroTelefone = null);
     }
+     if(erroNome != null){
+      setState(() => erroNome = null);
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     // final UsuarioGeral usuario;
@@ -88,8 +93,10 @@ class _ContratanteState extends State<Contratante>{
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: Perfil(image: foto,
-              OnImageSelected: (file){
+              child: Perfil(
+                semImagem: semImagem,
+                image: foto,
+                OnImageSelected: (file){
                 setState(() {
                 foto = file;
                 });
@@ -102,7 +109,7 @@ class _ContratanteState extends State<Contratante>{
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(controller: nomeController,),
+              child: Nome(controller: nomeController,erroNome: erroNome, onClearerror: limaparErro,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -111,7 +118,7 @@ class _ContratanteState extends State<Contratante>{
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController,erroTelefone: erroTelefone, onClearerror: limparTel,),
+              child: Telefone(controller: telefoneController,erroTelefone: erroTelefone, onClearerror: limaparErro,),
             ),
 
             Padding(
@@ -120,7 +127,7 @@ class _ContratanteState extends State<Contratante>{
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparCPF,),
+              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limaparErro,),
             ),
 
            
@@ -132,11 +139,15 @@ class _ContratanteState extends State<Contratante>{
                   child: Center(child: botao(
                   usuario: widget.usuario,
                   foto: foto,
+                  semImagem: semImagem,
                   nomeController: nomeController,
                   telefoneController: telefoneController,
                   cpfController: cpfController,
                   erroCPF: (msg) => setState(() => erroCPF = msg),
-                  erroTelefone: (msg) => setState(() => erroTelefone = msg))),
+                  erroTelefone: (msg) => setState(() => erroTelefone = msg),
+                  erroNome: (msg) => setState(() => erroNome = msg),
+                  
+                  )),
                 ),
           ],
         ),
@@ -147,9 +158,10 @@ class _ContratanteState extends State<Contratante>{
 
 // Widget para foto de perfil
 class Perfil extends StatefulWidget {
+  final bool semImagem;
   final File? image;
   final void Function(File?) OnImageSelected;
-  const Perfil({super.key, required this.image, required this.OnImageSelected });
+  Perfil({super.key, required this.image, required this.OnImageSelected, this.semImagem = false });
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -164,6 +176,14 @@ class _PerfilState extends State<Perfil> {
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       widget.OnImageSelected(file);
+
+    } else{
+     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Selecione uma imagem"),
+          backgroundColor:Colors.red,
+          duration: Duration(seconds: 2),
+        )
+      ); 
     }
   }
 
@@ -204,29 +224,40 @@ class _PerfilState extends State<Perfil> {
     return Center(
       child: GestureDetector(
         onTap: _showImageSourceDialog,
-        child: ClipOval(
-          child:widget.image != null
-              ? Image.file(
-                  widget.image!,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                )
-              : Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: MediaQuery.of(context).size.width * 0.1,
-                      color: Colors.white70,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: widget.semImagem ? Colors.red : Colors.transparent,
+              width: 1
+            )
+          ),  
+          child: ClipOval(
+            child:widget.image != null
+                ? Image.file(
+                    widget.image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                      
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -236,7 +267,9 @@ class _PerfilState extends State<Perfil> {
 // Campo de Nome
 class Nome extends StatefulWidget {
   final TextEditingController controller;
-  const Nome({super.key, required this.controller});
+  String? erroNome;
+  final VoidCallback onClearerror;
+  Nome({super.key, required this.controller, this.erroNome, required this.onClearerror});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -269,7 +302,11 @@ class _NomeState extends State<Nome> {
             color: Colors.grey,
           ),
         ),
+        errorText: widget.erroNome
       ),
+      onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -379,9 +416,11 @@ class _cpfState extends State<cpf> {
 class botao extends StatefulWidget {
   final Userform usuario;
   final File? foto;
+  bool semImagem;
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
+  final void Function (String?) erroNome;
   final void Function (String?) erroTelefone;
   final void Function (String?) erroCPF;
     botao({
@@ -391,8 +430,10 @@ class botao extends StatefulWidget {
     required this.nomeController,
     required this.telefoneController,
     required this.cpfController,
+    required this.erroNome,
     required this.erroCPF,
     required this.erroTelefone,
+    required this.semImagem
     });
 
   @override
@@ -411,13 +452,32 @@ class _botaoState extends State<botao> {
               widget.usuario.cpf = widget.cpfController.text;
               widget.usuario.foto = widget.foto;
 
+              
+              if(widget.foto == null ){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Selecione uma imagem"),
+                    backgroundColor:Colors.red,
+                    duration: Duration(seconds: 2),
+                  )
+                );
+                setState(() => widget.semImagem = true);
+                return;
+              }
+              
+              if(widget.nomeController.text.isEmpty){
+                widget.erroNome('Digite um nome');
+                print('digite nome');
+                return;
+              }
+
               if(widget.telefoneController.text.isEmpty){
                 widget.erroTelefone('Digite um telefone');
                 print('digite um telefone');
                 return;
               }
+
               if(widget.cpfController.text.isEmpty){
-                widget.erroCPF('Digite um cpf');
                 widget.erroCPF('Digite um cpf');
                 print('digite um cpf');
                 return;

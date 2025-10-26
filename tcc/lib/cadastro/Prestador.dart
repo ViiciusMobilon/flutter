@@ -21,7 +21,7 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 );
 
 
-// void main() => runApp(Prestador(usuario: UsuarioGeral(),));
+void main() => runApp(Prestador(usuario: Userform(),));
 
 class Prestador extends StatefulWidget {
   final Userform usuario;
@@ -33,28 +33,32 @@ class Prestador extends StatefulWidget {
 
 class _PrestadorState extends State<Prestador> {
   File? foto;
+  bool semImagem = false;
   int? id_ramo;
   final nomeController = TextEditingController();
   final telefoneController = TextEditingController();
   final cpfController = TextEditingController();
   String? erroCPF;
+  String? erroNome;
   String? erroTelefone;
   String? erroRamo;
-  void limparCPF(){
+  void limparError(){
+    if (erroNome != null) {
+      setState(() => erroNome = null);
+    }
     if(erroCPF != null){
       setState(() => erroCPF = null);
     }
-  }
-  void limparTel(){
+    
     if(erroTelefone != null){
       setState(() => erroTelefone = null);
     }
-  }
-  void limparRamo(){
+    
     if(erroRamo != null){
       setState(() => erroRamo = null);
     }
   }
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -104,7 +108,7 @@ class _PrestadorState extends State<Prestador> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(controller: nomeController,),
+              child: Nome(controller: nomeController, erroNome: erroNome, onClearerror: limparError,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -113,7 +117,7 @@ class _PrestadorState extends State<Prestador> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel),
+              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparError),
             ),
 
             Padding(
@@ -122,7 +126,7 @@ class _PrestadorState extends State<Prestador> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparCPF),
+              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparError),
             ),
 
             Padding(
@@ -134,7 +138,7 @@ class _PrestadorState extends State<Prestador> {
               ),
               child: Area(usuario: widget.usuario,
               erro: erroRamo,
-              onClearerror: limparRamo,
+              onClearerror: limparError,
               onRamoSelecionado: (item){
                 if(item != null){
                   setState(() {
@@ -149,16 +153,20 @@ class _PrestadorState extends State<Prestador> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: widget.usuario,
-                  erroRamo: (msg) => setState(() => erroRamo = msg),
-                  idramo: id_ramo,
-                  cpfController: cpfController,
-                  nomeController: nomeController,
-                  telefoneController: telefoneController,
-                  foto: foto,
-                  erroCPF: (msg) => setState(() => erroCPF = msg),
-                  erroTelefone: (msg) => setState(() => erroTelefone = msg)
-                  )),
+                  child: Center(child: botao(
+                      usuario: widget.usuario,
+                      erroNome: (msg) => setState(() => erroNome = msg),
+                      erroRamo: (msg) => setState(() => erroRamo = msg),
+                      idramo: id_ramo,
+                      cpfController: cpfController,
+                      nomeController: nomeController,
+                      telefoneController: telefoneController,
+                      foto: foto,
+                      semImagem: semImagem,
+                      erroCPF: (msg) => setState(() => erroCPF = msg),
+                      erroTelefone: (msg) => setState(() => erroTelefone = msg)
+                    )
+                  ),
                 ),
           ],
         ),
@@ -170,8 +178,9 @@ class _PrestadorState extends State<Prestador> {
 // Widget para escolher e mostrar a imagem de perfil
 class Perfilimagem extends StatefulWidget {
   final File? image;
+  bool semImagem;
   final void Function(File?) OnImageSelected;
-  Perfilimagem({super.key, required this.image, required this.OnImageSelected});
+  Perfilimagem({super.key, required this.image, required this.OnImageSelected, this.semImagem = false});
 
   @override
   State<Perfilimagem> createState() => _PerfilimagemState();
@@ -186,6 +195,13 @@ class _PerfilimagemState extends State<Perfilimagem> {
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       widget.OnImageSelected(file);
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Selecione uma imagem"),
+          backgroundColor:Colors.red,
+          duration: Duration(seconds: 2),
+        )
+      );
     }
   }
 
@@ -225,29 +241,39 @@ class _PerfilimagemState extends State<Perfilimagem> {
     return Center(
       child: GestureDetector(
         onTap: _showImageSourceDialog,
-        child: ClipOval(
-          child: widget.image != null
-              ? Image.file(
-                  widget.image!,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                )
-              : Container(
-                 width: MediaQuery.of(context).size.width * 0.3,
-                   height: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: MediaQuery.of(context).size.width * 0.1,
-                      color: Colors.white70,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: widget.semImagem ? Colors.red : Colors.transparent,
+              width: 1
+            )
+          ),
+          child: ClipOval(
+            child: widget.image != null
+                ? Image.file(
+                    widget.image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                   width: MediaQuery.of(context).size.width * 0.3,
+                     height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -257,7 +283,9 @@ class _PerfilimagemState extends State<Perfilimagem> {
 // Campo de Nome
 class Nome extends StatefulWidget {
   final TextEditingController controller; 
-  Nome({super.key, required this.controller});
+  String? erroNome;
+  final VoidCallback onClearerror;
+  Nome({super.key, required this.controller, this.erroNome, required this.onClearerror});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -290,7 +318,9 @@ class _NomeState extends State<Nome> {
             color: Colors.grey,
           ),
         ),
+        errorText: widget.erroNome
       ),
+      onChanged: (value) => widget.onClearerror(),
     );
   }
 }
@@ -403,18 +433,22 @@ class botao extends StatefulWidget {
   final Userform usuario;
   final int? idramo;
   final File? foto;
+  bool semImagem;
   final TextEditingController nomeController;
   final TextEditingController telefoneController;
   final TextEditingController cpfController;
+  final void Function (String?) erroNome;
   final void Function (String?) erroTelefone;
   final void Function (String?) erroCPF;
   final void Function (String?) erroRamo;
   botao({super.key, required this.usuario,
     required this.idramo,
     required this.foto,
+    required this.semImagem,
     required this.nomeController,
     required this.telefoneController,
     required this.cpfController,
+    required this.erroNome,
     required this.erroCPF,
     required this.erroRamo,
     required this.erroTelefone});
@@ -436,13 +470,29 @@ class _botaoState extends State<botao> {
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.cpf = widget.cpfController.text;
 
+            if (widget.foto == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Selecione uma imagem"),
+                    backgroundColor:Colors.red,
+                    duration: Duration(seconds: 2),
+                  )
+                );
+                setState(() => widget.semImagem = true);
+                return;
+            }
+            
+            if(widget.nomeController.text.isEmpty){
+                widget.erroNome('Digite um Nome');
+                print('digite um nome');
+                return;
+              }
             if(widget.telefoneController.text.isEmpty){
-                widget.erroTelefone('Digite um telefone');
+                widget.erroTelefone('Digite um Telefone');
                 print('digite um telefone');
                 return;
               }
             if(widget.cpfController.text.isEmpty){
-                widget.erroCPF('Digite um cpf');
                 widget.erroCPF('Digite um cpf');
                 print('digite um cpf');
                 return;

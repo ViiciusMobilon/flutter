@@ -28,6 +28,8 @@ class _CadastroState extends State<Cadastro> {
   final passwordController = TextEditingController();
   final confirmation_passwordController = TextEditingController();
   String? erroEmail;
+  String? erroPassword;
+  String? erroPasswordConfirmation;
 
   @override
   void dispose() {
@@ -41,6 +43,12 @@ class _CadastroState extends State<Cadastro> {
   void limpar(){
     if(erroEmail != null){
       setState(() => erroEmail = null);
+    }
+    if(erroPassword != null){
+      setState(() => erroPassword = null);
+    }
+    if(erroPasswordConfirmation != null){
+      setState(() => erroPasswordConfirmation = null);
     }
   }
   @override
@@ -108,7 +116,8 @@ class _CadastroState extends State<Cadastro> {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: senha(controller: passwordController,),
+                  child: senha(controller: passwordController, erroPassword: erroPassword, onClearerror: limpar 
+                ),
                 ),
 
                 // ---------- CAMPO CONFIRMAR SENHA ----------
@@ -118,7 +127,9 @@ class _CadastroState extends State<Cadastro> {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: confirmar(controller: confirmation_passwordController,),
+                  child: confirmar(controller: confirmation_passwordController,
+                        erroPasswordConfirmation: erroPasswordConfirmation,
+                        onClearerror: limpar),
                 ),
 
                 // ---------- BOTÃO CONTINUAR ----------
@@ -129,6 +140,8 @@ class _CadastroState extends State<Cadastro> {
                   child: Center(
                     child: 
                     botao(erroEmail: (msg) => setState(() => erroEmail = msg),
+                        erroPassword: (msg) => setState(() => erroPassword = msg),
+                        erroPasswordConfirmation: (msg) => setState(() => erroPasswordConfirmation = msg),
                         emailController: emailController,
                         passwordController: passwordController,
                         passwordConfirmationController: confirmation_passwordController,)
@@ -150,7 +163,7 @@ class email extends StatefulWidget {
   final TextEditingController? controller;
   final String? erroEmail;
   final VoidCallback onClearerror;
-   email({super.key, required this.controller, required this.erroEmail, required this.onClearerror});
+  email({super.key, required this.controller, required this.erroEmail, required this.onClearerror});
 
   @override
   State<email> createState() => _emailState();
@@ -203,7 +216,10 @@ class _emailState extends State<email> {
 // -----------------------------
 class senha extends StatefulWidget {
   final TextEditingController? controller;
-  const senha({super.key, required this.controller});
+  String? erroPassword;
+  final VoidCallback onClearerror;
+
+  senha({super.key, required this.controller, this.erroPassword,required this.onClearerror});
 
   @override
   _senhaState createState() => _senhaState();
@@ -260,7 +276,11 @@ class _senhaState extends State<senha> {
           ),
           onPressed: mudarVisao,
         ),
+          errorText: widget.erroPassword
       ),
+       onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -270,7 +290,9 @@ class _senhaState extends State<senha> {
 // -----------------------------
 class confirmar extends StatefulWidget {
   final TextEditingController? controller;
-  const confirmar({super.key, required this.controller});
+  String? erroPasswordConfirmation;
+  final VoidCallback onClearerror;
+  confirmar({super.key, required this.controller, this.erroPasswordConfirmation, required this.onClearerror});
 
   @override
   State<confirmar> createState() => _confirmarState();
@@ -320,7 +342,11 @@ class _confirmarState extends State<confirmar> {
           icon: Icon(senha2 ? Icons.visibility_off : Icons.visibility),
           onPressed: mudarvisao,
         ),
+            errorText: widget.erroPasswordConfirmation
       ),
+       onChanged: (value){
+        widget.onClearerror();
+      },
     );
   }
 }
@@ -333,12 +359,16 @@ class botao extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController passwordConfirmationController;
   final void Function (String?) erroEmail;
+  final void Function (String?) erroPassword;
+  final void Function (String?) erroPasswordConfirmation;
    botao({
     super.key,
     required this.emailController,
     required this.passwordController,
     required this.passwordConfirmationController,
-    required this.erroEmail
+    required this.erroEmail,
+    required this.erroPassword,
+    required this.erroPasswordConfirmation,
   });
 
   @override
@@ -359,9 +389,22 @@ class _botaoState extends State<botao> {
           widget.erroEmail("digite um email");
           return;
         }
+        if(widget.passwordController.text.isEmpty){
+          widget.erroPassword("digite uma senha");
+          return;
+        }
+        if(widget.passwordConfirmationController.text.isEmpty){
+          widget.erroPasswordConfirmation("digite a confirmação");
+          return;
+        }
+        if (widget.passwordController.text != widget.passwordConfirmationController.text) {
+          widget.erroPasswordConfirmation("As senhas não se coincidem!");
+          return; 
+        }
         
         final verificarController = VerificarController();
         final vemail = await verificarController.verificar(widget.emailController.text, 'check-email');
+        print('msg email: ${vemail['msg']}');
 
 
         if((vemail['msg'] as String).isNotEmpty){

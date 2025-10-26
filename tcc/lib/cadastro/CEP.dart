@@ -17,7 +17,7 @@ final cepMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-// void main() => runApp(const CEP());
+void main() => runApp( CEP(usuario: Userform(),));
 final numeromaskFormatter = MaskTextInputFormatter(
   mask: '#####',
   filter: { "#": RegExp(r'[0-9]') },
@@ -40,6 +40,29 @@ class _CEPState extends State<CEP> {
   final ruaController = TextEditingController();
   final numeroController = TextEditingController();
   final infoaddController = TextEditingController();
+  String? erroCEP;
+  String? erroEstado;
+  String? erroCidade;
+  String? erroRua;
+  String? erroNum;
+
+  void limparErro(){
+    if(erroCEP != null){
+      setState(() => erroCEP = null);
+    }
+    if(erroNum != null){
+      setState(() => erroNum = null);
+    }
+    if(erroCidade != null){
+      setState(() => erroCidade = null);
+    }
+    if(erroEstado != null){
+      setState(() => erroEstado = null);
+    }
+    if(erroRua != null){
+      setState(() => erroRua = null);
+    }
+  }
   
 
   void preencherCampos(CepModel endereco){
@@ -105,7 +128,7 @@ class _CEPState extends State<CEP> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cepWidget(controller: cepController, onCepBuscado: preencherCampos),
+              child: cepWidget(controller: cepController, onCepBuscado: preencherCampos, erroCEP: erroCEP, onClearerror: limparErro,),
             ),
                  
                   Padding(
@@ -122,12 +145,16 @@ class _CEPState extends State<CEP> {
                       child: cidade(
                         controller: cidadeController,
                         onCepBuscado: preencherCampos,
+                        erroCidade: erroCidade,
+                        onClearerror: limparErro
                       ),
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.230, // menor, pq é sigla
                       child: estado(
+                        erroEstado: erroEstado,
+                        onClearerror: limparErro,
                         controller: ufController,
                         onCepBuscado: preencherCampos,
                       ),
@@ -144,7 +171,12 @@ class _CEPState extends State<CEP> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: RuaWidget(controller: ruaController,),
+              child: RuaWidget(
+                controller: ruaController,
+                erroRua: erroRua,
+                onClearerror: limparErro,
+                
+                ),
             ),
 
             // Campo de número
@@ -154,7 +186,7 @@ class _CEPState extends State<CEP> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: numero(controller: numeroController,),
+              child: numero(controller: numeroController,erroNum: erroNum, onClearerror: limparErro,),
             ),Padding(
                   padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
@@ -167,14 +199,22 @@ class _CEPState extends State<CEP> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.22,
                   ),
-                  child: Center(child: botao(usuario: widget.usuario,
-                  cepController: cepController,
-                  cidadeController: cidadeController,
-                  estadoController: estadoController,
-                  ufController: ufController,
-                  infoaddController: infoaddController,
-                  numeroController: numeroController,
-                  ruaController: ruaController,)),
+                  child: Center(
+                    child: botao(
+                      usuario: widget.usuario,
+                      erroCEP: (msg) => setState(() => erroCEP = msg),
+                      erroCidade: (msg) => setState(() => erroCidade = msg),
+                      erroEstado: (msg) => setState(() => erroEstado = msg),
+                      erroRua: (msg) => setState(() => erroRua = msg),
+                      erroNum: (msg) => setState(() => erroNum = msg),
+                      cepController: cepController,
+                      cidadeController: cidadeController,
+                      estadoController: estadoController,
+                      ufController: ufController,
+                      infoaddController: infoaddController,
+                      numeroController: numeroController,
+                      ruaController: ruaController,)
+                  ),
                 ),
           
                  
@@ -187,16 +227,19 @@ class _CEPState extends State<CEP> {
   
 
 Widget cepField({
- required TextEditingController controller,
+  required TextEditingController controller,
   required void Function(CepModel) onCepBuscado,
+  required VoidCallback onClearerror,
 }) {
-  return cepWidget(controller: controller, onCepBuscado: onCepBuscado);
+  return cepWidget(controller: controller, onCepBuscado: onCepBuscado, onClearerror: onClearerror,);
 }
 
 class cepWidget extends StatefulWidget {
   final TextEditingController controller;
+  String? erroCEP;
+  final VoidCallback onClearerror;
   final void Function(CepModel) onCepBuscado;
-   cepWidget({super.key, required this.controller, required this.onCepBuscado});
+  cepWidget({super.key, required this.controller, required this.onCepBuscado, this.erroCEP, required this.onClearerror});
 
   @override
   State<cepWidget> createState() => _cepState();
@@ -254,21 +297,25 @@ class _cepState extends State<cepWidget> {
             color: Colors.grey,
           ),
         ),
+        errorText: widget.erroCEP
       ),
+      onChanged: (value) => widget.onClearerror(),
     );
   }
 }
 
 Widget ruaField(
-  {required TextEditingController controller}
+  {required TextEditingController controller, String? erroRua, required VoidCallback onClearerror}
 
 ){
-  return RuaWidget(controller: controller);
+  return RuaWidget(controller: controller, erroRua: erroRua, onClearerror: onClearerror,);
 }
 
 class RuaWidget extends StatefulWidget {
   final TextEditingController controller;
-  const RuaWidget({super.key, required this.controller});
+  String? erroRua;
+  final VoidCallback onClearerror;
+  RuaWidget({super.key, required this.controller, this.erroRua, required this.onClearerror});
 
   @override
   State<RuaWidget> createState() => _RuaState();
@@ -303,15 +350,19 @@ class _RuaState extends State<RuaWidget> {
            
           ),
         ),
+        errorText: widget.erroRua
       ),
+      onChanged: (value) => widget.onClearerror(),
     );
   }
 }
 
 // Campo de texto para número da residência
 class numero extends StatefulWidget {
+  String? erroNum;
+  final VoidCallback onClearerror;
   final TextEditingController controller;
-   numero({super.key, required this.controller});
+   numero({super.key, required this.controller, this.erroNum, required this.onClearerror});
 
   @override
   State<numero> createState() => _numeroState();
@@ -349,7 +400,9 @@ class _numeroState extends State<numero> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroNum,
       ),
+      onChanged: (value) => widget.onClearerror(),
     );
   }
 }
@@ -364,6 +417,11 @@ class botao extends StatefulWidget {
  final TextEditingController ruaController;
  final TextEditingController numeroController;
  final TextEditingController infoaddController;
+ final void Function(String?) erroCEP;
+ final void Function(String?) erroCidade;
+ final void Function(String?) erroEstado;
+ final void Function(String?) erroRua;
+ final void Function(String?) erroNum;
  botao({super.key, required this.usuario,
   required this.cepController,
   required this.cidadeController,
@@ -372,6 +430,11 @@ class botao extends StatefulWidget {
   required this.ruaController,
   required this.numeroController,
   required this.infoaddController,
+  required this.erroCEP,
+  required this.erroCidade,
+  required this.erroEstado,
+  required this.erroNum,
+  required this.erroRua
  });
 
   @override
@@ -420,7 +483,29 @@ class _botaoState extends State<botao> {
           print( "ramo: ${widget.usuario.ramo}");
           print("tipo:${widget.usuario.tipo}");
 
-          try { 
+          try {
+
+            if (widget.cepController.text.isEmpty) {
+              widget.erroCEP('Digite um CEP');
+              return;
+            }
+            if (widget.cidadeController.text.isEmpty) {
+              widget.erroCidade('Digite uma Cidade');
+              return;
+            }
+            if (widget.ufController.text.isEmpty) {
+              widget.erroEstado('Digite um Estado');
+              return;
+            }
+            if (widget.ruaController.text.isEmpty) {
+              widget.erroRua('Digite uma Rua');
+              return;
+            }
+            if (widget.numeroController.text.isEmpty) {
+              widget.erroNum('Digite um Numero');
+              return;
+            }
+
             final usuariofinal = await _authController.cadastro(widget.usuario);
             if (usuariofinal.token!.isNotEmpty) {
               
@@ -528,7 +613,9 @@ class _adicionaisState extends State<adicionais> {
 class cidade extends StatefulWidget {
   final TextEditingController controller;
   final void Function(CepModel) onCepBuscado;
-  cidade({super.key, required this.controller, required this.onCepBuscado});
+  String? erroCidade;
+  final VoidCallback onClearerror;
+  cidade({super.key, required this.controller, required this.onCepBuscado, this.erroCidade, required this.onClearerror});
 
   @override
   State<cidade> createState() => _CidadeState();
@@ -559,7 +646,9 @@ class _CidadeState extends State<cidade> {
             borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10),
           ),
+          errorText: widget.erroCidade
         ),
+        onChanged: (value) => (widget.onClearerror()),
         style: TextStyle(
           fontSize: MediaQuery.of(context).size.width * 0.03,
           fontFamily: "Poppins",
@@ -574,7 +663,9 @@ class _CidadeState extends State<cidade> {
 class estado extends StatefulWidget {
   final TextEditingController controller;
   final void Function(CepModel) onCepBuscado;
-  estado({super.key, required this.controller, required this.onCepBuscado});
+  String? erroEstado;
+  final VoidCallback onClearerror;
+  estado({super.key, required this.controller, required this.onCepBuscado, this.erroEstado, required this.onClearerror});
 
   @override
   State<estado> createState() => _EstadoState();
@@ -605,7 +696,9 @@ class _EstadoState extends State<estado> {
             borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(10),
           ),
+          errorText: widget.erroEstado,
         ),
+        onChanged: (value) => widget.onClearerror(),
         style: TextStyle(
           fontSize: MediaQuery.of(context).size.width * 0.03,
           fontFamily: "Poppins",

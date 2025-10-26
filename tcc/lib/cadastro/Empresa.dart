@@ -19,7 +19,7 @@ final cnpjMaskFormatter = MaskTextInputFormatter(
   filter: { "#": RegExp(r'[0-9]') },
 );
 
-// void main() => runApp(Empresa(usuario: Userform(),));
+void main() => runApp(Empresa(usuario: Userform(),));
 
 class Empresa extends StatefulWidget {
   final Userform usuario;
@@ -31,6 +31,7 @@ class Empresa extends StatefulWidget {
 
 class _EmpresaState extends State<Empresa> {
   File? foto;
+  bool semImagem = false;
   int? id_ramo;
   final rsController = TextEditingController();
   final telefoneController = TextEditingController();
@@ -39,22 +40,19 @@ class _EmpresaState extends State<Empresa> {
   String? erroCNPJ;
   String? erroTelefone;
   String? erroNome;
-  void limparCNPJ(){
+  void limparErro(){
     if(erroCNPJ != null){
       setState(() => erroCNPJ = null);
     }
-  }
-  void limparTel(){
+    
     if(erroTelefone != null){
       setState(() => erroTelefone = null);
     }
-  }
-  void limparRamo(){
+    
     if(erroRamo != null){
       setState(() => erroRamo = null);
     }
-  }
-   void limparNome(){
+    
     if(erroNome != null){
       setState(() => erroNome = null);
     }
@@ -100,7 +98,9 @@ class _EmpresaState extends State<Empresa> {
                 setState(() {
                   foto = file;
                 });
-              },),
+              },
+              semImagem: semImagem,
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -109,7 +109,7 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Nome(controller: rsController, erroNome: erroNome, onClearerror: limparNome,),
+              child: Nome(controller: rsController, erroNome: erroNome, onClearerror: limparErro,),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -118,7 +118,7 @@ class _EmpresaState extends State<Empresa> {
                
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel,),
+              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparErro,),
             ),
 
             Padding(
@@ -127,7 +127,7 @@ class _EmpresaState extends State<Empresa> {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cnpj(controller: cnpjController, erroCNPJ: erroCNPJ, onClearerror: limparCNPJ,),
+              child: cnpj(controller: cnpjController, erroCNPJ: erroCNPJ, onClearerror: limparErro,),
             ),
 
             Padding(
@@ -139,7 +139,7 @@ class _EmpresaState extends State<Empresa> {
               ),
               child: Area(usuario: widget.usuario,
               erro: erroRamo,
-              onClearerror: limparRamo,
+              onClearerror: limparErro,
               onRamoSelecionado: (item){
                 if(item != null){
                 setState(() {
@@ -153,16 +153,20 @@ class _EmpresaState extends State<Empresa> {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao(usuario: widget.usuario,
-                  erroNome: (msg) => setState(() => erroNome = msg),
-                  erroCNPJ: (msg) => setState(() => erroCNPJ = msg),
-                  erroRamo: (msg) => setState(() => erroRamo = msg),
-                  erroTelefone: (msg) => setState(() => erroTelefone = msg),
-                  idramo: id_ramo,
-                  cnpjController: cnpjController,
-                  rsController: rsController,
-                  telefoneController: telefoneController,
-                  foto: foto,)),
+                  child: Center(
+                    child: botao(
+                      usuario: widget.usuario,
+                      erroNome: (msg) => setState(() => erroNome = msg),
+                      erroCNPJ: (msg) => setState(() => erroCNPJ = msg),
+                      erroRamo: (msg) => setState(() => erroRamo = msg),
+                      erroTelefone: (msg) => setState(() => erroTelefone = msg),
+                      idramo: id_ramo,
+                      cnpjController: cnpjController,
+                      rsController: rsController,
+                      telefoneController: telefoneController,
+                      foto: foto,
+                      semImagem: semImagem,)
+                  ),
                 ),
           ],
         ),
@@ -174,8 +178,9 @@ class _EmpresaState extends State<Empresa> {
 // Componente de foto do perfil
 class Perfil extends StatefulWidget {
   final File? image;
+  bool semImagem;
   final void Function(File?) OnImageSelected;
-  Perfil({super.key, required this.image, required this.OnImageSelected});
+  Perfil({super.key, required this.image,this.semImagem = false, required this.OnImageSelected});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -191,6 +196,13 @@ class _PerfilState extends State<Perfil> {
         final file = File(pickedFile.path);
         widget.OnImageSelected(file);
       });
+    } else{
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Selecione uma imagem"),
+          backgroundColor:Colors.red,
+          duration: Duration(seconds: 2),
+        )
+      );
     }
   }
 
@@ -229,29 +241,39 @@ class _PerfilState extends State<Perfil> {
     return Center(
       child: GestureDetector(
         onTap: _showImageSourceDialog,
-        child: ClipOval(
-          child: widget.image != null
-              ? Image.file(
-                  widget.image!,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                )
-              : Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: MediaQuery.of(context).size.width * 0.1,
-                      color: Colors.white70,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: widget.semImagem ? Colors.red : Colors.transparent,
+              width: 1
+            )
+          ),
+          child: ClipOval(
+            child: widget.image != null
+                ? Image.file(
+                    widget.image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -411,6 +433,7 @@ class botao extends StatefulWidget {
   final Userform usuario;
   final int? idramo;
   final File? foto;
+  bool semImagem;
   final TextEditingController rsController;
   final TextEditingController telefoneController;
   final TextEditingController cnpjController;
@@ -421,6 +444,7 @@ class botao extends StatefulWidget {
   botao({super.key, required this.usuario,
     required this.idramo,
     required this.foto,
+    required this.semImagem,
     required this.rsController,
     required this.telefoneController,
     required this.cnpjController,
@@ -444,6 +468,18 @@ class _botaoState extends State<botao> {
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;
             widget.usuario.ramo = widget.idramo;
+
+            if(widget.foto == null ){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Selecione uma imagem"),
+                    backgroundColor:Colors.red,
+                    duration: Duration(seconds: 2),
+                  )
+                );
+                setState(() => widget.semImagem = true);
+                return;
+              }
 
             if(widget.rsController.text.isEmpty){
                 widget.erroNome('Digite um nome');
