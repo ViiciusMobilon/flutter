@@ -21,12 +21,7 @@ class PerfilUser extends StatefulWidget {
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 0;
-  String? telefone = null;
-  String? whatsapp = null;
-  String? email = null;
-  String? website = null;
-  String? x = 'cxcxzcz';
-  String? instagram = null;
+  
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -134,17 +129,16 @@ class _PerfilUserState extends State<PerfilUser> {
           SliverToBoxAdapter(child: _buildProfileHeader(user)),
           SliverToBoxAdapter(
             child: _buildDescription(
-              '',
+              user!.descricao!
             ),
           ),
           SliverToBoxAdapter(child: _buildContactSection(
             context: context,
             telefone: user?.telefone ?? null,
-            whatsapp: whatsapp,
-            email: email,
+            whatsapp: user?.whatsapp ?? null,
+            email: user?.email ?? null,
             website: user?.site ?? null,
-            x: x,
-            instagram: instagram,
+            instagram: user?.instagram ?? null,
           )),  
           SliverList(
             delegate: SliverChildBuilderDelegate(

@@ -7,12 +7,16 @@ class UsuarioGeral {
   int? id_user;       // logado.id
   String? nome;
   String? razao_social;
+  String? descricao;
   String? email;
   String? password;
   String? confirmation_password;
   String? cpf;
   String? cnpj;
   String? telefone;
+  String? whatsapp;
+  String? instagram;
+  String? site;
   File? foto;         // arquivo local (para upload)
   String? fotoURL;    // URL do servidor
   String? cep;
@@ -33,20 +37,22 @@ class UsuarioGeral {
   String? token;
   double? avaliacaoMedia;
   double? avaliacaoTotal;
-  String? site;
-
 
   UsuarioGeral({
     this.id,
     this.id_user,
     this.nome,
     this.razao_social,
+    this.descricao,
     this.email,
     this.password,
     this.confirmation_password,
     this.cpf,
     this.cnpj,
     this.telefone,
+    this.whatsapp,
+    this.site,
+    this.instagram,
     this.foto,
     this.fotoURL,
     this.cep,
@@ -80,7 +86,7 @@ class UsuarioGeral {
     cpf: json['user']['cpf'],
     cnpj: json['user']['cnpj'],
     razao_social: json['user']['razao_social'],
-    telefone: json['user']['telefone'],
+    descricao: json['user']['descricao'],
     fotoURL: json['foto'],
     cidade: json['user']['localidade'],
     uf: json['user']['uf'],
@@ -92,7 +98,7 @@ class UsuarioGeral {
     ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
     ramoNome: json['ramo']?['nome'],
     categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
-    categoriaNome: json['categoria'],
+    categoriaNome: json['categoria']['nome'],
     token: json['access_token'],
     logadoId: json['logado']['id'],
     logadoEmail: json['logado']['email'],
@@ -103,6 +109,10 @@ class UsuarioGeral {
     avaliacaoTotal: json['avaliacao']?['total'] != null
         ? double.tryParse(json['avaliacao']['total'].toString())
         : 0,
+    telefone: json['contatos']['telefone'],
+    whatsapp: json['contatos']['whatsapp'],
+    instagram: json['contatos']['instagram'],
+    site: json['contatos']['site'],
   );
 }
 

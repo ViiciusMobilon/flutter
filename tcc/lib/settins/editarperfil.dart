@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
+import 'package:tcc/data/models/Categoria.dart';
+import 'package:tcc/data/repositories/categoria_repository.dart';
+import 'package:tcc/data/http/dio_client.dart' as apiHttp;
+
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
@@ -25,8 +29,13 @@ class Editar_Perfil extends StatefulWidget {
 }
 
 class _Editar_PerfilState extends State<Editar_Perfil> {
+  final telefoneController = TextEditingController();
+  final descricaoController = TextEditingController();
+  int? id_categoria;
+  int? id_ramo;
   @override
   Widget build(BuildContext context) {
+  final user = widget.authController.usuario;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -47,15 +56,30 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             // Nome(),
             
             SizedBox(height: 20),
-            Descricao(),
-            SizedBox(height: 20),
-            Area(),
+            Descricao(authController: widget.authController, controller: descricaoController,),
+            
+            if(user!.tipo == 'empresa') ...
+            [
+              SizedBox(height: 20), 
+              Categoria(authController: widget.authController, onCategoriaSelecionado: (item){
+                if(item != null){
+                setState(() {
+                  id_categoria = item.id;
+                });
+                }
+              },),
+            ],
+            if(user!.tipo == 'prestador') ...
+            [
+              SizedBox(height: 20), 
+              Area(),
+            ],
            
             SizedBox(height: 50),
             Center(child: Text("Contatos", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
             
             SizedBox(height: 30),
-            Telefone(),
+            Telefone(authController: widget.authController, controller: telefoneController,),
 
              SizedBox(height: 30),
             Whatsapp(),
@@ -77,7 +101,9 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
 }
 
 class Descricao extends StatefulWidget {
-  const Descricao({super.key});
+  final AuthController authController;
+  late TextEditingController controller;
+  Descricao({super.key, required this.authController, required this.controller});
 
   @override
   State<Descricao> createState() => _DescricaoState();
@@ -85,8 +111,14 @@ class Descricao extends StatefulWidget {
 
 class _DescricaoState extends State<Descricao> {
   @override
+  void initState(){
+    super.initState();
+    widget.controller = TextEditingController(text: widget.authController.usuario?.descricao);
+  }
+  @override
   Widget build(BuildContext context) {
     return TextField(
+      controller:widget.controller,
       keyboardType: TextInputType.multiline,
       minLines: 3,
       maxLines: 6,
@@ -207,12 +239,28 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
-class Telefone extends StatelessWidget {
-  const Telefone({super.key});
+class Telefone extends StatefulWidget {
+  late TextEditingController controller;
+  final AuthController authController;
+  Telefone({super.key, required this.authController, required this.controller});
 
   @override
+  State<Telefone> createState() => _TelefoneState();
+}
+
+class _TelefoneState extends State<Telefone> {
+
+  @override
+  void initState(){
+    super.initState();
+
+    widget.controller = TextEditingController(text: widget.authController.usuario?.telefone);
+  }
+  @override
   Widget build(BuildContext context) {
+    final user = widget.authController.usuario;
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Telefone",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -405,6 +453,104 @@ class _AreaState extends State<Area> {
           ),
         );
       },
+    );
+  }
+}
+
+///Se for empresa
+
+
+class Categoria extends StatefulWidget {
+  final AuthController authController;
+  final void Function(CategoriaModel?) onCategoriaSelecionado;
+
+  Categoria({super.key, required this.authController, required this.onCategoriaSelecionado});
+
+  @override
+  State<Categoria> createState() => _CategoriaState();
+}
+
+class _CategoriaState extends State<Categoria> {
+  String? categoria;
+  List<CategoriaModel> categorias = [];
+  CategoriaModel? categoriaSelecionada;
+
+
+  late final CategoriaRepository categoriaRepository;
+
+  @override
+  // TODO: implement context
+  void initState(){
+    
+    categoriaRepository = CategoriaRepository(client: apiHttp.DioClient.dio);
+    carregarCategorias();
+  }
+
+  Future<void> carregarCategorias() async {
+    categorias = await categoriaRepository.getCategoria();
+
+    try {
+      categoriaSelecionada = categorias.firstWhere(
+      (c) => c.nome == widget.authController.usuario!.categoriaNome,
+      );
+    } catch (e) {
+      categoriaSelecionada = null; // não encontrou → null permitido
+    }
+    // Define a categoria selecionada de acordo com o usuário
+    
+
+    setState(() {}); // atualiza a UI após carregar categorias
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownSearch<CategoriaModel>(
+      selectedItem: categoriaSelecionada,
+      asyncItems: (String? filtro) => categoriaRepository.getCategoria(),
+          itemAsString:(CategoriaModel? Categoria) => Categoria?.nome ?? "",
+          onChanged: (CategoriaModel? Categoria){
+            setState(() {
+              categoriaSelecionada = Categoria;
+            });
+            widget.onCategoriaSelecionado(Categoria);
+          },
+      popupProps: PopupProps.menu(
+        showSearchBox: true,
+        searchFieldProps: TextFieldProps(
+          decoration: InputDecoration(
+            labelText: "Pesquisar área...",
+             labelStyle: const TextStyle(
+          color: Colors.black, fontFamily: "Poppins"),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        fit: FlexFit.loose,
+        constraints: const BoxConstraints(maxHeight: 250),
+      ),
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: "Área de atuação",
+          labelStyle: const TextStyle(
+          color: Colors.black, fontFamily: "Poppins"),
+          hintText: "Escolha a área de atuação",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(121, 180, 217, 1),
+              width: 1.5,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
     );
   }
 }
