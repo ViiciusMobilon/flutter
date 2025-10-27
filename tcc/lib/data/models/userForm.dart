@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
+
 class Userform {
   String? nome;
   String? razao_social;
@@ -18,6 +20,7 @@ class Userform {
   String? numero;
   String? infoadd;
   int? ramo;
+  int? categoria;
   String? tipo;
 
   Userform({
@@ -38,13 +41,14 @@ class Userform {
     this.numero,
     this.infoadd,
     this.ramo,
+    this.categoria,
     this.tipo,
   });
 
   /// Para debug legível
   @override
   String toString() {
-    return 'Userform(nome: $nome, email: $email, cpf: $cpf, cnpj: $cnpj, telefone: $telefone, cidade: $cidade, estado: $estado, uf: $uf, tipo: $tipo, ramo: $ramo)';
+    return 'Userform(nome: $nome, email: $email, cpf: $cpf, cnpj: $cnpj, telefone: $telefone,rua: $rua, cidade: $cidade, estado: $estado, uf: $uf,num: $numero, infoadd: $infoadd, tipo: $tipo, ramo: $ramo, categoria: $categoria)';
   }
 
   /// Para serialização em Map
@@ -66,6 +70,7 @@ class Userform {
       "numero": numero,
       "infoadd": infoadd,
       "id_ramo": ramo,
+      "id_categoria": categoria,
       "type": tipo,
     };
   }

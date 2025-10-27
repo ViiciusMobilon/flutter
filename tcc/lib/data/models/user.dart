@@ -24,6 +24,8 @@ class UsuarioGeral {
   String? infoadd;
   int? ramo;
   String? ramoNome;
+  int? categoria;
+  String? categoriaNome;
   String? tipo;
   int? logadoId;
   String? logadoEmail;
@@ -31,6 +33,7 @@ class UsuarioGeral {
   String? token;
   double? avaliacaoMedia;
   double? avaliacaoTotal;
+  String? site;
 
 
   UsuarioGeral({
@@ -55,6 +58,8 @@ class UsuarioGeral {
     this.infoadd,
     this.ramo,
     this.ramoNome,
+    this.categoria,
+    this.categoriaNome,
     this.tipo,
     this.logadoId,
     this.logadoEmail,
@@ -86,6 +91,8 @@ class UsuarioGeral {
     infoadd: json['user']['infoadd'],
     ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
     ramoNome: json['ramo']?['nome'],
+    categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
+    categoriaNome: json['categoria'],
     token: json['access_token'],
     logadoId: json['logado']['id'],
     logadoEmail: json['logado']['email'],
@@ -120,6 +127,7 @@ class UsuarioGeral {
       "numero": numero,
       "infoadd": infoadd,
       "ramo": ramo,
+      "categoria": categoria,
       "token": token,
       "logadoId": logadoId,
       "logadoEmail": logadoEmail,

@@ -25,10 +25,10 @@ class AuthService {
       if (user.fotoURL != null && user.fotoURL!.isNotEmpty) {
         await _storage.write(key: 'foto', value: user.fotoURL);
       }
-      print("Usuario cadastrado service: ${user.ramo}");
+      print("Usuario cadastrado service: ${user.toJson()}");
       return user;
     } catch (e) {
-      print("Erro no cadastro service: $e");
+      print("Erro no cadastro service: $e e o user:${form}");
       rethrow;
     }
   }

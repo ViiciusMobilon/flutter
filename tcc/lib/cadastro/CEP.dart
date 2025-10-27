@@ -450,7 +450,7 @@ class _botaoState extends State<botao> {
 
     // instancia o cliente HTTP
     final authService = AuthService(); // cria o repository aqui
-  _authController = AuthController(authService);
+    _authController = AuthController(authService);
   }
   @override
   Widget build(BuildContext context) {
@@ -505,6 +505,8 @@ class _botaoState extends State<botao> {
               widget.erroNum('Digite um Numero');
               return;
             }
+
+            
 
             final usuariofinal = await _authController.cadastro(widget.usuario);
             if (usuariofinal.token!.isNotEmpty) {

@@ -5,8 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
+import 'package:tcc/cadastro/dropdownCategoria.dart';
 import 'package:tcc/data/controllers/verificar_controller.dart';
-import 'package:tcc/cadastro/dropdown.dart';
+import 'package:tcc/cadastro/dropdownRamo.dart';
 import 'package:tcc/data/models/userForm.dart';
 
 // Máscaras de formatação
@@ -32,11 +33,11 @@ class Empresa extends StatefulWidget {
 class _EmpresaState extends State<Empresa> {
   File? foto;
   bool semImagem = false;
-  int? id_ramo;
+  int? id_categoria;
   final rsController = TextEditingController();
   final telefoneController = TextEditingController();
   final cnpjController = TextEditingController();
-  String? erroRamo;
+  String? erroCategoria;
   String? erroCNPJ;
   String? erroTelefone;
   String? erroNome;
@@ -49,8 +50,8 @@ class _EmpresaState extends State<Empresa> {
       setState(() => erroTelefone = null);
     }
     
-    if(erroRamo != null){
-      setState(() => erroRamo = null);
+    if(erroCategoria != null){
+      setState(() => erroCategoria = null);
     }
     
     if(erroNome != null){
@@ -137,13 +138,13 @@ class _EmpresaState extends State<Empresa> {
                 bottom: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Area(usuario: widget.usuario,
-              erro: erroRamo,
+              child: Categoria(usuario: widget.usuario,
+              erro: erroCategoria,
               onClearerror: limparErro,
-              onRamoSelecionado: (item){
+              onCategoriaSelecionado: (item){
                 if(item != null){
                 setState(() {
-                  id_ramo = item.id;
+                  id_categoria = item.id;
                 });
                 }
               },),
@@ -158,9 +159,9 @@ class _EmpresaState extends State<Empresa> {
                       usuario: widget.usuario,
                       erroNome: (msg) => setState(() => erroNome = msg),
                       erroCNPJ: (msg) => setState(() => erroCNPJ = msg),
-                      erroRamo: (msg) => setState(() => erroRamo = msg),
+                      erroCategoria: (msg) => setState(() => erroCategoria = msg),
                       erroTelefone: (msg) => setState(() => erroTelefone = msg),
-                      idramo: id_ramo,
+                      idcategoria: id_categoria,
                       cnpjController: cnpjController,
                       rsController: rsController,
                       telefoneController: telefoneController,
@@ -431,7 +432,7 @@ class _cnpjState extends State<cnpj> {
 
 class botao extends StatefulWidget {
   final Userform usuario;
-  final int? idramo;
+  final int? idcategoria;
   final File? foto;
   bool semImagem;
   final TextEditingController rsController;
@@ -439,17 +440,17 @@ class botao extends StatefulWidget {
   final TextEditingController cnpjController;
    final void Function (String?) erroTelefone;
   final void Function (String?) erroCNPJ;
-  final void Function (String?) erroRamo;
+  final void Function (String?) erroCategoria;
   final void Function (String?) erroNome;
   botao({super.key, required this.usuario,
-    required this.idramo,
+    required this.idcategoria,
     required this.foto,
     required this.semImagem,
     required this.rsController,
     required this.telefoneController,
     required this.cnpjController,
     required this.erroCNPJ,
-    required this.erroRamo,
+    required this.erroCategoria,
     required this.erroTelefone,
     required this.erroNome});
 
@@ -467,7 +468,7 @@ class _botaoState extends State<botao> {
             widget.usuario.razao_social = widget.rsController.text;
             widget.usuario.telefone = widget.telefoneController.text;
             widget.usuario.cnpj = widget.cnpjController.text;
-            widget.usuario.ramo = widget.idramo;
+            widget.usuario.categoria = widget.idcategoria;
 
             if(widget.foto == null ){
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -500,8 +501,8 @@ class _botaoState extends State<botao> {
               }
             
             
-            if(widget.idramo == null){
-              widget.erroRamo("Selecione um ramo");
+            if(widget.idcategoria == null){
+              widget.erroCategoria("Selecione uma categoria");
               return;
             }
 

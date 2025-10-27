@@ -21,6 +21,8 @@ class AuthRepository {
           ),
       });
 
+      print('print map cadastro: ${map['id_categoria']}');
+
       final response = await _dio.post('/usuario/cadastro', data: formData);
       print('Cadastro response.data: ${response.data}');
       return UsuarioGeral.fromJson(response.data);

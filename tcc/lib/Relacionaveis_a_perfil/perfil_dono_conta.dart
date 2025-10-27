@@ -12,7 +12,7 @@ import 'package:tcc/data/controllers/portfolio_controller.dart';
 
 class PerfilUser extends StatefulWidget {
   final AuthController authController;
-  const PerfilUser({super.key, required this.authController});
+  PerfilUser({super.key, required this.authController});
 
   @override
   State<PerfilUser> createState() => _PerfilUserState();
@@ -20,12 +20,12 @@ class PerfilUser extends StatefulWidget {
 
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
-  int loveCount = 1247;
-  String? telefone = '1';
+  int loveCount = 0;
+  String? telefone = null;
   String? whatsapp = null;
   String? email = null;
   String? website = null;
-  String? x = null;
+  String? x = 'cxcxzcz';
   String? instagram = null;
   final ScrollController _scrollController = ScrollController();
 
@@ -124,6 +124,7 @@ class _PerfilUserState extends State<PerfilUser> {
   Widget build(BuildContext context) {
     final _portfolioController = context.watch<PortfolioController>();
     final user = widget.authController.usuario;
+    print('user tell: ${user?.telefone}');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -133,17 +134,15 @@ class _PerfilUserState extends State<PerfilUser> {
           SliverToBoxAdapter(child: _buildProfileHeader(user)),
           SliverToBoxAdapter(
             child: _buildDescription(
-              'Desenvolvedor mobile apaixonado por criar experiências incríveis. '
-              'Especialista em Flutter e React Native, sempre buscando as melhores práticas. '
-              'Adoro trabalhar em equipe e compartilhar conhecimento com a comunidade.',
+              '',
             ),
           ),
           SliverToBoxAdapter(child: _buildContactSection(
             context: context,
-            telefone: telefone,
+            telefone: user?.telefone ?? null,
             whatsapp: whatsapp,
             email: email,
-            website: website,
+            website: user?.site ?? null,
             x: x,
             instagram: instagram,
           )),  
@@ -196,7 +195,7 @@ class _PerfilUserState extends State<PerfilUser> {
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+                  '',
                 ),
                 fit: BoxFit.cover,
               ),
@@ -233,7 +232,7 @@ class _PerfilUserState extends State<PerfilUser> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text('${user?.ramoNome ?? ''}',
+                Text('${user?.categoriaNome ?? ''}',
                     style: TextStyle(color: Colors.grey[700])),
                 Text('${user?.razao_social ?? user?.tipo}',
                     style: TextStyle(color: Colors.grey[500])),

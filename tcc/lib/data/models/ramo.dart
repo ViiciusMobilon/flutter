@@ -3,9 +3,8 @@
 class RamoModel{
   final int id;
   final String nome;
-  final String modalidade;
 
-  RamoModel({required this.id, required this.nome, required this.modalidade});
+  RamoModel({required this.id, required this.nome});
 
   factory RamoModel.fromJson(Map<String, dynamic> json){
 
@@ -13,7 +12,6 @@ class RamoModel{
       RamoModel(
         id: json['id'] ?? '',
         nome: json['nome'] ?? '',
-        modalidade: json['modalidade'] ?? '',
       );
   } 
 }
