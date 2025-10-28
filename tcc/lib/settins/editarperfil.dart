@@ -3,8 +3,10 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/Categoria.dart';
+import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/categoria_repository.dart';
 import 'package:tcc/data/http/dio_client.dart' as apiHttp;
 
@@ -29,10 +31,24 @@ class Editar_Perfil extends StatefulWidget {
 }
 
 class _Editar_PerfilState extends State<Editar_Perfil> {
+  File? foto;
   final telefoneController = TextEditingController();
+  final whatsappController= TextEditingController();
+  final siteController = TextEditingController();
+  final instaController = TextEditingController();
   final descricaoController = TextEditingController();
   int? id_categoria;
   int? id_ramo;
+  @override
+  void initState(){
+    super.initState();
+    final user = widget.authController.usuario!;
+    descricaoController.text = user.descricao ?? '';
+    telefoneController.text = user.telefone ?? '';
+    whatsappController.text = user.whatsapp ?? '';
+    instaController.text = user.instagram ?? '';
+    siteController.text = user.site ?? '';
+  }
   @override
   Widget build(BuildContext context) {
   final user = widget.authController.usuario;
@@ -51,12 +67,17 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           children: [
-            Center(child: Perfil(authController: widget.authController)),
+            Center(child: Perfil(authController: widget.authController, image: foto,
+            OnImageSelected: (file){
+              setState(() {
+                foto = file;
+              });
+            },),),
             // SizedBox(height: 30),
             // Nome(),
             
             SizedBox(height: 20),
-            Descricao(authController: widget.authController, controller: descricaoController,),
+            Descricao(controller: descricaoController,),
             
             if(user!.tipo == 'empresa') ...
             [
@@ -79,19 +100,26 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             Center(child: Text("Contatos", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
             
             SizedBox(height: 30),
-            Telefone(authController: widget.authController, controller: telefoneController,),
+            Telefone(controller: telefoneController,),
 
              SizedBox(height: 30),
-            Whatsapp(),
+            Whatsapp(controller: whatsappController,),
 
              SizedBox(height: 30),
-            Insta(), 
+            Insta(controller: instaController,), 
 
             SizedBox(height: 30),
-            site(),
+            site(controller: siteController,),
             
             SizedBox(height: 50),
-            Center(child: botao()),
+            Center(child: botao(
+              foto: foto,
+              WhatsappController: whatsappController,descricaoController: descricaoController,
+              authController: widget.authController,
+              telefoneController: telefoneController,
+              instaController: instaController,
+              siteController: siteController,
+            ),),
 
           ],
         ),
@@ -100,25 +128,14 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
   }
 }
 
-class Descricao extends StatefulWidget {
-  final AuthController authController;
+class Descricao extends StatelessWidget {
   late TextEditingController controller;
-  Descricao({super.key, required this.authController, required this.controller});
+  Descricao({super.key, required this.controller});
 
-  @override
-  State<Descricao> createState() => _DescricaoState();
-}
-
-class _DescricaoState extends State<Descricao> {
-  @override
-  void initState(){
-    super.initState();
-    widget.controller = TextEditingController(text: widget.authController.usuario?.descricao);
-  }
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller:widget.controller,
+      controller:controller,
       keyboardType: TextInputType.multiline,
       minLines: 3,
       maxLines: 6,
@@ -145,16 +162,18 @@ class _DescricaoState extends State<Descricao> {
 
 class Perfil extends StatefulWidget {
   final AuthController authController;
-   Perfil({super.key, required this.authController});
+  late File? image;
+  final void Function(File?) OnImageSelected;
+  Perfil({super.key, required this.authController, required this.image, required this.OnImageSelected});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
-  String? foto;
-  File? _image;
   final ImagePicker _picker = ImagePicker();
+  String? fotoUrl;
+  // File? imagem;
   @override
   void initState(){
     super.initState();
@@ -165,14 +184,15 @@ class _PerfilState extends State<Perfil> {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        final file = File(pickedFile.path);
+        widget.OnImageSelected(file);
       });
     }
   }
   void loadFoto() async{
     final imagem = await widget.authController.getFoto(); // seu AuthService
     setState(() {
-      foto = imagem;
+      fotoUrl = imagem;
     });
 
   }
@@ -212,15 +232,15 @@ class _PerfilState extends State<Perfil> {
     return GestureDetector(
       onTap: _showImageSourceDialog,
       child: ClipOval(
-        child: _image != null
+        child: widget.image != null
             ? Image.file(
-                _image!,
+                widget.image!,
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,
               )
-            : (foto != null && foto!.isNotEmpty) ?
-            Image.network(foto!, width: 150, height: 150, fit: BoxFit.cover)
+            : (fotoUrl != null && fotoUrl!.isNotEmpty) ?
+            Image.network(fotoUrl!, width: 150, height: 150, fit: BoxFit.cover)
             : Container(
                 width: 150,
                 height: 150,
@@ -239,28 +259,16 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
-class Telefone extends StatefulWidget {
+class Telefone extends StatelessWidget {
   late TextEditingController controller;
-  final AuthController authController;
-  Telefone({super.key, required this.authController, required this.controller});
 
-  @override
-  State<Telefone> createState() => _TelefoneState();
-}
+  Telefone({super.key, required this.controller});
 
-class _TelefoneState extends State<Telefone> {
-
-  @override
-  void initState(){
-    super.initState();
-
-    widget.controller = TextEditingController(text: widget.authController.usuario?.telefone);
-  }
   @override
   Widget build(BuildContext context) {
-    final user = widget.authController.usuario;
+
     return TextField(
-      controller: widget.controller,
+      controller: controller,
       decoration: InputDecoration(
         labelText: "Telefone",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -281,11 +289,13 @@ class _TelefoneState extends State<Telefone> {
 }
 
 class Whatsapp extends StatelessWidget {
-  const Whatsapp({super.key});
+  late TextEditingController controller;
+  Whatsapp({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: "Whatsapp",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -305,11 +315,13 @@ class Whatsapp extends StatelessWidget {
   }
 }
 class site extends StatelessWidget {
-  const site({super.key});
+  late TextEditingController controller;
+  site({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: "site",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -330,11 +342,13 @@ class site extends StatelessWidget {
 }
 
 class Insta extends StatelessWidget {
-  const Insta({super.key});
+  late TextEditingController controller;
+  Insta({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: "Insta",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -355,12 +369,49 @@ class Insta extends StatelessWidget {
 }
 
 class botao extends StatelessWidget {
-  const botao({super.key});
+  final AuthController authController;
+  final File? foto;
+  final TextEditingController telefoneController;
+  final TextEditingController WhatsappController;
+  final TextEditingController instaController;
+  final TextEditingController siteController;
+  final TextEditingController descricaoController;
+  botao({super.key,
+    required this.authController,
+    required this.foto,
+    required this.telefoneController,
+    required this.WhatsappController,
+    required this.instaController,
+    required this.siteController,
+    required this.descricaoController,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final userForm = Userform();
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () async {
+        userForm.foto = foto;
+        userForm.telefone = telefoneController.text;
+        userForm.whatsapp = WhatsappController.text;
+        userForm.instagram = instaController.text;
+        userForm.site = siteController.text;
+        userForm.descricao = descricaoController.text;
+        try {
+          final userEdit = await authController.update(userForm);
+          print("Usuário atualizado: $userEdit");
+          print('dados: ${userForm.categoria}, ${userForm.descricao}, ${userForm.instagram}, ${userForm.site}, ${userForm.whatsapp}, ${userForm.telefone}}');
+
+          if(userEdit != null){
+            context.read<AuthController>().setUsuario(userEdit);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Perfil atualizado com sucesso!"), backgroundColor: Colors.green, duration: Duration(seconds: 1),),
+            );
+          }
+        } catch (e) {
+          print("Erro ao atualizar perfil: $e");
+        }
+      },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: 50,

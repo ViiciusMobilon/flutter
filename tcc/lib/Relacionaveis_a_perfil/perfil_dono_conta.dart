@@ -118,7 +118,7 @@ class _PerfilUserState extends State<PerfilUser> {
   @override
   Widget build(BuildContext context) {
     final _portfolioController = context.watch<PortfolioController>();
-    final user = widget.authController.usuario;
+    final user = context.watch<AuthController>().usuario;
     print('user tell: ${user?.telefone}');
 
     return Scaffold(
@@ -129,7 +129,7 @@ class _PerfilUserState extends State<PerfilUser> {
           SliverToBoxAdapter(child: _buildProfileHeader(user)),
           SliverToBoxAdapter(
             child: _buildDescription(
-              user!.descricao!
+              user?.descricao ?? '',
             ),
           ),
           SliverToBoxAdapter(child: _buildContactSection(

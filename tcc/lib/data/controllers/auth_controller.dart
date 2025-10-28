@@ -28,19 +28,33 @@ class AuthController extends ChangeNotifier{
     notifyListeners();
   }
 
-  void _setUsuario(UsuarioGeral user) {
+  void setUsuario(UsuarioGeral user) {
     _usuario = user;
     notifyListeners();
   }
 
   AuthController(this._authService);
 
-   Future<UsuarioGeral> cadastro(Userform form) async {
+  Future<UsuarioGeral> cadastro(Userform form) async {
     print("Cadastro controller: $form");
     final usuario = await _authService.register(form);
     _usuario = usuario;  // salva no controller
     return usuario;      // retorna para a tela
   }
+
+  Future<UsuarioGeral> update(Userform form) async {
+
+    try {
+      print("Cadastro controller: $form");
+    final usuario = await _authService.update(form);
+    _usuario = usuario;  // salva no controller
+    return usuario;
+    } catch (e) {
+      print("Erro no update controller: $e e o user:${form}");
+      rethrow;
+    }      // retorna para a tela
+  }
+
 
   Future<UsuarioGeral?> login(String email, String password) async {
     try {
@@ -56,7 +70,7 @@ class AuthController extends ChangeNotifier{
 
   Future<void> logout() async{
     await _authService.logout();
-    _setUsuario(null!);
+    setUsuario(null!);
   }
 
   Future<bool> logado() async{

@@ -11,6 +11,10 @@ class Userform {
   String? cpf;
   String? cnpj;
   String? telefone;
+  String? whatsapp;
+  String? instagram;
+  String? site;
+  String? descricao;
   File? foto;
   String? cep;
   String? cidade;
@@ -32,6 +36,10 @@ class Userform {
     this.cpf,
     this.cnpj,
     this.telefone,
+    this.whatsapp,
+    this.instagram,
+    this.site,
+    this.descricao,
     this.foto,
     this.cep,
     this.cidade,
@@ -48,12 +56,36 @@ class Userform {
   /// Para debug legível
   @override
   String toString() {
-    return 'Userform(nome: $nome, email: $email, cpf: $cpf, cnpj: $cnpj, telefone: $telefone,rua: $rua, cidade: $cidade, estado: $estado, uf: $uf,num: $numero, infoadd: $infoadd, tipo: $tipo, ramo: $ramo, categoria: $categoria)';
+    return [  
+      'nome: $nome',
+      'razao_social: $razao_social',
+      'email: $email',
+      'password: $password',
+      'confirmation_password: $confirmation_password',
+      'cpf: $cpf',
+      'cnpj: $cnpj',
+      'telefone: $telefone',
+      'whatsapp: $whatsapp',
+      'instagram: $instagram',
+      'site: $site',
+      'descricao: $descricao',
+      'foto: ${foto != null ? foto!.path : 'null'}',
+      'cep: $cep',
+      'cidade: $cidade',
+      'estado: $estado',
+      'uf: $uf',
+      'rua: $rua',
+      'numero: $numero',
+      'infoadd: $infoadd',
+      'ramo: $ramo',
+      'categoria: $categoria',
+      'tipo: $tipo',
+    ].toString();
   }
 
   /// Para serialização em Map
   Map<String, dynamic> toMap() {
-    return {
+    final data = {
       "nome": nome,
       "razao_social": razao_social,
       "email": email,
@@ -62,6 +94,10 @@ class Userform {
       "cpf": cpf,
       "cnpj": cnpj,
       "telefone": telefone,
+      "whatsapp": whatsapp,
+      "instagram": instagram,
+      "site": site,
+      "descricao": descricao,
       "cep": cep,
       "localidade": cidade,
       "estado": estado,
@@ -73,5 +109,8 @@ class Userform {
       "id_categoria": categoria,
       "type": tipo,
     };
+
+    data.removeWhere((key, value) => value == null);
+    return data;
   }
 }

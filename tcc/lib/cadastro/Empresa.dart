@@ -438,7 +438,7 @@ class botao extends StatefulWidget {
   final TextEditingController rsController;
   final TextEditingController telefoneController;
   final TextEditingController cnpjController;
-   final void Function (String?) erroTelefone;
+  final void Function (String?) erroTelefone;
   final void Function (String?) erroCNPJ;
   final void Function (String?) erroCategoria;
   final void Function (String?) erroNome;

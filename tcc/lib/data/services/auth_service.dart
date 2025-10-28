@@ -16,6 +16,7 @@ class AuthService {
   Map<String, double>? avaliacao;
   Map<String, dynamic>? ramo;
   String? foto;
+
   Future<UsuarioGeral> register(Userform form) async {
     try {
       final user = await _repository.register(form);
@@ -29,6 +30,23 @@ class AuthService {
       return user;
     } catch (e) {
       print("Erro no cadastro service: $e e o user:${form}");
+      rethrow;
+    }
+  }
+
+  Future<UsuarioGeral> update(Userform form) async {
+    try {
+      final user = await _repository.update(form);
+      await _storage.write(key: 'user', value: jsonEncode(user.toJson()));
+      // salvar foto separada
+      if (user.fotoURL != null && user.fotoURL!.isNotEmpty) {
+        await _storage.write(key: 'foto', value: user.fotoURL);
+      }
+      print("Usuario cadastrado service: ${user.toJson()}");
+      
+      return user;
+    } catch (e) {
+      print("Erro no update service: $e e o user:${form}");
       rethrow;
     }
   }
@@ -98,7 +116,7 @@ class AuthService {
     return null;
 }
 
-   Future<String?> getFoto() async {
+  Future<String?> getFoto() async {
     if (foto != null) return foto;
 
     final fotoStr = await _storage.read(key: 'foto');

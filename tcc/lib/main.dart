@@ -34,6 +34,8 @@ class MainApp extends StatelessWidget {
     return MultiProvider(providers:   [
       ChangeNotifierProvider(
         create: (_) => PortfolioController()),
+      ChangeNotifierProvider(
+        create: (_) => AuthController(AuthService())),
     ],
       child: MaterialApp(
         scaffoldMessengerKey: scaffoldMessengerKey,
@@ -56,12 +58,9 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  late final AuthController _authController;
+  late final  _authController = context.read<AuthController>();
   @override
-  void initState() {
-    super.initState();
-    _authController = AuthController(AuthService());
-  }
+  
 
   Future<void> login() async {
   final email = emailController.text;
