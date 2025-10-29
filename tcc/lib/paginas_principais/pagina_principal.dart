@@ -28,7 +28,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [AleatorioFeed(), PerfilUser(authController: widget.authcontroller,)];
+    _paginas = [AleatorioFeed(authController: widget.authcontroller,), PerfilUser(authController: widget.authcontroller,)];
   }
 
   @override

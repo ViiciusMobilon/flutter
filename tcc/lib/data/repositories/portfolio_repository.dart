@@ -47,6 +47,7 @@ class PortfolioRepository {
       print('URL PORTFOLIO all: ${response.realUri}');
 
       print('Portfolio de geral: ${response.data}');
+      print('status code getportfolios: ${response.statusCode}');
 
       final json = response.data;
       final List data = response.data['data'];

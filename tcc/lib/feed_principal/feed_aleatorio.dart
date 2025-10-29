@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/config.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
@@ -12,8 +13,9 @@ import 'package:tcc/service_post.dart';
 
 /// Página principal que exibe o feed aleatório de postagens
 class AleatorioFeed extends StatefulWidget {
+  final AuthController authController;
 
-  AleatorioFeed({super.key});
+  AleatorioFeed({super.key, required this.authController});
 
   @override
   State<AleatorioFeed> createState() => _AleatorioFeedState();
@@ -52,6 +54,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 
   @override
   Widget build(BuildContext context) {
+    final user = widget.authController.usuario;
     
     return Consumer<PortfolioController>(
         builder: (context, controller, child) { 
@@ -74,7 +77,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
               itemBuilder: (context, index) {
                 if (index < _posts.length) {
                   print('novo post geral: ${_posts[index]}');
-                  return ServiceProviderFeed(post: _posts[index]);
+                  return ServiceProviderFeed(post: _posts[index], authController: widget.authController,);
                 } else if (controller.hasMoreGeral) {
                   return const Padding(
                         padding: EdgeInsets.all(16),
@@ -93,8 +96,9 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 
 class ServiceProviderFeed extends StatefulWidget {
   final Portfolio post;
+  final AuthController authController;
 
-  ServiceProviderFeed({super.key, required this.post});
+  ServiceProviderFeed({super.key, required this.post, required this.authController});
 
   @override
   State<ServiceProviderFeed> createState() => _ServiceProviderFeedState();
@@ -103,21 +107,22 @@ class ServiceProviderFeed extends StatefulWidget {
 class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
   @override
   Widget build(BuildContext context) {
+    final user = widget.authController.usuario;
     // final hasVideo = widget.post.videos != null && widget.post.videos!.isNotEmpty;
     // final hasImages = widget.post.images != null && widget.post.images!.isNotEmpty;
 
     // Lista que conterá as mídias do carrossel (imagens e/ou vídeos)
     List<Widget> carouselItems = [];
 
-    if (widget.post.videos.isNotEmpty) {
-      for (var v in widget.post.videos) {
+    if (widget.post.videos!.isNotEmpty) {
+      for (var v in widget.post.videos!) {
         carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
         print('url video: ${URLAPISTORAGE}${v.url}');
       }
     }
 
     carouselItems.addAll(
-      widget.post.fotos.map((f) {
+      widget.post.fotos!.map((f) {
         return ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           child: SizedBox(
@@ -236,11 +241,14 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                     InkWell(
                       onTap: () {
                         // Abre a tela "Ver Mais"
+                        if (widget.post.userId == user!.id) {
+                          print('Eu sou o dono');
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => VerMaisPage(post: ServicePost()),
+                                (context) => VerMaisPage(post: Portfolio()),
                           ),
                         );
                       },

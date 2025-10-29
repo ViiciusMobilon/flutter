@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/postForm.dart';
@@ -128,6 +129,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
       final postFinal = await portfolioController.create(postForm);
 
       if (postFinal != null) {
+        context.read<PortfolioController>().fetchPortfolioAuth();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Post publicado com sucesso!"),

@@ -389,6 +389,10 @@ class _botaoState extends State<botao> {
           widget.erroEmail("digite um email");
           return;
         }
+        if(widget.passwordController.text.length < 6){
+          widget.erroPassword("a senha deve ter 6 ou mais caracteres");
+          return;
+        }
         if(widget.passwordController.text.isEmpty){
           widget.erroPassword("digite uma senha");
           return;

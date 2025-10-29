@@ -28,14 +28,14 @@ class FeedPerfilPortfolio extends StatelessWidget {
     List<Widget> carouselItems = [];
 
     // Vídeos
-    if (post.videos.isNotEmpty) {
-      for (var v in post.videos) {
+    if (post.videos!.isNotEmpty) {
+      for (var v in post.videos!) {
         carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
       }
     }
 
     // Fotos
-    carouselItems.addAll(post.fotos.map((f) {
+    carouselItems.addAll(post.fotos!.map((f) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         child: Image.network(

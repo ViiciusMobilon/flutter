@@ -67,6 +67,11 @@ class PortfolioController extends ChangeNotifier {
     await fetchPortfolios(refresh: refresh);
   }
 
+  void setPost(Portfolio portfolio){
+    _post = portfolio;
+    notifyListeners();
+  }
+
   // Future<void> getPortfolioId({int id = 2}) async {
   //   try {
   //      _post = await _service.getPortfolioId(id: id);

@@ -7,7 +7,7 @@ import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:tcc/editar_servico/editar.dart';
+
 
 class VerMaisPageDono extends StatefulWidget {
   final Portfolio post;
@@ -59,7 +59,7 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
   void _initVideos() {
     if (widget.post.videos != null) {
       for (int i = 0; i < widget.post.videos!.length; i++) {
-        final url = '${URLAPISTORAGE}${widget.post.videos[i]}';
+        final url = '${URLAPISTORAGE}${widget.post.videos![i]}';
         if (_isVideo(url)) {
           final controller = VideoPlayerController.network(url)
             ..initialize().then((_) {
@@ -188,7 +188,7 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
 
   Widget _buildMediaCarousel() {
     final media = widget.post.videos;
-    if (media.isEmpty) return const SizedBox.shrink();
+    if (media!.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [

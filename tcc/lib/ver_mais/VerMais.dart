@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:tcc/data/config.dart';
+import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/service_post.dart';
@@ -7,7 +9,7 @@ import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:intl/intl.dart';
 
 class VerMaisPage extends StatefulWidget {
-  final ServicePost post;
+  final Portfolio post;
 
   const VerMaisPage({Key? key, required this.post}) : super(key: key);
 
@@ -26,9 +28,9 @@ class _VerMaisPageState extends State<VerMaisPage> {
   }
 
   void _initVideos() {
-    if (widget.post.mediaUrls != null) {
-      for (int i = 0; i < widget.post.mediaUrls!.length; i++) {
-        final url = widget.post.mediaUrls![i];
+    if (widget.post.videos != null) {
+      for (int i = 0; i < widget.post.videos!.length; i++) {
+        final url = '${URLAPISTORAGE}${widget.post.videos![i]}';
         if (_isVideo(url)) {
           final controller = VideoPlayerController.network(url)
             ..initialize().then((_) {
@@ -74,11 +76,11 @@ class _VerMaisPageState extends State<VerMaisPage> {
             ),
             child: CircleAvatar(
               radius: 26,
-              backgroundImage: widget.post.providerPhotoUrl != null
-                  ? NetworkImage(widget.post.providerPhotoUrl!)
+              backgroundImage: widget.post.user_foto != null
+                  ? NetworkImage(widget.post.user_foto!)
                   : null,
               backgroundColor: const Color(0xFFE6E8EB),
-              child: widget.post.providerPhotoUrl == null
+              child: widget.post.fotos == null
                   ? const Icon(Icons.person, color: Colors.white, size: 26)
                   : null,
             ),
@@ -89,7 +91,7 @@ class _VerMaisPageState extends State<VerMaisPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.post.providerName ?? "Prestador",
+                  widget.post.user_nome ?? "empresa",
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -97,9 +99,9 @@ class _VerMaisPageState extends State<VerMaisPage> {
                     letterSpacing: -0.3,
                   ),
                 ),
-                if (widget.post.providerCompany != null)
+                if (widget.post.user_ramo != null)
                   Text(
-                    widget.post.providerCompany!,
+                    '${widget.post.user_cidade!}, ${widget.post.user_estado}',
                     style: const TextStyle(
                       fontSize: 13,
                       color: Color(0xFF777777),
@@ -268,7 +270,7 @@ class _VerMaisPageState extends State<VerMaisPage> {
   }
 
   Widget _buildMediaCarousel() {
-    final media = widget.post.mediaUrls ?? [];
+    final media = widget.post.videos ?? [];
     if (media.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -276,7 +278,7 @@ class _VerMaisPageState extends State<VerMaisPage> {
         CarouselSlider.builder(
           itemCount: media.length,
           itemBuilder: (context, index, _) =>
-              _buildMedia(media[index], index),
+              _buildMedia('${URLAPISTORAGE}${media[index]}', index),
           options: CarouselOptions(
             height: MediaQuery.of(context).size.height * 0.3,
             viewportFraction: 1,
@@ -316,9 +318,9 @@ class _VerMaisPageState extends State<VerMaisPage> {
   }
 
   Widget _buildDescription() {
-    final name = widget.post.providerName ?? 'Prestador';
-    final service = widget.post.serviceName ?? '';
-    final desc = widget.post.description ?? '';
+    final name = widget.post.user_nome ?? 'Prestador';
+    final service = widget.post.user_ramo ?? 'sem trampo';
+    final desc = widget.post.descricao ?? 'sem desc';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),

@@ -44,8 +44,8 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                 style: const TextStyle(fontSize: 15, color: Colors.black87),
               ),
             ),
-          if (widget.post.fotos.isNotEmpty) _buildImageGallery(widget.post),
-          if (widget.post.videos.isNotEmpty) _buildVideoGallery(widget.post),
+          if (widget.post.fotos!.isNotEmpty) _buildImageGallery(widget.post),
+          if (widget.post.videos!.isNotEmpty) _buildVideoGallery(widget.post),
         ],
       ),
     );
@@ -76,10 +76,10 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
     child: ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       scrollDirection: Axis.horizontal,
-      itemCount: post.fotos.length,
+      itemCount: post.fotos!.length,
       separatorBuilder: (_, __) => const SizedBox(width: 10),
       itemBuilder: (context, index) {
-        final imageUrl = '${URLAPISTORAGE}${post.fotos[index].url}' ;
+        final imageUrl = '${URLAPISTORAGE}${post.fotos![index].url}' ;
         print('url foto portfolio:${imageUrl}');
         return ClipRRect(
           borderRadius: BorderRadius.circular(12),
@@ -105,10 +105,10 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
-        itemCount: post.videos.length,
+        itemCount: post.videos!.length,
         separatorBuilder: (_, __) => const SizedBox(width: 6),
         itemBuilder: (context, index) {
-          final videoUrl = '${URLAPISTORAGE}${post.videos[index].url}';
+          final videoUrl = '${URLAPISTORAGE}${post.videos![index].url}';
           print('url video portfolio:${videoUrl}');
 
           return VideoItem(url: videoUrl);

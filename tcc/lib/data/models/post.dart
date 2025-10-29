@@ -9,8 +9,8 @@ class Portfolio {
   final int? userId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final List<Foto> fotos;
-  final List<Video> videos;
+  final List<Foto>? fotos;
+  final List<Video>? videos;
 
   Portfolio({
     this.id,
@@ -23,8 +23,8 @@ class Portfolio {
     this.user_ramo,
     this.user_cidade,
     this.user_estado,
-    required this.fotos,
-    required this.videos,
+    this.fotos,
+    this.videos,
   });
 
   factory Portfolio.fromJson(Map<String, dynamic> json) {

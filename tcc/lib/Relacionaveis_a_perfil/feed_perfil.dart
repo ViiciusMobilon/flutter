@@ -32,8 +32,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
     List<Widget> carouselItems = [];
 
     // vídeos
-    if (post.videos.isNotEmpty) {
-      for (var v in post.videos) {
+    if (post.videos!.isNotEmpty) {
+      for (var v in post.videos!) {
         carouselItems.add(
           _CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'),
         );
@@ -41,7 +41,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
     }
 
     // fotos
-    carouselItems.addAll(post.fotos.map((f) {
+    carouselItems.addAll(post.fotos!.map((f) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         child: Image.network(
@@ -76,7 +76,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(user!.fotoURL!),
+                  backgroundImage: NetworkImage(user?.fotoURL ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapgOuAoFQ8eZJXjFpp9jLmkPbt9N8CzR8hg&s'),
                   radius: 28,
                 ),
                 const SizedBox(width: 12),
@@ -85,7 +85,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.nome!,
+                        user?.nome ?? 'sem nome 1',
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -93,7 +93,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        user.nome ?? user.razao_social ?? 'sem nome',
+                        user?.nome ?? user?.razao_social ?? 'sem nome',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -107,7 +107,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              user.cidade!,
+                              user?.cidade ?? 'sem city',
                               style: const TextStyle(color: Colors.grey),
                               overflow: TextOverflow.ellipsis,
                             ),
