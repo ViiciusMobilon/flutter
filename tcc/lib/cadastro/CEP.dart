@@ -34,6 +34,7 @@ class _CEPState extends State<CEP> {
 
         // AppBar no topo da tela
         appBar: AppBar(
+           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

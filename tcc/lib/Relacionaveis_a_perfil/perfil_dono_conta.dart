@@ -18,11 +18,11 @@ class _PerfilDonoState extends State<PerfilDono> {
   bool isLoved = false;
   int loveCount = 1247;
   String? telefone = '1';
-  String? whatsapp = null;
-  String? email = null;
-  String? website = null;
-  String? x = null;
-  String? instagram = null;
+  String? whatsapp;
+  String? email;
+  String? website;
+  String? x;
+  String? instagram;
 
   final List<ServicePostFeed> posts = [];
   bool isLoadingMore = false;
@@ -63,7 +63,6 @@ class _PerfilDonoState extends State<PerfilDono> {
 
   Future<void> _loadMorePosts() async {
     if (isLoadingMore) return;
-
     setState(() => isLoadingMore = true);
     await Future.delayed(const Duration(seconds: 2));
 
@@ -99,31 +98,36 @@ class _PerfilDonoState extends State<PerfilDono> {
 
   @override
   Widget build(BuildContext context) {
-    print('Rebuild PerfilDono');
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
+         // Espaço para o avatar
           SliverToBoxAdapter(child: _buildDescription()),
-          SliverToBoxAdapter(child: _buildContactSection(
-            context: context,
-            telefone: telefone,
-            whatsapp: whatsapp,
-            email: email,
-            website: website,
-            x: x,
-            instagram: instagram,
-          )),  
+          SliverToBoxAdapter(
+            child: _buildContactSection(
+              context: context,
+              telefone: telefone,
+              whatsapp: whatsapp,
+              email: email,
+              website: website,
+              x: x,
+              instagram: instagram,
+            ),
+          ),
           SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              if (index < posts.length) {
-                return FeedPerfil(post: posts[index]); // Corrigido aqui
-              } else {
-                return _buildLoadingIndicator();
-              }
-            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                if (index < posts.length) {
+                  return FeedPerfil(post: posts[index]);
+                } else {
+                  return _buildLoadingIndicator();
+                }
+              },
+              childCount: posts.length + (isLoadingMore ? 1 : 0),
+            ),
           ),
         ],
       ),
@@ -131,104 +135,113 @@ class _PerfilDonoState extends State<PerfilDono> {
   }
 
   Widget _buildProfileHeader() {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+  final height = MediaQuery.of(context).size.height;
+  final width = MediaQuery.of(context).size.width;
 
-    return SizedBox(
-      height: height * 0.40,
-      child: Stack(
-        children: [
-          Container(
-            height: height * 0.16,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
-                ),
-                fit: BoxFit.cover,
+  return SizedBox(
+    height: height * 0.45, // define a altura total do cabeçalho
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Imagem de capa
+        Container(
+          height: height * 0.25,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
               ),
+              fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            bottom: 170,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.white,
-                child: const CircleAvatar(
-                  radius: 46,
-                  backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                const Text(
-                  'João Silva',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Desenvolvedor Mobile',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                Text(
-                  'Tech Solutions Inc.',
-                  style: TextStyle(color: Colors.grey[500]),
-                ),
-                const SizedBox(height: 8),
-                estrelaperfil(),
-                const SizedBox(height: 12),
-                _buildLoveButton(),
+        ),
+
+        // Gradiente para contraste
+        Container(
+          height: height * 0.25,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black.withOpacity(0.4),
+                Colors.transparent,
+                Colors.black.withOpacity(0.3),
               ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-          Positioned(
-            left: width * 0.87,
-            top: height * 0.17,
-            child: IconButton(
-              onPressed:
-                  () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => TelaPrincipal()),
+        ),
+
+        // Botão de voltar
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 8,
+          left: 10,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+
+        // Avatar
+        Positioned(
+          top: height * 0.17,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 3),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
                   ),
-              icon: Icon(
-                Icons.photo_camera,
-                color: Colors.white,
-                size: width * 0.06,
+                ],
+              ),
+              child: const CircleAvatar(
+                radius: 55,
+                backgroundImage: NetworkImage(
+                  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+                ),
               ),
             ),
           ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.25,
-            right: MediaQuery.of(context).size.width * 0.05,
-            child: IconButton(
-              onPressed:
-                  () => Navigator.of(
-                    context,
-                  ).push(MaterialPageRoute(builder: (context) => imagem())),
-              icon: Icon(
-                Icons.photo_camera_back,
-                color: Color.fromARGB(255, 255, 255, 255),
+        ),
+
+        // Nome e informações
+        Positioned(
+          top: height * 0.32,
+          left: 0,
+          right: 0,
+          child: Column(
+            children: [
+              const Text(
+                'João Silva',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-            ),
+              const SizedBox(height: 4),
+              Text('Desenvolvedor Mobile',
+                  style: TextStyle(color: Colors.grey[700])),
+              Text('Tech Solutions Inc.',
+                  style: TextStyle(color: Colors.grey[500])),
+              const SizedBox(height: 8),
+              estrelaperfil(),
+              const SizedBox(height: 12),
+              _buildLoveButton(),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildLoveButton() {
     return Container(
@@ -293,6 +306,7 @@ class _PerfilDonoState extends State<PerfilDono> {
   }
 }
 
+// Seção de contato (mantida)
 Widget _buildContactSection({
   required BuildContext context,
   String? telefone,
@@ -304,7 +318,7 @@ Widget _buildContactSection({
 }) {
   final List<Map<String, dynamic>> contacts = [
     if (telefone != null && telefone.isNotEmpty)
-      {'icon': Icons.phone, 'label': 'Telefone', 'url': telefone, 'color': Color(0xFF2196F3),},
+      {'icon': Icons.phone, 'label': 'Telefone', 'url': telefone, 'color': Color(0xFF2196F3)},
     if (whatsapp != null && whatsapp.isNotEmpty)
       {'icon': Icons.message, 'label': 'WhatsApp', 'url': whatsapp, 'color': Color(0xFF2196F3)},
     if (email != null && email.isNotEmpty)

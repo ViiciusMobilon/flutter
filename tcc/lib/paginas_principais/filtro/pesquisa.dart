@@ -81,6 +81,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
 ThemeData appBarTheme(BuildContext context) {
   return Theme.of(context).copyWith(
     appBarTheme: const AppBarTheme(
+        surfaceTintColor: Colors.transparent,
       backgroundColor: Color(0xFF1976D2),
       foregroundColor: Colors.white,
       elevation: 0,

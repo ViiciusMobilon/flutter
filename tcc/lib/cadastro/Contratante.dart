@@ -29,6 +29,7 @@ class Contratante extends StatelessWidget {
       home: Scaffold(
         // AppBar branca com título e botão de voltar
         appBar: AppBar(
+           surfaceTintColor: Colors.transparent,
           backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

@@ -28,6 +28,7 @@ class Empresa extends StatelessWidget {
       theme: ThemeData(),
       home: Scaffold(
         appBar: AppBar(
+           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

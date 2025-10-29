@@ -27,6 +27,7 @@ class Prestador extends StatelessWidget {
       theme: ThemeData(),
       home: Scaffold(
         appBar: AppBar(
+           surfaceTintColor: Colors.transparent,
           backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Branco
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),

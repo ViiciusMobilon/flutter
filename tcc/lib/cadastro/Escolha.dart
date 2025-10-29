@@ -16,6 +16,7 @@ class Escolha extends StatelessWidget {
       home: Scaffold(
         // Estrutura básica da tela com AppBar e corpo
         appBar: AppBar(
+           surfaceTintColor: Colors.transparent,
           backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cor branca
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black), // Ícone de voltar
@@ -117,7 +118,7 @@ class _button_empresaState extends State<button_empresa> {
         ),
         child: Column(
           children: [
-            Icon(Icons.domain, size: MediaQuery.of(context).size.width * 0.4),
+            Icon(Icons.domain, size: MediaQuery.of(context).size.width * 0.35),
             Center(
               child: Text(
                 "Empresa",
@@ -167,7 +168,7 @@ class _button_prestadorState extends State<button_prestador> {
         ),
         child: Column(
           children: [
-            Icon(Icons.badge, size: MediaQuery.of(context).size.width * 0.4),
+            Icon(Icons.badge, size: MediaQuery.of(context).size.width * 0.35),
             Center(
               child: Text(
                 "Prestador",
@@ -219,7 +220,7 @@ class __button_contratanState extends State<_button_contratante> {
           children: [
             Icon(
               Icons.how_to_reg,
-              size: MediaQuery.of(context).size.width * 0.4,
+              size: MediaQuery.of(context).size.width * 0.35,
             ),
             Center(
               child: Text(

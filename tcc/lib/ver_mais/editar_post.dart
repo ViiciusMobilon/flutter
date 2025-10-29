@@ -165,6 +165,8 @@ class _EditarPostPageState extends State<EditarPostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+
         title: const Text("Editar Post"),
         actions: [
           IconButton(

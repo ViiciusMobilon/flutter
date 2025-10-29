@@ -60,7 +60,7 @@ class _FavoritosPageState extends State<FavoritosPage>
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        
+          surfaceTintColor: Colors.transparent,
         elevation: 0.8,
         backgroundColor: Colors.white,
         title: Row(

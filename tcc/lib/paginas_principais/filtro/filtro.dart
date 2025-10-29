@@ -66,6 +66,7 @@ final Map<String, Map<String, dynamic>> _meta = {
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context).copyWith(
       appBarTheme: AppBarTheme(
+          surfaceTintColor: Colors.transparent,
         backgroundColor: Colors.indigoAccent,
         foregroundColor: Colors.white,
       ),

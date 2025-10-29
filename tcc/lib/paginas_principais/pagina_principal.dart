@@ -45,6 +45,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   MediaQuery.of(context).size.height * 0.085,
                 ),
                 child: AppBar(
+                    surfaceTintColor: Colors.transparent,
                   automaticallyImplyLeading: false,
                   backgroundColor: Colors.transparent,
                   elevation: 0,
@@ -116,6 +117,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               )
             // AppBar da página de Perfil
             : AppBar(
+                surfaceTintColor: Colors.transparent,
                 title: const Text(
                   "Perfil",
                   style: TextStyle(fontWeight: FontWeight.w600),

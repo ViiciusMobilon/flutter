@@ -15,6 +15,8 @@ class _SegurancaState extends State<Seguranca> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+
         title: Text(
           "Segurança",
           style: TextStyle(

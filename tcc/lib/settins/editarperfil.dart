@@ -26,6 +26,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -46,13 +47,13 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             Descricao(),
             SizedBox(height: 20),
             Area(),
-           
+            SizedBox(height: 30),
+            nome(),
+
             SizedBox(height: 50),
             Center(child: Text("Contatos", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
             
-            SizedBox(height: 30),
-            Telefone(),
-
+           
              SizedBox(height: 30),
             Whatsapp(),
 
@@ -187,14 +188,14 @@ class _PerfilState extends State<Perfil> {
   }
 }
 
-class Telefone extends StatelessWidget {
-  const Telefone({super.key});
+class nome extends StatelessWidget {
+  const nome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        labelText: "Telefone",
+        labelText: "nome",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
@@ -211,6 +212,8 @@ class Telefone extends StatelessWidget {
     );
   }
 }
+
+
 
 class Whatsapp extends StatelessWidget {
   const Whatsapp({super.key});

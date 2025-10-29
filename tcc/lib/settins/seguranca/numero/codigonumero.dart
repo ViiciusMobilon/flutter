@@ -17,6 +17,7 @@ class _CodigoPageState extends State<CodigoPageNumero> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),

@@ -131,6 +131,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           elevation: 1,

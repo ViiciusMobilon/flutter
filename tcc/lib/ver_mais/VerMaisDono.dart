@@ -5,7 +5,6 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/service_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:tcc/editar_servico/editar.dart';
 
 class VerMaisPageDono extends StatefulWidget {
   final ServicePost post;
@@ -265,6 +264,8 @@ class _VerMaisPageState extends State<VerMaisPageDono> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+
         flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
