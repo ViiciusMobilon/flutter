@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
-import 'package:tcc/data/models/post.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
-import 'package:tcc/data/repositories/auth_repository.dart';
 import 'package:tcc/data/services/auth_service.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
-import 'package:tcc/teste_video.dart';
 import 'package:provider/provider.dart';
 
 
@@ -59,7 +56,6 @@ class _LoginState extends State<Login> {
   final passwordController = TextEditingController();
 
   late final  _authController = context.read<AuthController>();
-  @override
   
 
   Future<void> login() async {
@@ -77,7 +73,7 @@ class _LoginState extends State<Login> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => TelaPrincipal(authcontroller: _authController),
+            builder: (_) => TelaPrincipal(),
           ),
         );
       } else {
@@ -271,7 +267,6 @@ class senha extends StatefulWidget {
 }
 
 class _senhaState extends State<senha> {
-  @override
   bool senha = true;
 
   void mudarvisao() {

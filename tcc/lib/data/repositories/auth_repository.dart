@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:tcc/data/http/dio_client.dart';
 import 'package:tcc/data/models/user.dart';
@@ -24,14 +23,18 @@ class AuthRepository {
           ),
       });
 
-      print('print map cadastro: ${map['id_categoria']}');
+      // print('print map cadastro: ${map['id_categoria']}');
 
       final response = await _dio.post('/usuario/cadastro', data: formData);
-      print('Cadastro response.data: ${response.data}');
+      if(response.statusCode != 200){
+        print('Deu errado status code: ${response.statusCode}');
+      }
+      print('Cadastro response.data: ${response.data} e statuscode: ${response.statusCode}');
       return UsuarioGeral.fromJson(response.data);
+
     } on DioException catch (e) {
       if (e.response != null) {
-        throw Exception(e.response?.data['message'] ?? 'Erro no cadastro');
+        throw Exception(e.response?.data['message'] ?? 'Erro no cadastro.');
       } else {
         throw Exception('Erro de conexão');
       }

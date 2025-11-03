@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/ver_mais/editar_post.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
@@ -11,12 +11,11 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VerMaisPageDono extends StatefulWidget {
   final Portfolio post;
-  final AuthController authController;
+   
 
   const VerMaisPageDono({
     super.key,
     required this.post,
-    required this.authController,
   });
 
   @override
@@ -88,7 +87,8 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
   }
 
   Widget _buildHeader() {
-    final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+    final user = authController.usuario;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       child: Row(

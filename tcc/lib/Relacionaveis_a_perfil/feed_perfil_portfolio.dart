@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
-import 'package:tcc/service_post.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:tcc/data/config.dart';
-import 'package:tcc/ver_mais/VerMais.dart';
 
 // ------------------------ CARD DE PORTFÓLIO ------------------------
 class FeedPerfilPortfolio extends StatelessWidget {
   final Portfolio post;
-  final AuthController authController;
+   
 
   const FeedPerfilPortfolio({
     super.key,
     required this.post,
-    required this.authController,
+
   });
 
   @override
   Widget build(BuildContext context) {
+    final authController = context.watch<AuthController>();
+
     final user = authController.usuario;
     final fotoUrl = user?.fotoURL ?? 'https://via.placeholder.com/150';
 
@@ -106,7 +107,7 @@ class FeedPerfilPortfolio extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => VerMaisPageDono(post: post, authController: authController),
+                      builder: (context) => VerMaisPageDono(post: post),
                     ),
                   );
                 },

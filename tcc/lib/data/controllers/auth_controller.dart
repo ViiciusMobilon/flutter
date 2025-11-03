@@ -1,4 +1,6 @@
-import 'dart:io';
+
+
+// ignore_for_file: unused_element
 
 import 'package:flutter/foundation.dart';
 import 'package:tcc/data/models/user.dart';
@@ -36,19 +38,24 @@ class AuthController extends ChangeNotifier{
   AuthController(this._authService);
 
   Future<UsuarioGeral> cadastro(Userform form) async {
-    print("Cadastro controller: $form");
-    final usuario = await _authService.register(form);
-    _usuario = usuario;  // salva no controller
-    return usuario;      // retorna para a tela
+    try {
+      print("Cadastro controller: $form");
+      final usuario = await _authService.register(form);
+      setUsuario(usuario);  // salva no controller
+      return usuario;   
+    } catch (e) {
+      print('erro cadastro controller');
+      rethrow;
+    }      // retorna para a tela
   }
 
   Future<UsuarioGeral> update(Userform form) async {
 
     try {
-      print("Cadastro controller: $form");
-    final usuario = await _authService.update(form);
-    _usuario = usuario;  // salva no controller
-    return usuario;
+      print("update controller: $form");
+      final usuario = await _authService.update(form);
+      setUsuario(usuario);  // salva no controller
+      return usuario;
     } catch (e) {
       print("Erro no update controller: $e e o user:${form}");
       rethrow;
@@ -70,6 +77,7 @@ class AuthController extends ChangeNotifier{
 
   Future<void> logout() async{
     await _authService.logout();
+    // ignore: null_check_always_fails
     setUsuario(null!);
   }
 

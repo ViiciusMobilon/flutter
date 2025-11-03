@@ -77,43 +77,44 @@ class UsuarioGeral {
 
   /// Construtor a partir do JSON da API (login)
   factory UsuarioGeral.fromJson(Map<String, dynamic> json) {
-  return UsuarioGeral(
-    id: json['user']['id'],
-    id_user: json['logado']['id'],
-    email: json['logado']['email'],
-    tipo: json['logado']['type'],
-    nome: json['user']['nome'],
-    cpf: json['user']['cpf'],
-    cnpj: json['user']['cnpj'],
-    razao_social: json['user']['razao_social'],
-    descricao: json['user']['descricao'],
-    fotoURL: json['foto'],
-    cidade: json['user']['localidade'],
-    uf: json['user']['uf'],
-    estado: json['user']['estado'],
-    cep: json['user']['cep'],
-    rua: json['user']['rua'],
-    numero: json['user']['numero'],
-    infoadd: json['user']['infoadd'],
-    ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
-    ramoNome: json['ramo']?['nome'],
-    categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
-    categoriaNome: json['categoria']['nome'],
-    token: json['access_token'],
-    logadoId: json['logado']['id'],
-    logadoEmail: json['logado']['email'],
-    logadoType: json['logado']['type'],
-    avaliacaoMedia: json['avaliacao']?['media'] != null
-        ? double.tryParse(json['avaliacao']['media'].toString())
-        : null,
-    avaliacaoTotal: json['avaliacao']?['total'] != null
-        ? double.tryParse(json['avaliacao']['total'].toString())
-        : 0,
-    telefone: json['contatos']['telefone'],
-    whatsapp: json['contatos']['whatsapp'],
-    instagram: json['contatos']['instagram'],
-    site: json['contatos']['site'],
-  );
+    print("DEBUG UsuarioGeral.fromJson - chaves recebidas: ${json.keys}");
+    return UsuarioGeral(
+      id: json['user']['id'],
+      id_user: json['logado']['id'],
+      email: json['logado']['email'],
+      tipo: json['logado']['type'],
+      nome: json['user']['nome'],
+      cpf: json['user']['cpf'],
+      cnpj: json['user']['cnpj'],
+      razao_social: json['user']['razao_social'],
+      descricao: json['user']['descricao'],
+      fotoURL: json['foto'],
+      cidade: json['user']['localidade'],
+      uf: json['user']['uf'],
+      estado: json['user']['estado'],
+      cep: json['user']['cep'],
+      rua: json['user']['rua'],
+      numero: json['user']['numero'],
+      infoadd: json['user']['infoadd'],
+      ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
+      ramoNome: json['ramo']?['nome'],
+      categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
+      categoriaNome: json['categoria']?['nome'],
+      token: json['access_token'],
+      logadoId: json['logado']['id'],
+      logadoEmail: json['logado']['email'],
+      logadoType: json['logado']['type'],
+      avaliacaoMedia: json['avaliacao']?['media'] != null
+          ? double.tryParse(json['avaliacao']['media'].toString())
+          : null,
+      avaliacaoTotal: json['avaliacao']?['total'] != null
+          ? double.tryParse(json['avaliacao']['total'].toString())
+          : 0,
+      telefone: json['contatos']['telefone'],
+      whatsapp: json['contatos']['whatsapp'],
+      instagram: json['contatos']['instagram'],
+      site: json['contatos']['site'],
+    );
 }
 
   /// Converter para JSON (para storage ou envio simples)

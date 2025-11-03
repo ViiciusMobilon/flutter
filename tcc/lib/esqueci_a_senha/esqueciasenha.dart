@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
-import 'package:tcc/paginas_principais/pagina_principal.dart';
 
 // Função principal que inicia o app
 void main() => runApp(Esqueciasenha());

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
-import 'package:tcc/esqueci_a_senha/CodigoSenha.dart';
 import 'package:tcc/settins/seguranca/numero/codigonumero.dart';
 
 final maskFormatter = MaskTextInputFormatter(
@@ -190,7 +189,7 @@ class _botaoState extends State<botao> {
       onTap:
           () => Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => CodigoPageNumero(controller: widget.controller,))),
+          ).push(MaterialPageRoute(builder: (context) => CodigoPageNumero())),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,

@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // ------------------------ FEED DE PERFIL ------------------------
 class FeedPerfil extends StatefulWidget {
   final Portfolio post;
-  final AuthController authController;
+   
   const FeedPerfil({
     super.key,
     required this.post,
-    required this.authController,
   });
 
   @override
@@ -26,7 +25,8 @@ class FeedPerfil extends StatefulWidget {
 class _FeedPerfilState extends State<FeedPerfil> {
   @override
   Widget build(BuildContext context) {
-    final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+    final user = authController.usuario;
     final post = widget.post;
 
     List<Widget> carouselItems = [];
@@ -156,7 +156,6 @@ class _FeedPerfilState extends State<FeedPerfil> {
                         MaterialPageRoute(
                           builder: (context) => VerMaisPageDono(
                             post: post,
-                            authController: widget.authController,
                           ),
                         ),
                       );

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'dart:io'; // Para manipulação de arquivos (imagem)
 import 'package:image_picker/image_picker.dart'; // Para escolher imagens da galeria ou câmera

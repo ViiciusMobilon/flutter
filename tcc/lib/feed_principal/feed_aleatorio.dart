@@ -9,13 +9,12 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
-import 'package:tcc/service_post.dart';
 
 /// Página principal que exibe o feed aleatório de postagens
 class AleatorioFeed extends StatefulWidget {
-  final AuthController authController;
+   
 
-  AleatorioFeed({super.key, required this.authController});
+  AleatorioFeed({super.key,  });
 
   @override
   State<AleatorioFeed> createState() => _AleatorioFeedState();
@@ -54,7 +53,8 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 
   @override
   Widget build(BuildContext context) {
-    final user = widget.authController.usuario;
+    // final authController = context.watch<AuthController>();
+    // final user = authController.usuario;
     
     return Consumer<PortfolioController>(
         builder: (context, controller, child) { 
@@ -77,7 +77,7 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
               itemBuilder: (context, index) {
                 if (index < _posts.length) {
                   print('novo post geral: ${_posts[index]}');
-                  return ServiceProviderFeed(post: _posts[index], authController: widget.authController,);
+                  return ServiceProviderFeed(post: _posts[index]);
                 } else if (controller.hasMoreGeral) {
                   return const Padding(
                         padding: EdgeInsets.all(16),
@@ -96,9 +96,9 @@ class _AleatorioFeedState extends State<AleatorioFeed> {
 
 class ServiceProviderFeed extends StatefulWidget {
   final Portfolio post;
-  final AuthController authController;
+   
 
-  ServiceProviderFeed({super.key, required this.post, required this.authController});
+  ServiceProviderFeed({super.key, required this.post,  });
 
   @override
   State<ServiceProviderFeed> createState() => _ServiceProviderFeedState();
@@ -107,7 +107,9 @@ class ServiceProviderFeed extends StatefulWidget {
 class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
   @override
   Widget build(BuildContext context) {
-    final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+
+    final user = authController.usuario;
     // final hasVideo = widget.post.videos != null && widget.post.videos!.isNotEmpty;
     // final hasImages = widget.post.images != null && widget.post.images!.isNotEmpty;
 
@@ -196,7 +198,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
-                                '${widget.post.user_cidade}, ${widget.post.user_estado}' ?? 'Sem localização',
+                                '${widget.post.user_cidade}, ${widget.post.user_estado}',
                                 style: const TextStyle(color: Colors.grey),
                                 overflow: TextOverflow.ellipsis,
                               ),

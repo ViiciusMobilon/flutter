@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/service_post.dart';
 

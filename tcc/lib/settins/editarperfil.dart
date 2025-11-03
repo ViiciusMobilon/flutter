@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +24,9 @@ final cpfMaskFormatter = MaskTextInputFormatter(
 );
 
 class Editar_Perfil extends StatefulWidget {
-  final AuthController authController;
+   
   
-  Editar_Perfil({super.key, required this.authController});
+  Editar_Perfil({super.key,  });
 
   @override
   State<Editar_Perfil> createState() => _Editar_PerfilState();
@@ -42,16 +44,22 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
   @override
   void initState(){
     super.initState();
-    final user = widget.authController.usuario!;
-    descricaoController.text = user.descricao ?? '';
-    telefoneController.text = user.telefone ?? '';
-    whatsappController.text = user.whatsapp ?? '';
-    instaController.text = user.instagram ?? '';
-    siteController.text = user.site ?? '';
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      final _authController = context.read<AuthController>();
+      final user = _authController.usuario!;
+      descricaoController.text = user.descricao ?? '';
+      telefoneController.text = user.telefone ?? '';
+      whatsappController.text = user.whatsapp ?? '';
+      instaController.text = user.instagram ?? '';
+      siteController.text = user.site ?? '';
+    });
+    
   }
   @override
   Widget build(BuildContext context) {
-  final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+
+    final user = authController.usuario;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -67,7 +75,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           children: [
-            Center(child: Perfil(authController: widget.authController, image: foto,
+            Center(child: Perfil(image: foto,
             OnImageSelected: (file){
               setState(() {
                 foto = file;
@@ -82,7 +90,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             if(user!.tipo == 'empresa') ...
             [
               SizedBox(height: 20), 
-              Categoria(authController: widget.authController, onCategoriaSelecionado: (item){
+              Categoria( onCategoriaSelecionado: (item){
                 if(item != null){
                 setState(() {
                   id_categoria = item.id;
@@ -90,7 +98,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
                 }
               },),
             ],
-            if(user!.tipo == 'prestador') ...
+            if(user.tipo == 'prestador') ...
             [
               SizedBox(height: 20), 
               Area(),
@@ -115,7 +123,6 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             Center(child: botao(
               foto: foto,
               WhatsappController: whatsappController,descricaoController: descricaoController,
-              authController: widget.authController,
               telefoneController: telefoneController,
               instaController: instaController,
               siteController: siteController,
@@ -161,10 +168,10 @@ class Descricao extends StatelessWidget {
 }
 
 class Perfil extends StatefulWidget {
-  final AuthController authController;
+   
   late File? image;
   final void Function(File?) OnImageSelected;
-  Perfil({super.key, required this.authController, required this.image, required this.OnImageSelected});
+  Perfil({super.key, required this.image, required this.OnImageSelected});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -190,7 +197,8 @@ class _PerfilState extends State<Perfil> {
     }
   }
   void loadFoto() async{
-    final imagem = await widget.authController.getFoto(); // seu AuthService
+    final authController = context.read<AuthController>();
+    final imagem = await authController.getFoto(); // seu AuthService
     setState(() {
       fotoUrl = imagem;
     });
@@ -369,7 +377,7 @@ class Insta extends StatelessWidget {
 }
 
 class botao extends StatelessWidget {
-  final AuthController authController;
+
   final File? foto;
   final TextEditingController telefoneController;
   final TextEditingController WhatsappController;
@@ -377,7 +385,6 @@ class botao extends StatelessWidget {
   final TextEditingController siteController;
   final TextEditingController descricaoController;
   botao({super.key,
-    required this.authController,
     required this.foto,
     required this.telefoneController,
     required this.WhatsappController,
@@ -391,6 +398,7 @@ class botao extends StatelessWidget {
     final userForm = Userform();
     return GestureDetector(
       onTap: () async {
+        final authController = context.read<AuthController>();
         userForm.foto = foto;
         userForm.telefone = telefoneController.text;
         userForm.whatsapp = WhatsappController.text;
@@ -402,6 +410,7 @@ class botao extends StatelessWidget {
           print("Usuário atualizado: $userEdit");
           print('dados: ${userForm.categoria}, ${userForm.descricao}, ${userForm.instagram}, ${userForm.site}, ${userForm.whatsapp}, ${userForm.telefone}}');
 
+          // ignore: unnecessary_null_comparison
           if(userEdit != null){
             context.read<AuthController>().setUsuario(userEdit);
             ScaffoldMessenger.of(context).showSnackBar(
@@ -512,10 +521,10 @@ class _AreaState extends State<Area> {
 
 
 class Categoria extends StatefulWidget {
-  final AuthController authController;
+   
   final void Function(CategoriaModel?) onCategoriaSelecionado;
 
-  Categoria({super.key, required this.authController, required this.onCategoriaSelecionado});
+  Categoria({super.key, required this.onCategoriaSelecionado});
 
   @override
   State<Categoria> createState() => _CategoriaState();
@@ -530,19 +539,21 @@ class _CategoriaState extends State<Categoria> {
   late final CategoriaRepository categoriaRepository;
 
   @override
-  // TODO: implement context
+  
   void initState(){
+    super.initState();
     
     categoriaRepository = CategoriaRepository(client: apiHttp.DioClient.dio);
     carregarCategorias();
   }
 
   Future<void> carregarCategorias() async {
+    final authController = context.read<AuthController>();
     categorias = await categoriaRepository.getCategoria();
 
     try {
       categoriaSelecionada = categorias.firstWhere(
-      (c) => c.nome == widget.authController.usuario!.categoriaNome,
+      (c) => c.nome == authController.usuario!.categoriaNome,
       );
     } catch (e) {
       categoriaSelecionada = null; // não encontrou → null permitido

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
-import 'package:tcc/service_post.dart';
 
 class Midia {
   final String? url; // pode ser local ou remoto
@@ -61,6 +60,7 @@ class _EditarPostPageState extends State<EditarPostPage> {
     super.dispose();
   }
 
+  // ignore: unused_element
   bool _isVideoFile(String path) {
     return path.toLowerCase().endsWith('.mp4') ||
         path.toLowerCase().endsWith('.mov') ||

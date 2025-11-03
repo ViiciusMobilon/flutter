@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
@@ -6,12 +7,12 @@ import 'package:video_player/video_player.dart';
 
 class ServiceProviderFeed extends StatefulWidget {
   final Portfolio post;
-  final AuthController authController;
+   
 
   ServiceProviderFeed({
     super.key,
     required this.post,
-    required this.authController,
+
   });
 
   @override
@@ -22,7 +23,8 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
 
   @override
   Widget build(BuildContext context) {
-    final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+    final user = authController.usuario;
     final fotoUrl = user?.fotoURL != null 
         ? '${user?.fotoURL}'
         : 'https://via.placeholder.com/150';

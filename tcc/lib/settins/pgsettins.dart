@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/settins/editarperfil.dart';
 import 'package:tcc/settins/seguranca/email.dart';
 import 'package:tcc/settins/segurancap.dart';
 import 'package:tcc/main.dart'; // caso Main() esteja aqui
 
 class SettinsPage extends StatefulWidget {
-  final AuthController authController;
+   
 
-  const SettinsPage({super.key, required this.authController});
+  const SettinsPage({super.key,  });
 
   @override
   State<SettinsPage> createState() => _SettinsPageState();
@@ -53,7 +52,7 @@ class _SettinsPageState extends State<SettinsPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      Editar_Perfil(authController: widget.authController),
+                      Editar_Perfil(),
                 ),
               ),
             ),

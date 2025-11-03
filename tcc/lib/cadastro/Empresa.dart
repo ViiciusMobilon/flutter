@@ -1,4 +1,6 @@
 
+// ignore_for_file: must_be_immutable, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +9,6 @@ import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 import 'package:tcc/cadastro/dropdownCategoria.dart';
 import 'package:tcc/data/controllers/verificar_controller.dart';
-import 'package:tcc/cadastro/dropdownRamo.dart';
 import 'package:tcc/data/models/userForm.dart';
 
 // Máscaras de formatação

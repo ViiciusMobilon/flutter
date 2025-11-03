@@ -1,5 +1,6 @@
  // Metadados com informações adicionais de cada profissão
-  import 'dart:ui';
+
+// ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

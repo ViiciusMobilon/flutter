@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
-import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_portfolio.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
-import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'system_star.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +9,8 @@ import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 
 class PerfilUser extends StatefulWidget {
-  final AuthController authController;
-  PerfilUser({super.key, required this.authController});
+   
+  PerfilUser({super.key,  });
 
   @override
   State<PerfilUser> createState() => _PerfilUserState();
@@ -158,7 +156,6 @@ class _PerfilUserState extends State<PerfilUser> {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     child: FeedPerfil(
                       post: post,
-                      authController: widget.authController,
                     ),
                   );
                 } else {

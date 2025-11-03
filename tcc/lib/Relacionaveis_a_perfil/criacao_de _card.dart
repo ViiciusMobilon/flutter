@@ -16,10 +16,10 @@ class Midia {
 }
 
 class NovoPostPage extends StatefulWidget {
-  final AuthController authController;
+   
   final String? foto;
 
-  NovoPostPage({super.key, this.foto, required this.authController});
+  NovoPostPage({super.key, this.foto,  });
 
   @override
   State<NovoPostPage> createState() => _NovoPostPageState();
@@ -128,6 +128,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
     try {
       final postFinal = await portfolioController.create(postForm);
 
+      // ignore: unnecessary_null_comparison
       if (postFinal != null) {
         context.read<PortfolioController>().fetchPortfolioAuth();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -154,7 +155,8 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-  final user = widget.authController.usuario;
+    final authController = context.watch<AuthController>();
+    final user = authController.usuario;
     return WillPopScope(
       onWillPop: () async => true,
       child: Scaffold(

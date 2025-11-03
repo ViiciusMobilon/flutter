@@ -1,12 +1,13 @@
+// ignore_for_file: must_be_immutable, deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/cep.dart';
 import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/cep_repository.dart';
-import 'package:tcc/data/services/auth_service.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/data/http/dio_client.dart' as apiHttp;
 
@@ -442,21 +443,17 @@ class botao extends StatefulWidget {
 }
 
 class _botaoState extends State<botao> {
-  late final AuthController _authController;
 
   @override
   void initState() {
     super.initState();
-
-    // instancia o cliente HTTP
-    final authService = AuthService(); // cria o repository aqui
-    _authController = AuthController(authService);
   }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
           () async{
+            final _authController = context.read<AuthController>();
             widget.usuario.cep = widget.cepController.text;
             widget.usuario.cidade = widget.cidadeController.text;
             widget.usuario.estado = widget.estadoController.text;
@@ -515,7 +512,7 @@ class _botaoState extends State<botao> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TelaPrincipal(authcontroller: _authController,),
+                  builder: (_) => TelaPrincipal(),
                 ),
               );
             } else {

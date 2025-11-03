@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:tcc/data/controllers/auth_controller.dart';
-import 'package:tcc/esqueci_a_senha/Novasenha.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
 class CodigoPageNumero extends StatefulWidget {
-  final AuthController controller;
-  CodigoPageNumero({super.key, required this.controller});
+
+  CodigoPageNumero({super.key});
 
   @override
   State<CodigoPageNumero> createState() => _CodigoPageState();
@@ -112,7 +110,7 @@ class _CodigoPageState extends State<CodigoPageNumero> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>SettinsPage(authController: widget.controller,),
+                          builder: (_) =>SettinsPage(),
                         ),
                       );
                     } else {

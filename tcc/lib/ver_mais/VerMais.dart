@@ -4,9 +4,7 @@ import 'package:tcc/data/config.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:tcc/service_post.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
-import 'package:intl/intl.dart';
 
 class VerMaisPage extends StatefulWidget {
   final Portfolio post;

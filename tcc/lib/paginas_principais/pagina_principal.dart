@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:tcc/Relacionaveis_a_perfil/favoritos.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
-import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
 
 // Tela principal do app (com navegação inferior entre Início e Perfil)
 class TelaPrincipal extends StatefulWidget {
-  final AuthController authcontroller;
+   
   
-  TelaPrincipal({super.key, required this.authcontroller});
+  TelaPrincipal({super.key,  });
 
   @override
   State<TelaPrincipal> createState() => _TelaPrincipalState();
@@ -28,7 +25,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    _paginas = [AleatorioFeed(authController: widget.authcontroller,), PerfilUser(authController: widget.authcontroller,)];
+    _paginas = [AleatorioFeed(), PerfilUser()];
   }
 
   @override
@@ -137,7 +134,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SettinsPage(authController: widget.authcontroller,),
+                          builder: (context) => SettinsPage(),
                         ),
                       );
                     },
@@ -153,7 +150,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 // Abre a página para criar novo post
                 final resultado = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (ctx) => NovoPostPage(authController: widget.authcontroller,)),
+                  MaterialPageRoute(builder: (ctx) => NovoPostPage()),
                 );
                 if (resultado != null && mounted) {
                   // Aqui você pode atualizar o feed com o novo post
