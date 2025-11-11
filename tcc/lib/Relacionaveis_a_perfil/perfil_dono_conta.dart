@@ -19,16 +19,24 @@ class PerfilUser extends StatefulWidget {
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 0;
-  
+  bool _carregado = false;
+
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    Future.microtask(() =>
-        context.read<PortfolioController>().fetchPortfolioAuth());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final portfolioController = context.read<PortfolioController>();
+      if (!portfolioController.carregadoAuth) {
+        portfolioController.fetchPortfolioAuth();
+      }
+    });
+
   }
+
 
   @override
   void dispose() {
@@ -37,11 +45,17 @@ class _PerfilUserState extends State<PerfilUser> {
   }
 
   void _onScroll() {
+    final portfolioController = context.read<PortfolioController>();
+
+    // evita chamadas múltiplas enquanto carrega
+    if (portfolioController.loadingAuth || !portfolioController.hasMoreAuth) return;
+
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<PortfolioController>().loadMorePostsAuth();
+      portfolioController.loadMorePostsAuth();
     }
   }
+
 
   void _toggleLove() {
     setState(() {
@@ -154,9 +168,7 @@ class _PerfilUserState extends State<PerfilUser> {
                   return Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: FeedPerfil(
-                      post: post,
-                    ),
+                    child: FeedPerfil(post: post,),
                   );
                 } else {
                   return const Padding(

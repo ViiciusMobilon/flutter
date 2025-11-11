@@ -130,7 +130,7 @@ class _NovoPostPageState extends State<NovoPostPage> with WidgetsBindingObserver
 
       // ignore: unnecessary_null_comparison
       if (postFinal != null) {
-        context.read<PortfolioController>().fetchPortfolioAuth();
+        context.read<PortfolioController>().fetchPortfolioAuth(refresh: true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Post publicado com sucesso!"),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
+import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
@@ -150,10 +152,13 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 // Abre a página para criar novo post
                 final resultado = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (ctx) => NovoPostPage()),
+                  MaterialPageRoute(builder: (context) => NovoPostPage()),
                 );
-                if (resultado != null && mounted) {
-                  // Aqui você pode atualizar o feed com o novo post
+                if (resultado == "post_publicado") {
+                  final portfolioController = context.read<PortfolioController>();
+                  // força limpar e recarregar
+                  portfolioController.resetarFeed();
+                  portfolioController.fetchPortfolioAuth(refresh: true);
                 }
               },
               backgroundColor: const Color(0xFF5E35B1),

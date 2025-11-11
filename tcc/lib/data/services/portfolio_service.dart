@@ -12,7 +12,7 @@ class PortfolioService {
   Future<List<Portfolio>> getPortfolioAuth({int page = 1}) async {
     try{
       final post = await _repository.getPortfolioAuth(page: page);
-      print('Portfolio service: ${post.length}');
+      print('Portfolio service auth: ${post.length}');
       return post;
     } catch (e) {
       print("Erro no Portfolio service: $e");

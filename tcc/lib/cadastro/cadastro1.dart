@@ -409,7 +409,7 @@ class _botaoState extends State<botao> {
         }
         
         final verificarController = VerificarController();
-        final vemail = await verificarController.verificar(widget.emailController.text, 'check-email');
+        final vemail = await verificarController.verificar(widget.emailController.text, 'email');
         print('msg email: ${vemail['msg']}');
 
 

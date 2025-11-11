@@ -12,6 +12,7 @@ class PortfolioController extends ChangeNotifier {
   int _pageGeral = 1;
   bool _loadingAuth = false;
   bool _hasMoreAuth = true;
+  bool _carregadoAuth = false;
   bool _loadingGeral = false;
   bool _hasMoreGeral = true;
 
@@ -20,38 +21,145 @@ class PortfolioController extends ChangeNotifier {
   Portfolio? get post => _post;
   bool get loadingAuth => _loadingAuth;
   bool get hasMoreAuth => _hasMoreAuth;
+  bool get carregadoAuth => _carregadoAuth;
 
   bool get loadingGeral => _loadingGeral;
   bool get hasMoreGeral => _hasMoreGeral;
 
+  void resetarFeed(){
+    _carregadoAuth = false;
+    _pageAuth = 1;
+    _hasMoreAuth = true;
+    _portfoliosAuth.clear();
+    notifyListeners();
+  }
+
+//   Future<void> fetchPortfolioAuth({bool refresh = false}) async {
+//     portfoliosAuth.clear();
+//     if (_loadingAuth) return;
+
+    
+//     if (refresh) {
+//       _pageAuth = 1;
+//       _hasMoreAuth = true;
+//       _portfoliosAuth = [];
+//       _carregadoAuth = false;
+//     }
+
+//     if (_carregadoAuth && !refresh) return;
+
+
+//     _loadingAuth = true;
+//     notifyListeners();
+
+//     try {
+//       final newPosts = await _service.getPortfolioAuth(page: _pageAuth);
+//       print("newPosts: ${newPosts.length}");
+//       if (newPosts.isEmpty) {
+//         _hasMoreAuth = false;
+//       } else {
+//       final idsExistentes = _portfoliosAuth.map((p) => p.id).toSet();
+//       final postsFiltrados = newPosts.where((p) => !idsExistentes.contains(p.id)).toList();
+
+//       if (postsFiltrados.isEmpty) {
+//         _hasMoreAuth = false;
+//       } else {
+//         _portfoliosAuth.addAll(postsFiltrados);
+//         _pageAuth++;
+//         _carregadoAuth = true; // ✅ só marca se de fato adicionou novos
+//       }
+// }
+//     } finally {
+//       _loadingAuth = false;
+//       notifyListeners();
+//     }
+//   }
+
+
+  // Future<void> fetchPortfolioAuth({bool refresh = false}) async {
+  //   if (_loadingAuth) return;
+
+  //   if (refresh) {
+  //     _pageAuth = 1;
+  //     _hasMoreAuth = true;
+  //     _portfoliosAuth.clear();
+  //     _carregadoAuth = false;
+  //   }
+
+  //   // Se já foi carregado e não é refresh, não faz nada
+  //   if (_carregadoAuth && !refresh) return;
+
+  //   _loadingAuth = true;
+  //   notifyListeners();
+
+  //   try {
+  //     final newPosts = await _service.getPortfolioAuth(page: _pageAuth);
+  //     print("newPosts: ${newPosts.length}");
+
+  //     if (newPosts.isEmpty) {
+  //       _hasMoreAuth = false;
+  //     } else {
+  //       // evita duplicados
+  //       final idsExistentes = _portfoliosAuth.map((p) => p.id).toSet();
+  //       final postsFiltrados =
+  //           newPosts.where((p) => !idsExistentes.contains(p.id)).toList();
+
+  //       if (postsFiltrados.isNotEmpty) {
+  //         _portfoliosAuth.addAll(postsFiltrados);
+  //         _pageAuth++;
+  //       } else {
+  //         _hasMoreAuth = false;
+  //       }
+
+  //       _carregadoAuth = true;
+  //     }
+  //   } finally {
+  //     _loadingAuth = false;
+  //     notifyListeners();
+  //   }
+  // }
+
   Future<void> fetchPortfolioAuth({bool refresh = false}) async {
+    if (_loadingAuth) return;
+
     if (refresh) {
       _pageAuth = 1;
       _hasMoreAuth = true;
-      _portfoliosAuth = [];
+      _portfoliosAuth.clear(); // limpa a lista
+      _carregadoAuth = false;
     }
 
-    if (_loadingAuth || !_hasMoreAuth) return;
+    if (_carregadoAuth && !refresh && _pageAuth > 1 && !_hasMoreAuth) return;
 
     _loadingAuth = true;
     notifyListeners();
 
     try {
       final newPosts = await _service.getPortfolioAuth(page: _pageAuth);
-      print("newPosts: ${newPosts.length}");
 
       if (newPosts.isEmpty) {
         _hasMoreAuth = false;
       } else {
-        _portfoliosAuth.addAll(newPosts);
-        _pageAuth++;
+        // Sempre adiciona somente novos posts, sem duplicados
+        final idsExistentes = _portfoliosAuth.map((p) => p.id).toSet();
+        final postsFiltrados =
+            newPosts.where((p) => !idsExistentes.contains(p.id)).toList();
+
+        if (postsFiltrados.isNotEmpty) {
+          _portfoliosAuth.addAll(postsFiltrados);
+          _pageAuth++;
+        } else {
+          _hasMoreAuth = false;
+        }
       }
-      print("portfolio controller: ${newPosts}");
     } finally {
       _loadingAuth = false;
+      _carregadoAuth = true;
       notifyListeners();
     }
   }
+
+
 
   Future<Portfolio> create(Postform form) async{
     print("Portfolio Controller: $form");
@@ -60,8 +168,9 @@ class PortfolioController extends ChangeNotifier {
   }
 
   // 🔹 Esse método é o que a tela está tentando chamar
-  Future<void> loadMorePostsAuth() async {
-    await fetchPortfolioAuth();
+  Future<void> loadMorePostsAuth({bool refresh = false}) async {
+    if (_loadingAuth || !_hasMoreAuth) return;
+    await fetchPortfolioAuth(refresh: refresh);
   }
   Future<void> loadMorePostsAll({bool refresh = false}) async {
     await fetchPortfolios(refresh: refresh);

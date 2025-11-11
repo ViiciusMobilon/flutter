@@ -10,7 +10,6 @@ import 'package:tcc/data/config.dart';
 // ------------------------ CARD DE PORTFÓLIO ------------------------
 class FeedPerfilPortfolio extends StatelessWidget {
   final Portfolio post;
-   
 
   const FeedPerfilPortfolio({
     super.key,

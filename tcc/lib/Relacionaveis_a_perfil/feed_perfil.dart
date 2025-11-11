@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
+import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
@@ -10,11 +11,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 // ------------------------ FEED DE PERFIL ------------------------
 class FeedPerfil extends StatefulWidget {
-  final Portfolio post;
-   
+   final Portfolio post;
   const FeedPerfil({
     super.key,
-    required this.post,
+    required this.post
   });
 
   @override
@@ -29,172 +29,173 @@ class _FeedPerfilState extends State<FeedPerfil> {
     final user = authController.usuario;
     final post = widget.post;
 
-    List<Widget> carouselItems = [];
-
-    // vídeos
-    if (post.videos!.isNotEmpty) {
-      for (var v in post.videos!) {
-        carouselItems.add(
-          _CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'),
-        );
+      List<Widget> carouselItems = [];
+      // vídeos
+      if(post.videos != null && post.videos!.isNotEmpty) {
+        for (var v in post.videos!) {
+          carouselItems.add(
+            _CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'),
+          );
+        }
       }
-    }
 
-    // fotos
-    carouselItems.addAll(post.fotos!.map((f) {
-      return ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: Image.network(
-          '${URLAPISTORAGE}${f.url}',
-          width: double.infinity,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) =>
-              const Center(child: Icon(Icons.broken_image, size: 40)),
+      // fotos
+      if(post.fotos != null && post.fotos!.isNotEmpty){
+        carouselItems.addAll(post.fotos!.map((f) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+          child: Image.network(
+            '${URLAPISTORAGE}${f.url}',
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) =>
+                const Center(child: Icon(Icons.broken_image, size: 40)),
+          ),
+        );
+      }));
+      }
+
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-      );
-    }));
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Cabeçalho
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user?.fotoURL ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapgOuAoFQ8eZJXjFpp9jLmkPbt9N8CzR8hg&s'),
-                  radius: 28,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user?.nome ?? 'sem nome 1',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        user?.nome ?? user?.razao_social ?? 'sem nome',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on,
-                              size: 14, color: Colors.grey),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              user?.cidade ?? 'sem city',
-                              style: const TextStyle(color: Colors.grey),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cabeçalho
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(user?.fotoURL ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapgOuAoFQ8eZJXjFpp9jLmkPbt9N8CzR8hg&s'),
+                    radius: 28,
                   ),
-                ),
-              ],
-            ),
-          ),
-      
-          // Carrossel
-          if (carouselItems.isNotEmpty)
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 240,
-                viewportFraction: 1.0,
-                enableInfiniteScroll: false,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user?.nome ?? 'sem nome 1',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          user?.nome ?? user?.razao_social ?? 'sem nome',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on,
+                                size: 14, color: Colors.grey),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                user?.cidade ?? 'sem city',
+                                style: const TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              items: carouselItems,
             ),
-      
-          // Descrição e botão "Ver mais"
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    post.descricao ?? '',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        
+            // Carrossel
+            if (carouselItems.isNotEmpty)
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 240,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: false,
                 ),
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => VerMaisPageDono(
-                            post: post,
-                          ),
-                        ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1A202C),
-                        borderRadius: BorderRadius.circular(20),
+                items: carouselItems,
+              ),
+        
+            // Descrição e botão "Ver mais"
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      post.descricao ?? '',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
                       ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Ver mais',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => VerMaisPageDono(
+                              post: post,
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Icon(Icons.arrow_forward,
-                              color: Colors.white, size: 16),
-                        ],
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1A202C),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Ver mais',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward,
+                                color: Colors.white, size: 16),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );}
   }
-}
+
 
 // ------------------------ COMPONENTE DE VÍDEO ------------------------
 class _CarouselVideoItem extends StatefulWidget {

@@ -7,7 +7,7 @@ class VerificarController {
   Future<Map<String, dynamic>> verificar(String value, String endpoint) async{
    try {
     print("Valor: ${value}");
-      final result = await _service.verificar(value, endpoint);
+      final result = await _service.verificar(value, 'check/$endpoint');
       print("Mensagem: ${result['msg']}");
       print("existe: ${result['existe']}");
       return {

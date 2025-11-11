@@ -508,9 +508,9 @@ class _botaoState extends State<botao> {
             }
 
             final verificarController = VerificarController();
-              final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
-              final vCNPJ = await verificarController.verificar(widget.cnpjController.text, 'check-cnpj');
-              final vNome = await verificarController.verificar(widget.rsController.text, 'check-razaosocial');
+              final vTel = await verificarController.verificar(widget.telefoneController.text, 'numero');
+              final vCNPJ = await verificarController.verificar(widget.cnpjController.text, 'cnpj');
+              final vNome = await verificarController.verificar(widget.rsController.text, 'razaosocial');
 
             if((vTel['msg'] as String).isNotEmpty){
                 widget.erroTelefone(vTel['msg']);
