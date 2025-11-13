@@ -62,7 +62,12 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
 
             SizedBox(height: 30),
             site(),
-            
+
+            SizedBox(height: 50),
+            Center(child: Text("Especialidades", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
+            SizedBox(height: 30),
+            AreaMultiSelect(),
+
             SizedBox(height: 50),
             Center(child: botao()),
 
@@ -221,6 +226,8 @@ class Whatsapp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      keyboardType: TextInputType.number,
+      inputFormatters: [maskFormatter],
       decoration: InputDecoration(
         labelText: "Whatsapp",
         labelStyle: const TextStyle(color: Colors.black, fontFamily: "Poppins"),
@@ -388,6 +395,116 @@ class _AreaState extends State<Area> {
           ),
         );
       },
+    );
+  }
+}
+
+class AreaMultiSelect extends StatefulWidget {
+  const AreaMultiSelect({super.key});
+
+  @override
+  State<AreaMultiSelect> createState() => _AreaMultiSelectState();
+}
+
+class _AreaMultiSelectState extends State<AreaMultiSelect> {
+  // Lista de opções disponíveis
+  final dropOpcoes = [
+    "Agricultura",
+    "Tecnologia",
+    "Educação",
+    "Saúde",
+    "Engenharia",
+    "Comércio",
+  ];
+
+  // Lista das opções selecionadas
+  final ValueNotifier<List<String>> selecionadas = ValueNotifier([]);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ValueListenableBuilder<List<String>>(
+        
+        valueListenable: selecionadas,
+        builder: (context, value, _) {
+          return SizedBox(
+          
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: DropdownSearch<String>.multiSelection(
+              items: dropOpcoes,
+              selectedItems: value,
+              onChanged: (List<String> selecionadasNovas) {
+                selecionadas.value = selecionadasNovas;
+              },
+              popupProps: PopupPropsMultiSelection.menu(
+                 menuProps: MenuProps(
+                  backgroundColor: Color(0xFFE3F2FD), // 🌈 muda aqui (fundo do menu)
+                ),
+                showSearchBox: true,
+                showSelectedItems: true,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    labelText: "Pesquisar área...",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                fit: FlexFit.loose,
+                constraints: const BoxConstraints(
+                  maxHeight: 300,
+                ),
+              ),
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Áreas de atuação",
+                  hintText: "Escolha uma ou mais áreas",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: const Color.fromRGBO(121, 180, 217, 1),
+                      width: 1.5,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              dropdownBuilder: (context, selecionadasAtuais) {
+                if (selecionadasAtuais.isEmpty) {
+                  return Text(
+                    "Escolha uma ou mais áreas",
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.045,
+                      fontFamily: "Poppins",
+                      color: Colors.grey[700],
+                    ),
+                  );
+                }
+                return Wrap(
+                  spacing: 6,
+                  runSpacing: -8,
+                  children: selecionadasAtuais.map((area) {
+                    return Chip(
+                      label: Text(area),
+                      backgroundColor: const Color.fromRGBO(121, 180, 217, 0.2),
+                      labelStyle: const TextStyle(color: Color.fromRGBO(50, 100, 140, 1)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

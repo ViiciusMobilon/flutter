@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
@@ -104,8 +107,15 @@ class _PerfilDonoState extends State<PerfilDono> {
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
-         // Espaço para o avatar
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+          ),
+          // Espaço para o avatar
           SliverToBoxAdapter(child: _buildDescription()),
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+          ),
+          SliverToBoxAdapter(child: _buildEspecializacao()),
           SliverToBoxAdapter(
             child: _buildContactSection(
               context: context,
@@ -118,16 +128,13 @@ class _PerfilDonoState extends State<PerfilDono> {
             ),
           ),
           SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                if (index < posts.length) {
-                  return FeedPerfil(post: posts[index]);
-                } else {
-                  return _buildLoadingIndicator();
-                }
-              },
-              childCount: posts.length + (isLoadingMore ? 1 : 0),
-            ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index < posts.length) {
+                return FeedPerfil(post: posts[index]);
+              } else {
+                return _buildLoadingIndicator();
+              }
+            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
           ),
         ],
       ),
@@ -135,113 +142,122 @@ class _PerfilDonoState extends State<PerfilDono> {
   }
 
   Widget _buildProfileHeader() {
-  final height = MediaQuery.of(context).size.height;
-  final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
-  return SizedBox(
-    height: height * 0.45, // define a altura total do cabeçalho
-    child: Stack(
-      clipBehavior: Clip.none,
-      children: [
-        // Imagem de capa
-        Container(
-          height: height * 0.25,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+    return SizedBox(
+      height: height * 0.45, // define a altura total do cabeçalho
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Imagem de capa
+          Container(
+            height: height * 0.25,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4',
+                ),
+                fit: BoxFit.cover,
               ),
-              fit: BoxFit.cover,
             ),
           ),
-        ),
 
-        // Gradiente para contraste
-        Container(
-          height: height * 0.25,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.black.withOpacity(0.4),
-                Colors.transparent,
-                Colors.black.withOpacity(0.3),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-
-        // Botão de voltar
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 8,
-          left: 10,
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-
-        // Avatar
-        Positioned(
-          top: height * 0.17,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 3),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
+          // Gradiente para contraste
+          Container(
+            height: height * 0.25,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.3),
                 ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              child: const CircleAvatar(
-                radius: 55,
-                backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+            ),
+          ),
+
+          // Botão de voltar
+
+          // Avatar
+          Positioned(
+            top: height * 0.17,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: const CircleAvatar(
+                  radius: 55,
+                  backgroundImage: NetworkImage(
+                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+                  ),
                 ),
               ),
             ),
           ),
-        ),
 
-        // Nome e informações
-        Positioned(
-          top: height * 0.32,
-          left: 0,
-          right: 0,
-          child: Column(
-            children: [
-              const Text(
-                'João Silva',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+          // Nome e informações
+          Positioned(
+            top: height * 0.32,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                const Text(
+                  'João Silva',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text('Desenvolvedor Mobile',
-                  style: TextStyle(color: Colors.grey[700])),
-              Text('Tech Solutions Inc.',
-                  style: TextStyle(color: Colors.grey[500])),
-              const SizedBox(height: 8),
-              estrelaperfil(),
-              const SizedBox(height: 12),
-              _buildLoveButton(),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  'Desenvolvedor Mobile',
+                  style: TextStyle(color: Colors.grey[700]),
+                ),
+                Text(
+                  'Tech Solutions Inc.',
+                  style: TextStyle(color: Colors.grey[500]),
+                ),
+                const SizedBox(height: 8),
+                estrelaperfil(),
+                const SizedBox(height: 12),
+                _buildLoveButton(),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.25,
+            right: MediaQuery.of(context).size.width * 0.06,
+            child: IconButton(
+              icon: const Icon(
+                Icons.photo,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              onPressed: () {
+                fundo();  
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildLoveButton() {
     return Container(
@@ -267,6 +283,39 @@ class _PerfilDonoState extends State<PerfilDono> {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEspecializacao() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            "Especializações",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.justify,
           ),
         ],
       ),
@@ -318,17 +367,47 @@ Widget _buildContactSection({
 }) {
   final List<Map<String, dynamic>> contacts = [
     if (telefone != null && telefone.isNotEmpty)
-      {'icon': Icons.phone, 'label': 'Telefone', 'url': telefone, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.phone,
+        'label': 'Telefone',
+        'url': telefone,
+        'color': Color(0xFF2196F3),
+      },
     if (whatsapp != null && whatsapp.isNotEmpty)
-      {'icon': Icons.message, 'label': 'WhatsApp', 'url': whatsapp, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.message,
+        'label': 'WhatsApp',
+        'url': whatsapp,
+        'color': Color(0xFF2196F3),
+      },
     if (email != null && email.isNotEmpty)
-      {'icon': Icons.email, 'label': 'Email', 'url': email, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.email,
+        'label': 'Email',
+        'url': email,
+        'color': Color(0xFF2196F3),
+      },
     if (website != null && website.isNotEmpty)
-      {'icon': Icons.language, 'label': 'Website', 'url': website, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.language,
+        'label': 'Website',
+        'url': website,
+        'color': Color(0xFF2196F3),
+      },
     if (x != null && x.isNotEmpty)
-      {'icon': Icons.alternate_email, 'label': 'X', 'url': x, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.alternate_email,
+        'label': 'X',
+        'url': x,
+        'color': Color(0xFF2196F3),
+      },
     if (instagram != null && instagram.isNotEmpty)
-      {'icon': Icons.camera_alt, 'label': 'Instagram', 'url': instagram, 'color': Color(0xFF2196F3)},
+      {
+        'icon': Icons.camera_alt,
+        'label': 'Instagram',
+        'url': instagram,
+        'color': Color(0xFF2196F3),
+      },
   ];
 
   if (contacts.isEmpty) return const SizedBox.shrink();
@@ -364,65 +443,159 @@ Widget _buildContactSection({
             alignment: WrapAlignment.center,
             spacing: 20,
             runSpacing: 16,
-            children: contacts.map((contact) {
-              return GestureDetector(
-                onTap: () async {
-                  final url = Uri.parse(contact['url'] as String);
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Não foi possível abrir o link')),
-                    );
-                  }
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            (contact['color'] as Color).withOpacity(0.7),
-                            contact['color'] as Color,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: (contact['color'] as Color).withOpacity(0.3),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
+            children:
+                contacts.map((contact) {
+                  return GestureDetector(
+                    onTap: () async {
+                      final url = Uri.parse(contact['url'] as String);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Não foi possível abrir o link'),
                           ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Icon(
-                          contact['icon'] as IconData,
-                          color: Colors.white,
-                          size: 28,
+                        );
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                (contact['color'] as Color).withOpacity(0.7),
+                                contact['color'] as Color,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (contact['color'] as Color).withOpacity(
+                                  0.3,
+                                ),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Icon(
+                              contact['icon'] as IconData,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 6),
+                        Text(
+                          contact['label'] as String,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      contact['label'] as String,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
         ],
       ),
     ),
   );
+}
+
+class fundo extends StatefulWidget {
+  const fundo({super.key});
+
+  @override
+  State<fundo> createState() => _fundoState();
+}
+
+class _fundoState extends State<fundo> {
+  File? _image; // Armazena a imagem escolhida
+  final ImagePicker _picker = ImagePicker(); // Picker de imagens
+
+  // Função para escolher imagem
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  // Mostra opções de Galeria ou Câmera
+  void _showImageSourceDialog() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Escolher da Galeria'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Tirar uma Foto'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: _showImageSourceDialog,
+        child: ClipOval(
+          child: _image != null
+              ? Image.file(
+                  _image!,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.width * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: MediaQuery.of(context).size.width * 0.1,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
 }
