@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/favoritos.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
-import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
 import 'package:tcc/settins/pgsettins.dart';
@@ -136,6 +135,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 actions: [
+                  IconButton(
+              icon: const Icon(
+                Icons.photo,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+              onPressed: () {
+                
+              },
+            ),
                    IconButton(
                     icon: const Icon(Icons.favorite,),
                     onPressed: () {

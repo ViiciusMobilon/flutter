@@ -61,7 +61,7 @@ class _VerMaisPageState extends State<VerMaisPageDono> {
           GestureDetector(
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const PerfilDeOutroUsuario()),
+              MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario()),
             ),
             child: CircleAvatar(
               radius: 26,

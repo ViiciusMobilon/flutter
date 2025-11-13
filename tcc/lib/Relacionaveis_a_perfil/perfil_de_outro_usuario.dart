@@ -4,6 +4,7 @@ import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/service_post.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PerfilDeOutroUsuario extends StatefulWidget {
   const PerfilDeOutroUsuario({super.key});
@@ -15,6 +16,13 @@ class PerfilDeOutroUsuario extends StatefulWidget {
 class ProfileScreenState extends State<PerfilDeOutroUsuario> {
   bool isLoved = false;
   int loveCount = 1247;
+   String? telefone = '1';
+  String? whatsapp;
+  String? email;
+  String? website;
+  String? x;
+  String? instagram;
+
 
   final List<ServicePostFeed > posts = [];
   bool isLoadingMore = false;
@@ -100,24 +108,42 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
 
  
 
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          ),
+          // Espaço para o avatar
           SliverToBoxAdapter(child: _buildDescription()),
-          SliverList.builder(
-            itemCount: posts.length + (isLoadingMore ? 1 : 0),
-            itemBuilder: (context, index) {
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+          ),
+          SliverToBoxAdapter(child: _buildEspecializacao()),
+          SliverToBoxAdapter(
+            child: buildContactSection(
+              context: context,
+              telefone: telefone,
+              whatsapp: whatsapp,
+              email: email,
+              website: website,
+              x: x,
+              instagram: instagram,
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
               if (index < posts.length) {
                 return FeedPerfil(post: posts[index]);
               } else {
                 return _buildLoadingIndicator();
               }
-            },
+            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
           ),
         ],
       ),
@@ -361,4 +387,195 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
       ),
     );
   }
+}
+
+ Widget _buildEspecializacao() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            "Especializações",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+    );
+  }
+ // Seção de contato (mantida)
+Widget buildContactSection({
+  required BuildContext context,
+  String? telefone,
+  String? whatsapp,
+  String? email,
+  String? website,
+  String? x,
+  String? instagram,
+}) {
+  final List<Map<String, dynamic>> contacts = [
+    if (telefone != null && telefone.isNotEmpty)
+      {
+        'icon': Icons.phone,
+        'label': 'Telefone',
+        'url': telefone,
+        'color': Color(0xFF2196F3),
+      },
+    if (whatsapp != null && whatsapp.isNotEmpty)
+      {
+        'icon': Icons.message,
+        'label': 'WhatsApp',
+        'url': whatsapp,
+        'color': Color(0xFF2196F3),
+      },
+    if (email != null && email.isNotEmpty)
+      {
+        'icon': Icons.email,
+        'label': 'Email',
+        'url': email,
+        'color': Color(0xFF2196F3),
+      },
+    if (website != null && website.isNotEmpty)
+      {
+        'icon': Icons.language,
+        'label': 'Website',
+        'url': website,
+        'color': Color(0xFF2196F3),
+      },
+    if (x != null && x.isNotEmpty)
+      {
+        'icon': Icons.alternate_email,
+        'label': 'X',
+        'url': x,
+        'color': Color(0xFF2196F3),
+      },
+    if (instagram != null && instagram.isNotEmpty)
+      {
+        'icon': Icons.camera_alt,
+        'label': 'Instagram',
+        'url': instagram,
+        'color': Color(0xFF2196F3),
+      },
+  ];
+
+  if (contacts.isEmpty) return const SizedBox.shrink();
+
+  return Center(
+    child: Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "Entre em Contato",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 20,
+            runSpacing: 16,
+            children:
+                contacts.map((contact) {
+                  return GestureDetector(
+                    onTap: () async {
+                      final url = Uri.parse(contact['url'] as String);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Não foi possível abrir o link'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                (contact['color'] as Color).withOpacity(0.7),
+                                contact['color'] as Color,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (contact['color'] as Color).withOpacity(
+                                  0.3,
+                                ),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Icon(
+                              contact['icon'] as IconData,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          contact['label'] as String,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+          ),
+        ],
+      ),
+    ),
+  );
 }

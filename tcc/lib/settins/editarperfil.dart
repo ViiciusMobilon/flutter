@@ -41,6 +41,8 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
           padding:  EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           children:  [
             Center(child: Perfil()),
+               disponivel(),
+          
         
             
             SizedBox(height: 20),
@@ -188,6 +190,56 @@ class _PerfilState extends State<Perfil> {
                   color: Colors.white70,
                 ),
               ),
+      ),
+    );
+  }
+}
+
+class disponivel extends StatefulWidget {
+  const disponivel({Key? key}) : super(key: key);
+
+  @override
+  State<disponivel> createState() => _disponivelState();
+}
+
+class _disponivelState extends State<disponivel> {
+  bool _isAvailable = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _isAvailable = !_isAvailable;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isAvailable ? Colors.green : Colors.grey,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 4,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(_isAvailable ? Icons.check_circle : Icons.cancel),
+              const SizedBox(width: 8),
+              Text(
+                _isAvailable ? 'Disponível' : 'Indisponível',
+                style:  TextStyle(
+                  fontSize:MediaQuery.of(context).size.width * 0.03,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

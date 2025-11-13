@@ -117,7 +117,7 @@ class _PerfilDonoState extends State<PerfilDono> {
           ),
           SliverToBoxAdapter(child: _buildEspecializacao()),
           SliverToBoxAdapter(
-            child: _buildContactSection(
+            child: buildContactSection(
               context: context,
               telefone: telefone,
               whatsapp: whatsapp,
@@ -241,19 +241,9 @@ class _PerfilDonoState extends State<PerfilDono> {
               ],
             ),
           ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.25,
-            right: MediaQuery.of(context).size.width * 0.06,
-            child: IconButton(
-              icon: const Icon(
-                Icons.photo,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
-              onPressed: () {
-                fundo();  
-              },
-            ),
-          ),
+
+         
+        
         ],
       ),
     );
@@ -356,7 +346,7 @@ class _PerfilDonoState extends State<PerfilDono> {
 }
 
 // Seção de contato (mantida)
-Widget _buildContactSection({
+Widget buildContactSection({
   required BuildContext context,
   String? telefone,
   String? whatsapp,
@@ -572,30 +562,32 @@ class _fundoState extends State<fundo> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child: _image != null
-              ? Image.file(
-                  _image!,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                )
-              : Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: MediaQuery.of(context).size.width * 0.1,
-                      color: Colors.white70,
+          child:
+              _image != null
+                  ? Image.file(
+                    _image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                  : Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
                     ),
                   ),
-                ),
         ),
       ),
     );
   }
 }
+
