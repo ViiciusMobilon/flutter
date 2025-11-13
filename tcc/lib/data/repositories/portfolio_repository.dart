@@ -40,8 +40,14 @@ class PortfolioRepository {
 
   Future<PaginationResult<Portfolio>> getPortfolios({int page =1 }) async {
     try {
+      final token = await _storage.read(key: 'token');
+
       final response = await _dio.get(
-        '/portfolio?page=$page'
+        '/portfolio?page=$page',
+        options: Options(
+          headers: {
+          'Authorization': 'Bearer $token',
+        },),
       );
       print('URL PORTFOLIO all: ${response.realUri}');
 
@@ -67,14 +73,14 @@ class PortfolioRepository {
   
   Future<Portfolio> getPortfolioId({required int id}) async {
     try {
-      // final token = await _storage.read(key: 'token');
+      final token = await _storage.read(key: 'token');
       
       final response = await _dio.get(
         '/portfolio/$id',
-        // options: Options(
-        //   headers: {
-        //   'Authorization': 'Bearer $token',
-        // },),
+        options: Options(
+          headers: {
+          'Authorization': 'Bearer $token',
+        },),
       );
 
       // Se o backend retornar um objeto:
@@ -85,6 +91,7 @@ class PortfolioRepository {
       // Se retornar uma lista com 1 item:
       final data = response.data['portfolio'];
       if (data is List && data.isNotEmpty) {
+        print("getPortfolioid repo: ${Portfolio.fromJson(data[0])}");
         return Portfolio.fromJson(data[0]);
       }
 
@@ -150,4 +157,34 @@ class PortfolioRepository {
   }
 
 
+  Future<Portfolio> updatePortfolio(Postform post, {required int idPost}) async{
+    try{
+      final token = await _storage.read(key: 'token');
+      final map = post.toMap()..removeWhere((key, value) => value == null || (value is String && value.isEmpty));
+
+      FormData formData = FormData.fromMap({
+      ...map,
+        
+      });
+
+      final response = await _dio.post('/usuario/update/$idPost', data: formData, options: Options(
+        headers: {
+        'Authorization': 'Bearer $token',
+        },),
+      );
+
+      if(response == 200 || response == 201){
+        return Portfolio.fromJson(response.data);
+      }else{
+        print('Erro ao fazer update status code: ${response.statusCode}');
+        throw Exception('Erro ao fazer updade status code:  ${response.statusCode}');
+      }
+    } on DioException catch(e){
+      if (e.response != null) {
+        throw Exception(e.response?.data['message'] ?? 'Erro no update');
+      } else {
+        throw Exception('Erro de conexão');
+      }
+    }
+  }
 }

@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:tcc/data/config.dart';
+import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/post.dart';
 import 'package:video_player/video_player.dart';
 
@@ -14,9 +17,9 @@ class Midia {
 }
 
 class EditarPostPage extends StatefulWidget {
-  final Portfolio post;
+  // final Portfolio post;
 
-  const EditarPostPage({Key? key, required this.post}) : super(key: key);
+  const EditarPostPage({Key? key}) : super(key: key);
 
   @override
   State<EditarPostPage> createState() => _EditarPostPageState();
@@ -28,28 +31,38 @@ class _EditarPostPageState extends State<EditarPostPage> {
   final ImagePicker _picker = ImagePicker();
   final PageController _pageController = PageController();
   bool _isLoading = false;
+  late Portfolio? _portfolio;
 
   @override
   void initState() {
     super.initState();
-    _descricaoController.text = widget.post.descricao ?? '';
+    final _portfolioController = context.read<PortfolioController>();
+    _portfolio = _portfolioController.post; 
+    _descricaoController.text = _portfolio!.descricao ?? '';
 
-    // Inicializa mídias existentes
-    // if (widget.post.mediaUrls != null) {
-    //   for (var url in widget.post.mediaUrls!) {
-    //     bool isVideo = url.toLowerCase().endsWith('.mp4') ||
-    //         url.toLowerCase().endsWith('.mov') ||
-    //         url.toLowerCase().endsWith('.avi');
-    //     VideoPlayerController? controller;
-    //     if (isVideo) {
-    //       controller = VideoPlayerController.network(url)
-    //         ..initialize().then((_) {
-    //           if (mounted) setState(() {});
-    //         });
-    //     }
-    //     _midias.add(Midia(url: url, isVideo: isVideo, controller: controller));
-    //   }
-    // }
+    // Inicializa fotos existentes
+    if (_portfolio != null) {
+      if(_portfolio!.fotos != null && _portfolio!.fotos!.isNotEmpty){
+        for (var fotos in _portfolio!.fotos!) {
+          final url = '${URLAPISTORAGE}${fotos.url}';
+          _midias.add(Midia(isVideo: false, url: url));
+        }
+      }
+    }
+
+    // Inicializa videos existentes
+    if (_portfolio != null) {
+      if(_portfolio!.videos != null && _portfolio!.videos!.isNotEmpty){
+        for (var videos in _portfolio!.videos!) {
+          final url = '${URLAPISTORAGE}${videos.url}';
+          final controller = VideoPlayerController.network(url)
+          ..initialize().then((_){
+            if(mounted) setState(() {});
+          });
+          _midias.add(Midia(isVideo: true, url: url, controller: controller));
+        }
+      }
+    }
   }
 
   @override
@@ -113,7 +126,7 @@ class _EditarPostPageState extends State<EditarPostPage> {
     await Future.delayed(const Duration(seconds: 1));
 
     // Atualiza post
-    // final updatedPost = widget.post.copyWith(
+    // final updatedPost = _portfolio.copyWith(
     //   description: _descricaoController.text,
     //   mediaUrls: _midias.map((m) => m.arquivo?.path ?? m.url!).toList(),
     // );

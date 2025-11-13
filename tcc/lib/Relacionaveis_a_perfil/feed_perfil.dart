@@ -26,7 +26,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
   @override
   Widget build(BuildContext context) {
     final authController = context.watch<AuthController>();
-    final user = authController.usuario;
+    final _portfolioController = context.watch<PortfolioController>();
+    final user = context.watch<AuthController>().usuario;
     final post = widget.post;
 
       List<Widget> carouselItems = [];
@@ -86,7 +87,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          user?.nome ?? 'sem nome 1',
+                          user?.nome ?? user?.razao_social ?? 'sem nome',
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -94,7 +95,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          user?.nome ?? user?.razao_social ?? 'sem nome',
+                          user?.tipo ?? 'sem nome',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -152,11 +153,11 @@ class _FeedPerfilState extends State<FeedPerfil> {
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await _portfolioController.getPortfolioId(id: post.id!);
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => VerMaisPageDono(
-                              post: post,
                             ),
                           ),
                         );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil.dart';
 import 'package:tcc/cadastro/cadastro1.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +18,6 @@ class PerfilUser extends StatefulWidget {
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 0;
-  bool _carregado = false;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -235,9 +233,9 @@ class _PerfilUserState extends State<PerfilUser> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text('${user?.categoriaNome ?? ''}',
+                Text('${user?.categoriaNome ?? user?.ramoNome}',
                     style: TextStyle(color: Colors.grey[700])),
-                Text('${user?.razao_social ?? user?.tipo}',
+                Text('${user?.tipo}',
                     style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
                 const EstrelaPerfil(),

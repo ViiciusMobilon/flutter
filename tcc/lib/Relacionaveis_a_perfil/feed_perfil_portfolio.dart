@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
-import 'package:tcc/ver_mais/VerMaisDono.dart';
+import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/post.dart';
@@ -106,7 +106,7 @@ class FeedPerfilPortfolio extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => VerMaisPageDono(post: post),
+                      builder: (context) => VerMaisPage(post: post),
                     ),
                   );
                 },

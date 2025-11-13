@@ -53,6 +53,15 @@ class Portfolio {
           [],
     );
   }
+
+  Map<String, dynamic> toJson(){
+    return{
+      "id": id,
+      "descricao": descricao,
+      "fotos": fotos,
+      "Videos": videos
+    };
+  }
 }
 
 class Foto {

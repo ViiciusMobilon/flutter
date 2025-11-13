@@ -11,6 +11,7 @@ class PortfolioController extends ChangeNotifier {
   int _pageAuth = 1;
   int _pageGeral = 1;
   bool _loadingAuth = false;
+  bool _loading = false;
   bool _hasMoreAuth = true;
   bool _carregadoAuth = false;
   bool _loadingGeral = false;
@@ -19,6 +20,7 @@ class PortfolioController extends ChangeNotifier {
   List<Portfolio> get portfoliosAuth => _portfoliosAuth;
   List<Portfolio> get portfoliosGeral => _portfoliosGeral;
   Portfolio? get post => _post;
+  bool get loading => _loading;
   bool get loadingAuth => _loadingAuth;
   bool get hasMoreAuth => _hasMoreAuth;
   bool get carregadoAuth => _carregadoAuth;
@@ -181,17 +183,18 @@ class PortfolioController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> getPortfolioId({int id = 2}) async {
-  //   try {
-  //      _post = await _service.getPortfolioId(id: id);
-  //   } catch (e) {
-  //     print("Erro ao buscar portfólio: $e");
-  //   } finally {
-  //     notifyListeners();
-  //     _loading = false;
+  Future<void> getPortfolioId({required int id}) async {
+    try {
+       _post = await _service.getPortfolioId(id: id);
+       print("getportfolioidcontroller: ${_post.toString()}");
+    } catch (e) {
+      print("Erro ao buscar portfólio: $e");
+    } finally {
+      notifyListeners();
+      _loading = false;
 
-  //   }
-  // }
+    }
+  }
 
 
   Future<void> fetchPortfolios({bool refresh = false}) async {
@@ -228,4 +231,15 @@ class PortfolioController extends ChangeNotifier {
     }
   }
 
+
+  Future<Portfolio> updade(Postform form,{required int idPost}) async {
+    try {
+      final post = await _service.update( form,idPost: idPost);
+
+      return post;
+    } catch (e) {
+      print("erro update post controller: $e");
+      rethrow;
+    }
+  }
 }

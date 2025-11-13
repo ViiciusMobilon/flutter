@@ -48,6 +48,7 @@ class PortfolioService {
     try{
       final post = await _repository.getPortfolioId(id: id);
       print('Portfolio id service: ${post.id}');
+      print('getPortfolioid service: ${post.toString()}');
       return post;
     } catch (e) {
       print("Erro no Portfolio service: $e");
@@ -55,4 +56,23 @@ class PortfolioService {
     }
 
   }
+
+
+  Future<Portfolio> update(Postform form,{required int idPost}) async{
+    try{
+      final post = await _repository.updatePortfolio(form, idPost: idPost);
+
+      print('Update post service: ${post.toJson()}');
+
+      return post;
+    }catch(e){
+      print("Erro update form ${e.toString()}");
+      throw Exception(e);
+    }
+  }
+
+
+
+
+
 }
