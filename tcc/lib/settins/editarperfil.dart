@@ -8,9 +8,11 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/models/Categoria.dart';
+import 'package:tcc/data/models/ramo.dart';
 import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/categoria_repository.dart';
 import 'package:tcc/data/http/dio_client.dart' as apiHttp;
+import 'package:tcc/data/repositories/ramo_repository.dart';
 
 
 final maskFormatter = MaskTextInputFormatter(
@@ -101,7 +103,13 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             if(user.tipo == 'prestador') ...
             [
               SizedBox(height: 20), 
-              Area(),
+              Area(onRamoSelecionado: (item){
+                if(item != null){
+                  setState(() {
+                    id_ramo = item.id;
+                  });
+                }
+              },),
             ],
            
             SizedBox(height: 50),
@@ -406,6 +414,7 @@ class botao extends StatelessWidget {
         userForm.site = siteController.text;
         userForm.descricao = descricaoController.text;
         try {
+          print("Instagram: ${userForm.instagram}");
           final userEdit = await authController.update(userForm);
           print("Usuário atualizado: $userEdit");
           print('dados: ${userForm.categoria}, ${userForm.descricao}, ${userForm.instagram}, ${userForm.site}, ${userForm.whatsapp}, ${userForm.telefone}}');
@@ -453,26 +462,58 @@ class botao extends StatelessWidget {
 }
 
 class Area extends StatefulWidget {
-  const Area({super.key});
+  final void Function(RamoModel?) onRamoSelecionado;
+
+  const Area({super.key, required this.onRamoSelecionado});
 
   @override
   State<Area> createState() => _AreaState();
+  
 }
 
 class _AreaState extends State<Area> {
-  final dropValue = ValueNotifier('');
-  final dropOpcoes = ["3", "2", "1"];
+  late final RamoRepository ramoRepository;
+
+    void initState(){
+    super.initState();
+    
+    ramoRepository = RamoRepository(client: apiHttp.DioClient.dio);
+    carregarRamos();
+  }
+
+  Future<void> carregarRamos() async {
+    final authController = context.read<AuthController>();
+    ramos = await ramoRepository.getRamo();
+
+    try {
+      ramoSelecionado = ramos.firstWhere(
+      (c) => c.nome == authController.usuario!.ramoNome,
+      );
+    } catch (e) {
+      ramoSelecionado = null; // não encontrou → null permitido
+    }
+    // Define a categoria selecionada de acordo com o usuário
+    
+
+    setState(() {}); // atualiza a UI após carregar categorias
+  }
+
+  String? ramo;
+  List<RamoModel> ramos = [];
+  RamoModel? ramoSelecionado;
+
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: dropValue,
-      builder: (BuildContext context, String value, _) {
-        return DropdownSearch<String>(
-          items: dropOpcoes,
-          selectedItem: value.isEmpty ? null : value,
-          onChanged: (String? newValue) {
-            dropValue.value = newValue ?? '';
+        return DropdownSearch<RamoModel>(
+          selectedItem: ramoSelecionado,
+          asyncItems: (String? filtro) => ramoRepository.getRamo(),
+          itemAsString:(RamoModel? Ramo) => Ramo?.nome ?? "",
+          onChanged: (RamoModel? Ramo){
+            setState(() {
+              ramoSelecionado = Ramo;
+            });
+            widget.onRamoSelecionado(Ramo);
           },
           popupProps: PopupProps.menu(
             showSearchBox: true,
@@ -512,10 +553,9 @@ class _AreaState extends State<Area> {
             ),
           ),
         );
-      },
-    );
+      }
   }
-}
+
 
 ///Se for empresa
 

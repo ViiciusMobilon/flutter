@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
 import 'package:tcc/data/models/post.dart';
+import 'package:tcc/data/models/postForm.dart';
 import 'package:video_player/video_player.dart';
 
 class Midia {
@@ -109,8 +110,9 @@ class _EditarPostPageState extends State<EditarPostPage> {
     });
   }
 
-  Future<void> _salvarAlteracoes() async {
-    if (_descricaoController.text.isEmpty && _midias.isEmpty) {
+  Future<void> _salvarAlteracoes(TextEditingController descricao, List<File?> foto, List<File?> video, {required int id}) async {
+    try {
+          if (descricao.text.isEmpty && foto.isEmpty && video.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Digite algo ou selecione uma mídia"),
@@ -118,29 +120,44 @@ class _EditarPostPageState extends State<EditarPostPage> {
         ),
       );
       return;
+      }
+      final form = Postform();
+
+      form.descricao = descricao.text;
+      form.foto = foto;
+      form.video = video;
+      print("form debug: ${form.descricao}");
+
+      setState(() => _isLoading = true);
+
+      // Simula delay de salvamento
+      await Future.delayed(const Duration(seconds: 1));
+
+      final portfolioController = context.read<PortfolioController>();
+
+      final postEdit = await portfolioController.updade(idPost: id, form);
+      print("POst: ${form.toString()} e id${id}");
+      
+
+      setState(() => _isLoading = false);
+      if (postEdit != null) {
+      print("POst: ${form.toString()} e id${id}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Post atualizado com sucesso!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+        
+        Navigator.pop(context, true);
+      }
+
+      
+
+      
+    } catch (e) {
+      print("Erro ao atualizar post: ${e}");
     }
-
-    setState(() => _isLoading = true);
-
-    // Simula delay de salvamento
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Atualiza post
-    // final updatedPost = _portfolio.copyWith(
-    //   description: _descricaoController.text,
-    //   mediaUrls: _midias.map((m) => m.arquivo?.path ?? m.url!).toList(),
-    // );
-
-    setState(() => _isLoading = false);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Post atualizado com sucesso!"),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    // Navigator.pop(context, updatedPost);
   }
 
   Widget _buildMidiaItem(Midia midia, int index) {
@@ -177,13 +194,21 @@ class _EditarPostPageState extends State<EditarPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final postForm = Postform();
+    final postId = _portfolio!.id;
+
+    postForm.descricao = _descricaoController.text;
+    final foto = _midias.where((m) => !m.isVideo).map((m) => m.arquivo).toList();
+    final video = _midias.where((m) => m.isVideo).map((m) => m.arquivo).toList();
+    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Editar Post"),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: _isLoading ? null : _salvarAlteracoes,
+            onPressed: () => _isLoading ? null : _salvarAlteracoes(id: postId!, _descricaoController,foto, video ),
           ),
         ],
       ),

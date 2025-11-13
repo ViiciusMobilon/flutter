@@ -167,16 +167,18 @@ class PortfolioRepository {
         
       });
 
-      final response = await _dio.post('/usuario/update/$idPost', data: formData, options: Options(
+      final response = await _dio.post('/portfolio/update/$idPost', data: formData, options: Options(
         headers: {
         'Authorization': 'Bearer $token',
         },),
       );
 
-      if(response == 200 || response == 201){
-        return Portfolio.fromJson(response.data);
+      if(response.statusCode == 200 || response.statusCode == 201){
+        print("Portfolio.json: ${Portfolio.fromJson(response.data)}");
+        print("response.data[portfolio]: ${response.data['portfolio']}");
+        return Portfolio.fromJson(response.data['portfolio']);
       }else{
-        print('Erro ao fazer update status code: ${response.statusCode}');
+        print('Erro ao fazer update status code: ${response.statusCode} e data ${response.data}');
         throw Exception('Erro ao fazer updade status code:  ${response.statusCode}');
       }
     } on DioException catch(e){

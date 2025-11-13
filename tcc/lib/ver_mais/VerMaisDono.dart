@@ -37,6 +37,9 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
     @override
     void initState() {
       super.initState();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<PortfolioController>();
+      });
       final _portfolioController = context.read<PortfolioController>();
       _portfolio = _portfolioController.post; 
 

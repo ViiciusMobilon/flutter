@@ -1,12 +1,15 @@
 import 'dart:io';
 
 class Postform {
+  int? id;
   String? descricao;
   List<File?>? foto;
   List<File?>? video;
 
 
   Postform({
+
+    this.id,
     this.descricao,
     this.foto,
     this.video
