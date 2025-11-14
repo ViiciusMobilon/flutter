@@ -117,7 +117,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
         slivers: [
           SliverToBoxAdapter(child: _buildProfileHeader()),
           SliverToBoxAdapter(
-            child: SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            child: SizedBox(height: MediaQuery.of(context).size.width * 0.001),
           ),
           // Espaço para o avatar
           SliverToBoxAdapter(child: _buildDescription()),
@@ -262,7 +262,9 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
 
                 // Botão de Love
                 _buildLoveButton(),
-                const SizedBox(height: 20),
+               disponivel()
+                
+           
               ],
             ),
           ),
@@ -270,7 +272,7 @@ class ProfileScreenState extends State<PerfilDeOutroUsuario> {
       ),
     );
   }
-
+ 
   Widget _buildLoveButton() {
     return GestureDetector(
       onTap: _toggleLove,
@@ -578,4 +580,53 @@ Widget buildContactSection({
       ),
     ),
   );
+}
+class disponivel extends StatefulWidget {
+  const disponivel({Key? key}) : super(key: key);
+
+  @override
+  State<disponivel> createState() => _disponivelState();
+}
+
+class _disponivelState extends State<disponivel> {
+  bool _isAvailable = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _isAvailable = !_isAvailable;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isAvailable ? Colors.green : const Color.fromARGB(255, 255, 0, 0),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 4,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(_isAvailable ? Icons.check_circle : Icons.cancel),
+              const SizedBox(width: 8),
+              Text(
+                _isAvailable ? 'Disponível' : 'Indisponível',
+                style:  TextStyle(
+                  fontSize:MediaQuery.of(context).size.width * 0.03,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

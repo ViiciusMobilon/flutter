@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/settins/seguranca/email/email.dart';
 import 'package:tcc/settins/seguranca/numero/numero.dart';
@@ -62,6 +63,21 @@ class _SegurancaState extends State<Seguranca> {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Trocarnumero()),
+                  ),
+            ),
+
+             ListTile(
+              leading: Icon(Icons.lock, color: Colors.indigoAccent),
+              title: Text(
+                'Alterar CEP',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                ),
+              ),
+              onTap:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CEP()),
                   ),
             ),
             CamposSenha(),

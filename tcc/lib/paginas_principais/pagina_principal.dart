@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tcc/Relacionaveis_a_perfil/favoritos.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
+import 'package:tcc/cadastro/Contratante.dart';
 import 'package:tcc/feed_principal/feed_aleatorio.dart';
 import 'package:tcc/Relacionaveis_a_perfil/criacao_de%20_card.dart';
 import 'package:tcc/paginas_principais/filtro/pesquisa.dart';
@@ -30,26 +34,105 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: () async {
+    return WillPopScope(
+      onWillPop: () async {
         // Retornar false bloqueia o botão de voltar
-        return false;},
+        return false;
+      },
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
-      
+
         // AppBar muda dependendo da página
-        appBar: paginaAtual == 0
-            // AppBar da tela inicial (com barra de pesquisa)
-            ? PreferredSize(
-                preferredSize: Size.fromHeight(
-                  MediaQuery.of(context).size.height * 0.085,
-                ),
-                child: AppBar(
+        appBar:
+            paginaAtual == 0
+                // AppBar da tela inicial (com barra de pesquisa)
+                ? PreferredSize(
+                  preferredSize: Size.fromHeight(
+                    MediaQuery.of(context).size.height * 0.085,
+                  ),
+                  child: AppBar(
                     surfaceTintColor: Colors.transparent,
-                  automaticallyImplyLeading: false,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    flexibleSpace: Container(
+                      // Gradiente de fundo do AppBar
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: SafeArea(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.05,
+                            vertical: MediaQuery.of(context).size.height * 0.02,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Container da barra de pesquisa
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.045,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(25),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: TextField(
+                                  style: const TextStyle(color: Colors.white),
+                                  cursorColor: Colors.white,
+                                  readOnly: true, // Impede digitação direta
+                                  onTap: () {
+                                    // Ao tocar, abre a tela de pesquisa personalizada
+                                    showSearch(
+                                      context: context,
+                                      delegate: BarraDePesquisa(),
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                                    hintText: "Pesquisar serviços...",
+                                    hintStyle: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                          0.04,
+                                    ),
+                                    border: InputBorder.none,
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                          0.012,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                // AppBar da página de Perfil
+                : AppBar(
+                  surfaceTintColor: Colors.transparent,
+                  title: const Text(
+                    "Perfil",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   flexibleSpace: Container(
-                    // Gradiente de fundo do AppBar
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
@@ -57,141 +140,74 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: SafeArea(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.05,
-                          vertical: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Container da barra de pesquisa
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.045,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(25),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: TextField(
-                                style: const TextStyle(color: Colors.white),
-                                cursorColor: Colors.white,
-                                readOnly: true, // Impede digitação direta
-                                onTap: () {
-                                  // Ao tocar, abre a tela de pesquisa personalizada
-                                  showSearch(
-                                    context: context,
-                                    delegate: BarraDePesquisa(),
-                                  );
-                                },
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                  ),
-                                  hintText: "Pesquisar serviços...",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize:
-                                        MediaQuery.of(context).size.width * 0.04,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical:
-                                        MediaQuery.of(context).size.height * 0.012,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                  ),
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  actions: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.photo,
+                        color: Color.fromARGB(255, 255, 255, 255),
                       ),
+                      onPressed: () async {
+                        final imagem = await escolherImagemDaGaleria();
+                        if (imagem != null) {
+                          // faça algo com a imagem
+                          print("Imagem selecionada: ${imagem.path}");
+                        }
+                      },
                     ),
-                  ),
-                ),
-              )
-            // AppBar da página de Perfil
-            : AppBar(
-                surfaceTintColor: Colors.transparent,
-                title: const Text(
-                  "Perfil",
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    IconButton(
+                      icon: const Icon(Icons.favorite),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FavoritosPage(),
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                    // Ícone de configurações no canto direito
+                    IconButton(
+                      icon: const Icon(Icons.more_vert_outlined),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const settinspage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                actions: [
-                  IconButton(
-              icon: const Icon(
-                Icons.photo,
-                color: Color.fromARGB(255, 255, 255, 255),
-              ),
-              onPressed: () {
-                
-              },
-            ),
-                   IconButton(
-                    icon: const Icon(Icons.favorite,),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FavoritosPage(),
-                        ),
-                      );
-                    },
-                  ),
-                  // Ícone de configurações no canto direito
-                  IconButton(
-                    icon: const Icon(Icons.more_vert_outlined),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const settinspage(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-      
+
         // IndexedStack mantém o estado das páginas mesmo ao trocar
         body: IndexedStack(index: paginaAtual, children: _paginas),
-      
+
         // Botão flutuante aparece apenas na página de Perfil
-        floatingActionButton: paginaAtual == 1
-            ? FloatingActionButton(
-                onPressed: () async {
-                  // Abre a página para criar novo post
-                  final resultado = await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
-                  );
-                  if (resultado != null && mounted) {
-                    // Aqui você pode atualizar o feed com o novo post
-                  }
-                },
-                backgroundColor: const Color(0xFF5E35B1),
-                elevation: 4,
-                child: const Icon(Icons.add, color: Colors.white),
-              )
-            : null,
-      
+        floatingActionButton:
+            paginaAtual == 1
+                ? FloatingActionButton(
+                  onPressed: () async {
+                    // Abre a página para criar novo post
+                    final resultado = await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (ctx) => const NovoPostPage()),
+                    );
+                    if (resultado != null && mounted) {
+                      // Aqui você pode atualizar o feed com o novo post
+                    }
+                  },
+                  backgroundColor: const Color(0xFF5E35B1),
+                  elevation: 4,
+                  child: const Icon(Icons.add, color: Colors.white),
+                )
+                : null,
+
         // Barra de navegação inferior com gradiente
         bottomNavigationBar: Container(
           margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -227,8 +243,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 type: BottomNavigationBarType.fixed,
                 selectedFontSize: 12,
                 unselectedFontSize: 11,
-                selectedLabelStyle:
-                    const TextStyle(fontWeight: FontWeight.w600),
+                selectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home_rounded),
@@ -333,7 +350,6 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
                     ),
                   ],
                 ),
-             
               ),
             ],
           ),
@@ -341,4 +357,17 @@ class _pesquisaWidgetState extends State<pesquisaWidget> {
       ),
     );
   }
+}
+
+final ImagePicker picker = ImagePicker();
+
+Future<File?> escolherImagemDaGaleria() async {
+  final XFile? imagem = await picker.pickImage(
+    source: ImageSource.gallery,
+    imageQuality: 70,
+  );
+
+  if (imagem == null) return null;
+
+  return File(imagem.path);
 }

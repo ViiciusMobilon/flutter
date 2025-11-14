@@ -26,7 +26,7 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          surfaceTintColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -38,13 +38,11 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
       body: Container(
         color: Colors.white,
         child: ListView(
-          padding:  EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          children:  [
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          children: [
             Center(child: Perfil()),
-               disponivel(),
-          
-        
-            
+            disponivel(),
+
             SizedBox(height: 20),
             Descricao(),
             SizedBox(height: 20),
@@ -53,26 +51,40 @@ class _Editar_PerfilState extends State<Editar_Perfil> {
             nome(),
 
             SizedBox(height: 50),
-            Center(child: Text("Contatos", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
-            
-           
-             SizedBox(height: 30),
+            Center(
+              child: Text(
+                "Contatos",
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.08,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            SizedBox(height: 30),
             Whatsapp(),
 
-             SizedBox(height: 30),
-            Insta(), 
+            SizedBox(height: 30),
+            Insta(),
 
             SizedBox(height: 30),
             site(),
 
             SizedBox(height: 50),
-            Center(child: Text("Especialidades", style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.08, fontWeight:FontWeight.bold),)), 
+            Center(
+              child: Text(
+                "Especialidades",
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.08,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             SizedBox(height: 30),
             AreaMultiSelect(),
 
             SizedBox(height: 50),
             Center(child: botao()),
-
           ],
         ),
       ),
@@ -170,26 +182,27 @@ class _PerfilState extends State<Perfil> {
     return GestureDetector(
       onTap: _showImageSourceDialog,
       child: ClipOval(
-        child: _image != null
-            ? Image.file(
-                _image!,
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
-              )
-            : Container(
-                width: 150,
-                height: 150,
-                decoration: const BoxDecoration(
-                  color: Colors.grey,
-                  shape: BoxShape.circle,
+        child:
+            _image != null
+                ? Image.file(
+                  _image!,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                )
+                : Container(
+                  width: 150,
+                  height: 150,
+                  decoration: const BoxDecoration(
+                    color: Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    size: 50,
+                    color: Colors.white70,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.camera_alt,
-                  size: 50,
-                  color: Colors.white70,
-                ),
-              ),
       ),
     );
   }
@@ -217,7 +230,10 @@ class _disponivelState extends State<disponivel> {
             });
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: _isAvailable ? Colors.green : Colors.grey,
+            backgroundColor:
+                _isAvailable
+                    ? Colors.green
+                    : const Color.fromARGB(255, 255, 0, 0),
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape: RoundedRectangleBorder(
@@ -232,8 +248,8 @@ class _disponivelState extends State<disponivel> {
               const SizedBox(width: 8),
               Text(
                 _isAvailable ? 'Disponível' : 'Indisponível',
-                style:  TextStyle(
-                  fontSize:MediaQuery.of(context).size.width * 0.03,
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width * 0.03,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -257,9 +273,7 @@ class nome extends StatelessWidget {
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: const BorderSide(color: Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -269,8 +283,6 @@ class nome extends StatelessWidget {
     );
   }
 }
-
-
 
 class Whatsapp extends StatelessWidget {
   const Whatsapp({super.key});
@@ -286,9 +298,7 @@ class Whatsapp extends StatelessWidget {
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: const BorderSide(color: Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -298,6 +308,7 @@ class Whatsapp extends StatelessWidget {
     );
   }
 }
+
 class site extends StatelessWidget {
   const site({super.key});
 
@@ -310,9 +321,7 @@ class site extends StatelessWidget {
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: const BorderSide(color: Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -335,9 +344,7 @@ class Insta extends StatelessWidget {
         hintText: "Fulano de Tal",
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: const BorderSide(color: Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -359,7 +366,9 @@ class botao extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.6,
         height: 50,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(colors: [Colors.blue, Colors.indigoAccent]),
+          gradient: const LinearGradient(
+            colors: [Colors.blue, Colors.indigoAccent],
+          ),
           borderRadius: BorderRadius.circular(40),
           boxShadow: [
             BoxShadow(
@@ -394,27 +403,29 @@ class Area extends StatefulWidget {
 }
 
 class _AreaState extends State<Area> {
-  final dropValue = ValueNotifier('');
-  final dropOpcoes = ["3", "2", "1"];
+  final ValueNotifier<String> dropValue = ValueNotifier('');
+  final List<String> dropOpcoes = ['3', '2', '1'];
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<String>(
       valueListenable: dropValue,
-      builder: (BuildContext context, String value, _) {
+      builder: (context, value, _) {
         return DropdownSearch<String>(
-          items: dropOpcoes,
+          items: (filter, _) => dropOpcoes,
           selectedItem: value.isEmpty ? null : value,
-          onChanged: (String? newValue) {
+          onChanged: (newValue) {
             dropValue.value = newValue ?? '';
           },
           popupProps: PopupProps.menu(
             showSearchBox: true,
             searchFieldProps: TextFieldProps(
               decoration: InputDecoration(
-                labelText: "Pesquisar área...",
-                 labelStyle: const TextStyle(
-              color: Colors.black, fontFamily: "Poppins"),
+                labelText: 'Pesquisar área...',
+                labelStyle: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'Poppins',
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -423,12 +434,14 @@ class _AreaState extends State<Area> {
             fit: FlexFit.loose,
             constraints: const BoxConstraints(maxHeight: 250),
           ),
-          dropdownDecoratorProps: DropDownDecoratorProps(
-            dropdownSearchDecoration: InputDecoration(
-              labelText: "Área de atuação",
+          decoratorProps: DropDownDecoratorProps(
+            decoration: InputDecoration(
+              labelText: 'Área de atuação',
               labelStyle: const TextStyle(
-              color: Colors.black, fontFamily: "Poppins"),
-              hintText: "Escolha a área de atuação",
+                color: Colors.black,
+                fontFamily: 'Poppins',
+              ),
+              hintText: 'Escolha a área de atuação',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -451,6 +464,9 @@ class _AreaState extends State<Area> {
   }
 }
 
+
+
+
 class AreaMultiSelect extends StatefulWidget {
   const AreaMultiSelect({super.key});
 
@@ -459,96 +475,79 @@ class AreaMultiSelect extends StatefulWidget {
 }
 
 class _AreaMultiSelectState extends State<AreaMultiSelect> {
-  // Lista de opções disponíveis
-  final dropOpcoes = [
-    "Agricultura",
-    "Tecnologia",
-    "Educação",
-    "Saúde",
-    "Engenharia",
-    "Comércio",
+  final List<String> dropOpcoes = [
+    'Agricultura',
+    'Tecnologia',
+    'Educação',
+    'Saúde',
+    'Engenharia',
+    'Comércio',
   ];
 
-  // Lista das opções selecionadas
-  final ValueNotifier<List<String>> selecionadas = ValueNotifier([]);
+  final ValueNotifier<List<String>> selecionadas = ValueNotifier<List<String>>([]);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ValueListenableBuilder<List<String>>(
-        
         valueListenable: selecionadas,
-        builder: (context, value, _) {
+        builder: (context, values, _) {
           return SizedBox(
-          
             width: MediaQuery.of(context).size.width * 0.8,
             child: DropdownSearch<String>.multiSelection(
-              items: dropOpcoes,
-              selectedItems: value,
-              onChanged: (List<String> selecionadasNovas) {
-                selecionadas.value = selecionadasNovas;
+              // ✅ Nova forma de fornecer a lista fixa
+              items: (String? filter, List<String>? _) {
+                if (filter == null || filter.isEmpty) return dropOpcoes;
+                return dropOpcoes
+                    .where((item) =>
+                        item.toLowerCase().contains(filter.toLowerCase()))
+                    .toList();
               },
+
+              selectedItems: values,
+              onChanged: (newValues) {
+                selecionadas.value = newValues;
+              },
+
               popupProps: PopupPropsMultiSelection.menu(
-                 menuProps: MenuProps(
-                  backgroundColor: Color(0xFFE3F2FD), // 🌈 muda aqui (fundo do menu)
-                ),
                 showSearchBox: true,
-                showSelectedItems: true,
-                searchFieldProps: TextFieldProps(
-                  decoration: InputDecoration(
-                    labelText: "Pesquisar área...",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                fit: FlexFit.loose,
-                constraints: const BoxConstraints(
-                  maxHeight: 300,
-                ),
+                showSelectedItems: false,
               ),
-              dropdownDecoratorProps: DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                  labelText: "Áreas de atuação",
-                  hintText: "Escolha uma ou mais áreas",
+
+              decoratorProps: DropDownDecoratorProps(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  labelText: 'Áreas de atuação',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: const Color.fromRGBO(121, 180, 217, 1),
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF2196F3), width: 2),
                   ),
                 ),
               ),
-              dropdownBuilder: (context, selecionadasAtuais) {
-                if (selecionadasAtuais.isEmpty) {
-                  return Text(
+
+              dropdownBuilder: (context, selectedList) {
+                if (selectedList.isEmpty) {
+                  return const Text(
                     "Escolha uma ou mais áreas",
-                    style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.width * 0.045,
-                      fontFamily: "Poppins",
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(color: Colors.black),
                   );
                 }
+
                 return Wrap(
                   spacing: 6,
-                  runSpacing: -8,
-                  children: selecionadasAtuais.map((area) {
+                  children: selectedList.map((area) {
                     return Chip(
                       label: Text(area),
-                      backgroundColor: const Color.fromRGBO(121, 180, 217, 0.2),
-                      labelStyle: const TextStyle(color: Color.fromRGBO(50, 100, 140, 1)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                      backgroundColor: const Color(0xFFE3F2FD),
+                      labelStyle: const TextStyle(color: Color(0xFF2196F3)),
                     );
                   }).toList(),
                 );

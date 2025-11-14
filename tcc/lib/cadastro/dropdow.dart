@@ -12,7 +12,7 @@ class Area extends StatefulWidget {
 class _AreaState extends State<Area> {
   // Valor selecionado no dropdown
   final dropValue = ValueNotifier('');
-  
+
   // Opções disponíveis no dropdown
   final dropOpcoes = [
     "3",
@@ -27,15 +27,16 @@ class _AreaState extends State<Area> {
         valueListenable: dropValue,
         builder: (BuildContext context, String value, _) {
           return SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8, // Largura do dropdown
+            width: MediaQuery.of(context).size.width * 0.8,
             child: DropdownSearch<String>(
-              items: dropOpcoes, // Lista de opções
-              selectedItem: value.isEmpty ? null : value, // Valor selecionado
+              items: (filter, _) => dropOpcoes,
+              selectedItem: value.isEmpty ? null : value,
               onChanged: (String? newValue) {
-                dropValue.value = newValue ?? ''; // Atualiza o valor selecionado
+                dropValue.value = newValue ?? '';
               },
+
               popupProps: PopupProps.menu(
-                showSearchBox: true, // Permite pesquisar opções
+                showSearchBox: true,
                 searchFieldProps: TextFieldProps(
                   decoration: InputDecoration(
                     labelText: "Pesquisar área...",
@@ -45,32 +46,32 @@ class _AreaState extends State<Area> {
                   ),
                 ),
                 fit: FlexFit.loose,
-                constraints: BoxConstraints(
-                  maxHeight: 250, // Altura máxima do popup
-                ),
+                constraints: const BoxConstraints(maxHeight: 250),
               ),
-              dropdownDecoratorProps: DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
+
+              /// ✔ CORREÇÃO AQUI → usar decoratorProps
+              decoratorProps: DropDownDecoratorProps(
+                decoration: InputDecoration(
                   labelText: "Área de atuação",
                   hintText: "Escolha a área de atuação",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: const Color.fromRGBO(121, 180, 217, 1), // Cor ao focar
+                    borderSide: const BorderSide(
+                      color: Color.fromRGBO(121, 180, 217, 1),
                       width: 1.5,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey), // Cor padrão
+                    borderSide: const BorderSide(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
+
               dropdownBuilder: (context, selectedItem) {
-                // Exibe o texto do item selecionado ou o placeholder
                 return Text(
                   selectedItem ?? "Escolha a área de atuação",
                   style: TextStyle(
@@ -86,4 +87,3 @@ class _AreaState extends State<Area> {
     );
   }
 }
-
