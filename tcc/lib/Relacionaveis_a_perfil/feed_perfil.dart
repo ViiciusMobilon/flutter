@@ -157,8 +157,7 @@ class _FeedPerfilState extends State<FeedPerfil> {
                         await _portfolioController.getPortfolioId(id: post.id!);
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => VerMaisPageDono(
-                            ),
+                            builder: (context) => VerMaisPageDono(id: post.id!),
                           ),
                         );
                       },

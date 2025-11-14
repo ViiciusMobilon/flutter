@@ -234,10 +234,14 @@ class PortfolioController extends ChangeNotifier {
 
   Future<Portfolio> updade(Postform form,{required int idPost}) async {
     try {
-      final post = await _service.update( form,idPost: idPost);
-      notifyListeners();
+      final result = await _service.update( form,idPost: idPost);
+      if(result != null){
+        _post = result;
+        notifyListeners();
+      }
+      
 
-      return post;
+      return result;
     } catch (e) {
       print("erro update post controller: $e");
       rethrow;

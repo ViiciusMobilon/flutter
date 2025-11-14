@@ -11,10 +11,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 
 class VerMaisPageDono extends StatefulWidget {
-  // final int id;
+  final int id;
   const VerMaisPageDono({
     super.key,
-    // required this.id,
+    required this.id,
   });
 
   @override
@@ -28,7 +28,7 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
     final Map<int, VideoPlayerController> _controllers = {};
     int _currentIndex = 0;
 
-    late Portfolio? _portfolio;
+    // late Portfolio? _portfolio;
 
     late AnimationController _animationController;
     late Animation<double> _fadeAnimation;
@@ -37,11 +37,13 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
     @override
     void initState() {
       super.initState();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<PortfolioController>();
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
+        final portfolioController = Provider.of<PortfolioController>(context, listen: false);
+        await portfolioController.getPortfolioId(id: widget.id);
+        _initVideos();
+        _animationController.forward();
+
       });
-      final _portfolioController = context.read<PortfolioController>();
-      _portfolio = _portfolioController.post; 
 
       _animationController = AnimationController(
         duration: const Duration(milliseconds: 400),
@@ -59,20 +61,17 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
         CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
       );
 
-      _animationController.forward();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final portfolioController = context.read<PortfolioController>();
-        setState(() {
-          _portfolio = portfolioController.post;
-        });
-        _initVideos();
-      });
+      
     }
 
     void _initVideos() {
-      if (_portfolio!.videos != null) {
-        for (int i = 0; i < _portfolio!.videos!.length; i++) {
-          final url = '${URLAPISTORAGE}${_portfolio!.videos![i]}';
+      final _portfolio = Provider.of<PortfolioController>(context, listen: false);
+      // final _portfolio = context.read<PortfolioController>();
+      final _post = _portfolio.post;
+
+      if (_post!.videos != null) {
+        for (int i = 0; i < _post!.videos!.length; i++) {
+          final url = '${URLAPISTORAGE}${_post!.videos![i]}';
           print('url video: ${url}');
           if (_isVideo(url)) {
             final controller = VideoPlayerController.network(url)
@@ -203,9 +202,12 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
     }
 
     Widget _buildMidiaCarousel() {
-      final fotos = _portfolio!.fotos;
+      final _portfolio = context.watch<PortfolioController>();
+
+      final _post = _portfolio.post;
+      final fotos = _post!.fotos;
       // print('fotos dono: ${_portfolio!.fotos?.first.url}');
-      final videos = _portfolio!.videos;
+      final videos = _post!.videos;
       print('ver dono Fotos: ${fotos?.map((f) => f.toString()).toList()}');
       print('ver mais url: ${URLAPISTORAGE}$fotos.url');
 
@@ -260,7 +262,10 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
     }
 
     Widget _buildDescription() {
-      final desc = _portfolio!.descricao ?? 'Sem descrição disponível.';
+      final _portfolio = context.watch<PortfolioController>();
+
+      final _post = _portfolio.post;
+      final desc = _post!.descricao ?? 'Sem descrição disponível.';
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         child: Text(
@@ -276,11 +281,16 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
 
     @override
     Widget build(BuildContext context) {
-      final _portfolioController = context.watch<PortfolioController>();
-      if(_portfolio == null){
+      final _portfolio = context.watch<PortfolioController>();
+
+      final _post = _portfolio.post;
+      if(_post == null){
         return const Scaffold(
           body: Center(child: CircularProgressIndicator(),),
         );
+      }
+      if(_controllers.isEmpty){
+        _initVideos();
       }
       return Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
@@ -310,13 +320,20 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
             IconButton(
               icon: const Icon(Icons.edit, color: Colors.white),
               onPressed: () async {
-                await _portfolioController.getPortfolioId(id: _portfolio!.id!);
+                final _portfolioController = Provider.of<PortfolioController>(context, listen: false);
+                var _post = _portfolio.post;
+                await _portfolioController.getPortfolioId(id: _post!.id!);
 
-                Navigator.of(context).push(
+                final update = Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => EditarPostPage(),
                   ),
                 );
+
+                if(update == 'true'){
+                print('fui chamado');
+                await _portfolioController.getPortfolioId(id: _post!.id!);
+                }
               },
             ),
           ],
