@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
 
 /// EstrelaRating: barra de avaliação interativa
 class EstrelaRating extends StatelessWidget {
@@ -49,14 +51,18 @@ class EstrelaRating extends StatelessWidget {
 
 /// EstrelaPerfil: apenas exibe estrelas (não interativa)
 class EstrelaPerfil extends StatelessWidget {
-  final double estrelas;
+  // final double estrelas;
 
-  const EstrelaPerfil({super.key, this.estrelas = 5});
+  const EstrelaPerfil({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<AuthController>();
+    final user = controller.usuario;
+    var estrelas = user!.avaliacaoMedia;
+    print("Estrelas do usuario: ${estrelas}");
     return RatingBarIndicator(
-      rating: estrelas,
+      rating: estrelas == null ? estrelas = 5 : estrelas,
       direction: Axis.horizontal,
       itemCount: 5,
       itemSize: 32,

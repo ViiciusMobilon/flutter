@@ -24,6 +24,7 @@ class VerMaisPageDono extends StatefulWidget {
 
 class _VerMaisPageDonoState extends State<VerMaisPageDono>
   with SingleTickerProviderStateMixin {
+    bool editou = false;
 
     final Map<int, VideoPlayerController> _controllers = {};
     int _currentIndex = 0;
@@ -307,7 +308,7 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context, editou),
           ),
           title: const Text(
             'Detalhes do Serviço',
@@ -324,15 +325,17 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
                 var _post = _portfolio.post;
                 await _portfolioController.getPortfolioId(id: _post!.id!);
 
-                final update = Navigator.of(context).push(
+                final update = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => EditarPostPage(),
                   ),
                 );
 
                 if(update == 'true'){
-                print('fui chamado');
-                await _portfolioController.getPortfolioId(id: _post!.id!);
+                  print('fui chamado');
+                  editou = true;
+                  await _portfolioController.getPortfolioId(id: _post!.id!);
+                  setState(() {});
                 }
               },
             ),

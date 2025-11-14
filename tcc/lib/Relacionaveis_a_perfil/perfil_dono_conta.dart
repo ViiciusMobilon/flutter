@@ -6,6 +6,8 @@ import 'system_star.dart';
 import 'package:provider/provider.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';
+import 'package:intl/intl.dart';
+
 
 class PerfilUser extends StatefulWidget {
    
@@ -18,6 +20,8 @@ class PerfilUser extends StatefulWidget {
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
   int loveCount = 0;
+
+
 
   final ScrollController _scrollController = ScrollController();
 
@@ -130,6 +134,20 @@ class _PerfilUserState extends State<PerfilUser> {
     final _portfolioController = context.watch<PortfolioController>();
     final user = context.watch<AuthController>().usuario;
     print('user tell: ${user?.telefone}');
+    DateTime hoje  = DateTime.now();
+    DateTime criado = user!.createdAt!;
+
+    int anos = hoje.year - criado.year;
+
+    if (hoje.month < criado.month ||
+      (hoje.month == criado.month && hoje.day < criado.day)) {
+      anos--;
+    }
+    // String data = DateFormat('dd/MM/yyyy').format(user!.createdAt!);
+    print('user data criação: ${anos}');
+    if(anos < 1){
+      print("cadastrado recentemente");
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,

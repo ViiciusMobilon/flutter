@@ -26,6 +26,8 @@ class UsuarioGeral {
   String? rua;
   String? numero;
   String? infoadd;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   int? ramo;
   String? ramoNome;
   int? categoria;
@@ -62,6 +64,8 @@ class UsuarioGeral {
     this.rua,
     this.numero,
     this.infoadd,
+    this.createdAt,
+    this.updatedAt,
     this.ramo,
     this.ramoNome,
     this.categoria,
@@ -96,6 +100,8 @@ class UsuarioGeral {
       rua: json['user']['rua'],
       numero: json['user']['numero'],
       infoadd: json['user']['infoadd'],
+      createdAt: DateTime.parse(json['user']['created_at']),
+      updatedAt: DateTime.parse(json['user']['updated_at']),
       ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
       ramoNome: json['ramo']?['nome'],
       categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
@@ -137,6 +143,8 @@ class UsuarioGeral {
       "rua": rua,
       "numero": numero,
       "infoadd": infoadd,
+      // "createdAt": DateTime.parse(createdAt.toString()),
+      // "updatedAt":DateTime.parse(updatedAt.toString()),
       "ramo": ramo,
       "categoria": categoria,
       "token": token,

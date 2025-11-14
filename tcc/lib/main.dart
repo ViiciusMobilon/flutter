@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
   try {
       final usuarioLogado = await _authController.login(email, password);
       print('email:${email} e senha ${password}');
-      print("Usuario Login tela:${usuarioLogado}"); 
+      print("Usuario Login tela:${usuarioLogado?.toJson()}"); 
       print("Usuario Login controller:${_authController.usuario}");
 
       if (usuarioLogado?.token?.isNotEmpty ?? false) {

@@ -28,7 +28,9 @@ class _FeedPerfilState extends State<FeedPerfil> {
     final authController = context.watch<AuthController>();
     final _portfolioController = context.watch<PortfolioController>();
     final user = context.watch<AuthController>().usuario;
-    final post = widget.post;
+    final post = context.watch<PortfolioController>()
+    .portfoliosAuth
+    .firstWhere((p) => p.id == widget.post.id);
 
       List<Widget> carouselItems = [];
       // vídeos
@@ -78,7 +80,8 @@ class _FeedPerfilState extends State<FeedPerfil> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(user?.fotoURL ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQapgOuAoFQ8eZJXjFpp9jLmkPbt9N8CzR8hg&s'),
+                    backgroundImage: user?.fotoURL != null && user!.fotoURL!.isNotEmpty ? NetworkImage(user!.fotoURL!) : null,
+                    child: user?.fotoURL == null ? Icon(Icons.person) : null,
                     radius: 28,
                   ),
                   const SizedBox(width: 12),
@@ -155,11 +158,18 @@ class _FeedPerfilState extends State<FeedPerfil> {
                     child: InkWell(
                       onTap: () async {
                         await _portfolioController.getPortfolioId(id: post.id!);
-                        Navigator.of(context).push(
+                        final editou = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => VerMaisPageDono(id: post.id!),
                           ),
                         );
+                        if (editou == true) {
+                          print("Editou");
+                          await _portfolioController.fetchPortfolioAuth(refresh: true);
+                          setState(() {});
+                        }else{
+                          print("nao editou");
+                        }
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(
