@@ -54,7 +54,7 @@ class _settinspageState extends State<settinspage> {
                   onTap:
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Editar_Perfil()),
+                        MaterialPageRoute(builder: (context) => EditarPerfil()),
                       ),
                 ),
             
