@@ -1,9 +1,11 @@
 class DadosUsuario {
   final int id;
   final int userId;
-  final int disponivel;
+  final bool disponivel;
   final String? nome;
+  final String? razao_social;
   final String? cpf;
+  final String? cnpj;
   final String? descricao;
   final String? foto;
   final String? capa;
@@ -24,7 +26,9 @@ class DadosUsuario {
     required this.userId,
     required this.disponivel,
     this.nome,
+    this.razao_social,
     this.cpf,
+    this.cnpj,
     this.descricao,
     this.foto,
     this.capa,
@@ -45,9 +49,11 @@ class DadosUsuario {
     return DadosUsuario(
       id: json['id'],
       userId: json['user_id'],
-      disponivel: json['disponivel'] ?? 0,
+      disponivel: json['disponivel'] ?? false,
       nome: json['nome'],
+      razao_social: json['razao_social'],
       cpf: json['cpf'],
+      cnpj: json['cnpj'],
       descricao: json['descricao'],
       foto: json['foto'],
       capa: json['capa'],
@@ -58,10 +64,36 @@ class DadosUsuario {
       numero: json['numero'],
       rua: json['rua'],
       infoadd: json['infoadd'],
-      ramoNome: json['ramo']['nome'],
-      categoriaNome: json['categoria']['nome'],
+      ramoNome: json['ramo']?['nome'],
+      categoriaNome: json['categoria']?['nome'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );
+  }
+
+  Map<String, dynamic> toJson(){
+    return{
+      'id': id,
+      'userId': userId,
+      'disponivel':disponivel,
+      'nome':nome,
+      'razaosocial':razao_social,
+      'cpf':cpf,
+      'cnpj':cnpj,
+      'descricao': descricao,
+      'foto': foto,
+      'capa':capa,
+      'localidade':localidade,
+      'uf':uf,
+      'estado':estado,
+      'cep':cep,
+      'numero':numero,
+      'rua':rua,
+      'infoadd':infoadd,
+      'ramoNome':ramoNome,
+      'categoriaNome': categoriaNome,
+      'createdAt':createdAt,
+      'updatedAt':updatedAt,
+    };
   }
 }

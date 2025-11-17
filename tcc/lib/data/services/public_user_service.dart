@@ -1,5 +1,5 @@
 import 'package:tcc/data/models/user_public/userPublic.dart';
-import 'package:tcc/data/repositories/public_user.dart';
+import 'package:tcc/data/repositories/public_user_repository.dart';
 
 class PublicUserService {
   final PublicUserRepository _repository = PublicUserRepository();

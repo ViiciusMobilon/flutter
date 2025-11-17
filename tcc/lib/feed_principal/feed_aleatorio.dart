@@ -158,7 +158,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
         onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => PerfilDeOutroUsuario(),
+            builder: (_) => PerfilDeOutroUsuario(id: widget.post.userId!,),
           ),
         ),
         child: Column(

@@ -9,12 +9,11 @@ import 'package:tcc/data/config.dart';
 
 // ------------------------ CARD DE PORTFÓLIO ------------------------
 class FeedPerfilUser extends StatelessWidget {
-  final Portfolio post;
+  final Portfolio? post;
 
   const FeedPerfilUser({
     super.key,
-    required this.post,
-
+    this.post,
   });
 
   @override
@@ -29,14 +28,14 @@ class FeedPerfilUser extends StatelessWidget {
     List<Widget> carouselItems = [];
 
     // Vídeos
-    if (post.videos!.isNotEmpty) {
-      for (var v in post.videos!) {
+    if (post!.videos!.isNotEmpty) {
+      for (var v in post!.videos!) {
         carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
       }
     }
 
     // Fotos
-    carouselItems.addAll(post.fotos!.map((f) {
+    carouselItems.addAll(post!.fotos!.map((f) {
       return ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         child: Image.network(
@@ -85,14 +84,14 @@ class FeedPerfilUser extends StatelessWidget {
               items: carouselItems,
             ),
           // 🔹 Descrição do post
-          if (post.descricao != null && post.descricao!.isNotEmpty)
+          if (post!.descricao != null && post!.descricao!.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
-                    post.descricao!,
+                    post!.descricao!,
                     style: const TextStyle(fontSize: 15, color: Colors.black87),
                   ),
                 ),
@@ -107,7 +106,7 @@ class FeedPerfilUser extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => VerMaisPage(post: post),
+                      builder: (context) => VerMaisPage(post: post!),
                     ),
                   );
                 },

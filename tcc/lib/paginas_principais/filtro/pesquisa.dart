@@ -395,7 +395,7 @@ ThemeData appBarTheme(BuildContext context) {
         final meta = _meta[item]!;
 
         return GestureDetector(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario())),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario(id: 1,))),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(

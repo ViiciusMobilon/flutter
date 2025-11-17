@@ -25,4 +25,15 @@ class Contato {
       userId: json['user_id'],
     );
   }
+
+  Map<String, dynamic> toJson(){
+    return{
+      'id':id,
+      'whatsapp':whatsapp,
+      'telefone':telefone,
+      'site':site,
+      'instagram':instagram,
+      'userId':userId
+    };
+  }
 }

@@ -36,4 +36,17 @@ class UsuarioPublic {
           : null,
     );
   }
+
+
+  Map<String, dynamic> toJson(){
+    return{
+      'id':id,
+      'email':email,
+      'type':type,
+      'curtidasQueRecebi':curtidasQueRecebi,
+      'dados':dados,
+      'portfolios':portfolios,
+      'contato':contato
+    };
+  }
 }

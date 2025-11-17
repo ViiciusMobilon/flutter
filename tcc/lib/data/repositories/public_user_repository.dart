@@ -10,9 +10,15 @@ class PublicUserRepository{
 
 
   Future<UsuarioPublic> getUserPublic(int id) async {
-    final response = await _dio.get('/user/$id/posts');
+
+    final token = await _storage.read(key: 'token');
+    final response = await _dio.get('/usuario/$id/posts', options: Options(
+        headers: {
+        'Authorization': 'Bearer $token',
+        },),);
 
     if (response.statusCode == 200) {
+      print("response.data userpublicrepo: ${response.data['user']}");
       return UsuarioPublic.fromJson(response.data['user']);
     } else {
       throw Exception('Erro ao carregar usuário público');

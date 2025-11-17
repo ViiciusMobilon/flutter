@@ -2,27 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_outro.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
+import 'package:tcc/data/config.dart';
+import 'package:tcc/data/controllers/public_user_controller.dart';
+import 'package:tcc/data/models/user_public/userPublic.dart';
+import 'package:tcc/data/services/public_user_service.dart';
 import 'package:tcc/service_post.dart';
 
 class PerfilDeOutroUsuario extends StatefulWidget {
-  const PerfilDeOutroUsuario({super.key});
+  final int id;
+  PerfilDeOutroUsuario({super.key, required this.id});
 
   @override
   State<PerfilDeOutroUsuario> createState() => _PerfilDeOutroUsuarioState();
 }
 
 class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
-  bool isLoved = false;
-  int loveCount = 1247;
   final List<ServicePostFeed> posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
+  final UserPublicController _user = UserPublicController(PublicUserService());
+  UsuarioPublic? user;
+  bool isLoved = false;
+  int? loveCount;
+  String? urlPerfil;
+  String? urlCapa;
+  String? nome;
+  String? razao_social;
+  String? tipo;
+  String? area;
+  String? cat;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
 
+    _user.addListener(() {
+      setState(() {
+        user = _user.user;
+        user = _user.user;
+        loveCount = user!.curtidasQueRecebi;
+        urlCapa = user?.dados.capa;
+        urlPerfil = user?.dados.foto;
+        nome = user?.dados.nome;
+        razao_social = user?.dados.razao_social;
+        tipo = user?.type;
+        area = user?.dados.ramoNome;
+        cat = user?.dados.categoriaNome;
+      });
+    });
+
+    _user.loadUser(id: widget.id);
   }
 
   @override
@@ -49,7 +79,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   void _toggleLove() {
     setState(() {
       isLoved = !isLoved;
-      loveCount += isLoved ? 1 : -1;
+      // loveCount += isLoved ? 1 : -1?
     });
   }
 
@@ -107,23 +137,35 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
 
   @override
   Widget build(BuildContext context) {
+
     print("Tela do user");
+    print("id do user: ${widget.id}");
+    print("O user: ${user?.toJson()}");
+    print("O user.dados: ${user?.dados?.toJson()}");
+    print("O user.dados.cat: ${user?.dados?.categoriaNome}");
+    print("O user.dados.ramo: ${user?.dados?.ramoNome}");
+    print("O user.portfolio: ${user?.portfolios.toString()}");
+    print("O user.contatos: ${user?.contato?.toJson()}");
+    print("user curtidas: ${user?.curtidasQueRecebi}");
+    if (user == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          SliverToBoxAdapter(child: _buildProfileHeader()),
+          SliverToBoxAdapter(child: _buildProfileHeader(urlCapa, urlPerfil, nome, razao_social, tipo, area, cat)),
           SliverToBoxAdapter(
               child: _buildDescription(
-                  'Desenvolvedor mobile apaixonado por criar experiências incríveis. '
-                  'Especialista em Flutter e React Native, sempre buscando as melhores práticas. '
-                  'Adoro trabalhar em equipe e compartilhar conhecimento com a comunidade.')),
+                  user?.dados.descricao! ?? '')),
           SliverList.builder(
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < posts.length) ; 
-              if (index < posts.length) return FeedPerfilUser(post: posts[index]);
+              if (index < posts.length) return FeedPerfilUser();
               return const Padding(
                 padding: EdgeInsets.all(20),
                 child: Center(child: CircularProgressIndicator()),
@@ -135,7 +177,10 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(String? urlCapa,String? urlPerfil, String? nome, String? razao_social, String? type, String? area, String? cat) {
+    print("${area} ou cat ${cat}");
+    print("url final perfil(capa):${URLAPISTORAGE}${urlCapa}");
+    print("url final perfil(perfil):${URLAPISTORAGE}${urlPerfil}");
     return Container(
       color: Colors.white,
       child: Column(
@@ -144,10 +189,10 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
             children: [
               Container(
                 height: 200,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4'),
+                          '${URLAPISTORAGE}${urlCapa}'),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -169,23 +214,23 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
                     padding: const EdgeInsets.all(4),
                     decoration:
                         const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+                        '${URLAPISTORAGE}${urlPerfil}',
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text('João Silva',
+                Text(nome ?? razao_social ?? 'sem nome',
                     style: TextStyle(
                         fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1A202C))),
                 const SizedBox(height: 4),
-                const Text('Desenvolvedor Mobile',
+                Text(area ?? cat ?? 'vagabundo',
                     style: TextStyle(fontSize: 16, color: Color(0xFF718096))),
                 const SizedBox(height: 2),
-                const Text('Tech Solutions Inc.',
+                Text(type ?? 's/n',
                     style: TextStyle(fontSize: 14, color: Color(0xFF718096))),
                 const SizedBox(height: 12),
                 const EstrelaRating(),

@@ -152,7 +152,7 @@ class _FavoritosPageState extends State<FavoritosPage>
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => PerfilDeOutroUsuario()),
+                                  builder: (_) => PerfilDeOutroUsuario(id: 1,)),
                             ),
                             child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 8),
