@@ -6,6 +6,7 @@ import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:tcc/cadastro/Prestador.dart';
+import 'package:tcc/cadastro/dropdow.dart';
 
 // Máscaras de formatação
 final maskFormatter = MaskTextInputFormatter(

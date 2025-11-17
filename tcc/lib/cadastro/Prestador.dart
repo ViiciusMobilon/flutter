@@ -4,7 +4,8 @@ import 'package:image_picker/image_picker.dart'; // Para escolher imagens da gal
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart'; // Para máscaras de input
 import 'package:tcc/cadastro/CEP.dart';
 import 'package:tcc/cadastro/Escolha.dart';
-import 'package:dropdown_search/dropdown_search.dart'; // Dropdown com busca
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:tcc/cadastro/dropdow.dart'; // Dropdown com busca
 
 // Máscaras para telefone e CPF
 final maskFormatter = MaskTextInputFormatter(
@@ -325,87 +326,6 @@ class _cpfState extends State<cpf> {
 // Dropdown de Área de Atuação
 
 
-class Area extends StatelessWidget {
-  final dropValue = ValueNotifier('');
-
-  final dropOpcoes = [
-    'Pedreiro','Pintor','Eletricista','Encanador','Marceneiro','Jardineiro',
-    'Gesseiro','Serralheiro','Vidraceiro','Alvenaria','Telhadista',
-    'Azulejista','Instalador de drywall','Servente de obras','Outros',
-  ];
-
-  Area({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ValueListenableBuilder(
-        valueListenable: dropValue,
-        builder: (BuildContext context, String value, _) {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width * 0.8,
-            child: DropdownSearch<String>(
-              // ✔ VERSÃO CORRETA NA 6.0.1 → função com (filter, compare)
-              items: (filter, _) => dropOpcoes,
-
-              selectedItem: value.isEmpty ? null : value,
-
-              onChanged: (String? newValue) {
-                dropValue.value = newValue ?? '';
-              },
-
-              popupProps: PopupProps.menu(
-                showSearchBox: true,
-                searchFieldProps: TextFieldProps(
-                  decoration: InputDecoration(
-                    labelText: "Pesquisar área...",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                fit: FlexFit.loose,
-                constraints: const BoxConstraints(maxHeight: 250),
-              ),
-
-              // ✔ NOME ATUAL NA 6.0.1 → decoratorProps:
-              decoratorProps: DropDownDecoratorProps(
-                decoration: InputDecoration(
-                  labelText: "Área de atuação",
-                  hintText: "Escolha a área de atuação",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Color.fromRGBO(121, 180, 217, 1),
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-
-              dropdownBuilder: (context, selectedItem) {
-                return Text(
-                  selectedItem ?? "Escolha a área de atuação",
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.045,
-                    fontFamily: "Poppins",
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 
 // Botão "Próximo"
