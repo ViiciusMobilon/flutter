@@ -325,18 +325,20 @@ class _VerMaisPageDonoState extends State<VerMaisPageDono>
                 var _post = _portfolio.post;
                 await _portfolioController.getPortfolioId(id: _post!.id!);
 
-                final update = await Navigator.of(context).push(
+                final updatedPost = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => EditarPostPage(),
                   ),
                 );
 
-                if(update == 'true'){
-                  print('fui chamado');
-                  editou = true;
-                  await _portfolioController.getPortfolioId(id: _post!.id!);
-                  setState(() {});
+                if (updatedPost == true) {
+
+                  setState(() => this.editou = true);
+                  final controller = context.read<PortfolioController>();
+                  await controller.getPortfolioId(id: _post!.id!); // recarrega post editado
+
                 }
+
               },
             ),
           ],

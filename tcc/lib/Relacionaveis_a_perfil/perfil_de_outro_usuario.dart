@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_outro.dart';
 import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/service_post.dart';
@@ -21,7 +22,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    _loadInitialPosts();
+
   }
 
   @override
@@ -30,36 +31,12 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     super.dispose();
   }
 
-  void _loadInitialPosts() {
-    posts.addAll(List.generate(10, (index) => _generateFakePost(index)));
-  }
-
-  ServicePostFeed _generateFakePost(int index) {
-    return ServicePostFeed(
-      id: 'post_$index',
-      providerName: 'Usuário $index',
-      providerCompany: 'Empresa $index',
-      providerAvatar: 'https://picsum.photos/seed/avatar$index/100/100',
-      location: 'São Paulo - SP',
-      description: 'Serviço $index',
-      fullDescription: 'Descrição completa do serviço $index',
-      images: ['https://www.youtube.com/watch?v=i2PHZ9ARdzg'],
-      likes: 0,
-      isLiked: false,
-    );
-  }
-
   Future<void> _loadMorePosts() async {
     if (isLoadingMore) return;
     setState(() => isLoadingMore = true);
     await Future.delayed(const Duration(seconds: 2));
 
-    setState(() {
-      final currentLength = posts.length;
-      posts.addAll(
-          List.generate(5, (index) => _generateFakePost(currentLength + index)));
-      isLoadingMore = false;
-    });
+    setState(() {});
   }
 
   void _onScroll() {
@@ -130,6 +107,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
 
   @override
   Widget build(BuildContext context) {
+    print("Tela do user");
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
@@ -144,8 +122,8 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           SliverList.builder(
             itemCount: posts.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index < posts.length) ; //a linha de baixo é a anterior
-              // if (index < posts.length) return FeedPerfil(post: posts[index]);
+              if (index < posts.length) ; 
+              if (index < posts.length) return FeedPerfilUser(post: posts[index]);
               return const Padding(
                 padding: EdgeInsets.all(20),
                 child: Center(child: CircularProgressIndicator()),

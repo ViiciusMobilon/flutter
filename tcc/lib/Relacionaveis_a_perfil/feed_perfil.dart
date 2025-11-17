@@ -9,7 +9,7 @@ import 'package:tcc/ver_mais/VerMaisDono.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-// ------------------------ FEED DE PERFIL ------------------------
+// ------------------------ FEED DE PERFIL Auth ------------------------
 class FeedPerfil extends StatefulWidget {
    final Portfolio post;
   const FeedPerfil({
@@ -158,18 +158,18 @@ class _FeedPerfilState extends State<FeedPerfil> {
                     child: InkWell(
                       onTap: () async {
                         await _portfolioController.getPortfolioId(id: post.id!);
-                        final editou = await Navigator.of(context).push(
+                          final atualizar = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => VerMaisPageDono(id: post.id!),
                           ),
                         );
-                        if (editou == true) {
-                          print("Editou");
-                          await _portfolioController.fetchPortfolioAuth(refresh: true);
-                          setState(() {});
-                        }else{
-                          print("nao editou");
+
+                        if (atualizar == true) {
+
+                          context.read<PortfolioController>().fetchPortfolioAuth(refresh: true);
+
                         }
+
                       },
                       borderRadius: BorderRadius.circular(20),
                       child: Container(

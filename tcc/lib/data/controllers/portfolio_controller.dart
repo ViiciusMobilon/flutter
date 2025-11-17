@@ -232,19 +232,39 @@ class PortfolioController extends ChangeNotifier {
   }
 
 
-  Future<Portfolio> updade(Postform form,{required int idPost}) async {
-    try {
-      final result = await _service.update( form,idPost: idPost);
-      if(result != null){
-        _post = result;
-        notifyListeners();
-      }
-      
+  Future<Portfolio> updade(Postform form, {required int idPost}) async {
+  try {
+    final result = await _service.update(form, idPost: idPost);
 
-      return result;
-    } catch (e) {
-      print("erro update post controller: $e");
-      rethrow;
+    if (result != null) {
+
+      // Atualiza o post da tela VerMais (se estiver ativo)
+      if (_post?.id == result.id) {
+        _post = result;
+      }
+
+      // Atualiza o feed AUTH
+      final indexAuth = _portfoliosAuth.indexWhere((p) => p.id == result.id);
+      if (indexAuth != -1) {
+        _portfoliosAuth[indexAuth] = result;
+      }
+
+      // Atualiza o feed GERAL
+      final indexGeral = _portfoliosGeral.indexWhere((p) => p.id == result.id);
+      if (indexGeral != -1) {
+        _portfoliosGeral[indexGeral] = result;
+      }
+
+      notifyListeners();
     }
+
+    return result;
+
+  } catch (e) {
+    print("erro update post controller: $e");
+    rethrow;
   }
+}
+
+
 }

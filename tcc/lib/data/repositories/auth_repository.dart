@@ -1,4 +1,4 @@
-  import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:tcc/data/http/dio_client.dart';
 import 'package:tcc/data/models/user.dart';
 import 'package:tcc/data/models/userForm.dart';

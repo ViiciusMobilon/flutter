@@ -8,10 +8,10 @@ import 'package:tcc/data/models/post.dart';
 import 'package:tcc/data/config.dart';
 
 // ------------------------ CARD DE PORTFÓLIO ------------------------
-class FeedPerfilPortfolio extends StatelessWidget {
+class FeedPerfilUser extends StatelessWidget {
   final Portfolio post;
 
-  const FeedPerfilPortfolio({
+  const FeedPerfilUser({
     super.key,
     required this.post,
 
@@ -19,6 +19,7 @@ class FeedPerfilPortfolio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('estou no feed do outro user');
     final authController = context.watch<AuthController>();
 
     final user = authController.usuario;
