@@ -13,7 +13,6 @@ class EstrelaRating extends StatelessWidget {
     this.initialRating = 5,
     this.isInteractive = true,
   });
-  const EstrelaRating({super.key});
 
   void _mostrarConfirmacao(BuildContext context, double rating) {
     showDialog(
@@ -96,7 +95,7 @@ class EstrelaRating extends StatelessWidget {
 class EstrelaPerfil extends StatelessWidget {
   // final double estrelas;
 
-  const EstrelaPerfil({super.key});
+  EstrelaPerfil({super.key});
 
     return RatingBar.builder(
       initialRating: 5,
@@ -107,7 +106,7 @@ class EstrelaPerfil extends StatelessWidget {
       glow: false,
       itemCount: 5,
       itemSize: 32,
-      itemBuilder: (context, _) => const Icon(
+      itemBuilder: (context, _) => Icon(
         Icons.star,
         color: Colors.amber,
       ),
@@ -116,7 +115,7 @@ class EstrelaPerfil extends StatelessWidget {
       },
     );
   }
-}
+
 
 class estrelaperfil extends StatefulWidget {
   const estrelaperfil({super.key});
