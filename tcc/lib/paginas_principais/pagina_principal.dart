@@ -94,7 +94,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                     // Ao tocar, abre a tela de pesquisa personalizada
                                     showSearch(
                                       context: context,
-                                      delegate: BarraDePesquisa(),
+                                      delegate: BarraDePesquisa(context),
                                     );
                                   },
                                   decoration: InputDecoration(

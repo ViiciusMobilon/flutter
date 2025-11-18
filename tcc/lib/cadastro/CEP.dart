@@ -184,6 +184,7 @@ class _RuaState extends State<Rua> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength: 100,
       decoration: InputDecoration(
         labelText: "Rua / Avenida",
         labelStyle: TextStyle(

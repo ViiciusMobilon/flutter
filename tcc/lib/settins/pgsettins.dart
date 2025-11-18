@@ -3,7 +3,7 @@ import 'package:tcc/main.dart';
 import 'package:tcc/paginas_principais/pagina_principal.dart';
 import 'package:tcc/settins/editarperfil.dart';
 import 'package:tcc/settins/segurancap.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class settinspage extends StatefulWidget {
   const settinspage({super.key});
 
@@ -40,6 +40,9 @@ class _settinspageState extends State<settinspage> {
           centerTitle: true,
         ),
         body: Container(
+          
+  width: double.infinity,
+  height: double.infinity, 
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
@@ -75,6 +78,14 @@ class _settinspageState extends State<settinspage> {
                   title: Text('Sobre'),
                   subtitle: Text('Informações sobre o aplicativo'),
                   trailing: Icon(Icons.arrow_forward_ios),
+                 onTap: () async { // Marque a função anônima como assíncrona
+    final Uri url = Uri.parse('https://www.google.com');
+    if (!await launchUrl(url)) {
+      // Tratamento de erro opcional
+      // ignore: avoid_print
+      print('Erro ao abrir a URL'); 
+    }
+  },
                 ),
             
                 ListTile(
