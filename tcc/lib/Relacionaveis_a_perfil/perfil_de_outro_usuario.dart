@@ -7,6 +7,7 @@ import 'package:tcc/data/controllers/public_user_controller.dart';
 import 'package:tcc/data/models/user_public/userPublic.dart';
 import 'package:tcc/data/services/public_user_service.dart';
 import 'package:tcc/service_post.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PerfilDeOutroUsuario extends StatefulWidget {
   final int id;
@@ -21,9 +22,11 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
   final UserPublicController _user = UserPublicController(PublicUserService());
+
   UsuarioPublic? user;
   bool isLoved = false;
-  int? loveCount;
+  int loveCount = 0;
+
   String? urlPerfil;
   String? urlCapa;
   String? nome;
@@ -31,6 +34,14 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   String? tipo;
   String? area;
   String? cat;
+
+  // contatos (preenchidos a partir de user.contato se houver)
+  String? telefone;
+  String? whatsapp;
+  String? email;
+  String? website;
+  String? x;
+  String? instagram;
 
   @override
   void initState() {
@@ -40,19 +51,31 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     _user.addListener(() {
       setState(() {
         user = _user.user;
-        user = _user.user;
-        loveCount = user!.curtidasQueRecebi;
-        urlCapa = user?.dados.capa;
-        urlPerfil = user?.dados.foto;
-        nome = user?.dados.nome;
-        razao_social = user?.dados.razao_social;
-        tipo = user?.type;
-        area = user?.dados.ramoNome;
-        cat = user?.dados.categoriaNome;
+        if (user != null) {
+          loveCount = user!.curtidasQueRecebi ?? 0;
+          urlCapa = user?.dados.capa;
+          urlPerfil = user?.dados.foto;
+          nome = user?.dados.nome;
+          razao_social = user?.dados.razao_social;
+          tipo = user?.type;
+          area = user?.dados.ramoNome;
+          cat = user?.dados.categoriaNome;
+
+          // contatos
+          telefone = user?.contato?.telefone;
+          whatsapp = user?.contato?.whatsapp;
+          email = user?.email;
+          website = user?.contato?.site;
+          // x = user?.contato?.x;
+          instagram = user?.contato?.instagram;
+        }
       });
     });
 
+    // carregar usuário pelos dados do backend
     _user.loadUser(id: widget.id);
+    // se você tiver carregamento inicial de posts, chame aqui
+    // carregarPosts();
   }
 
   @override
@@ -64,12 +87,17 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   Future<void> _loadMorePosts() async {
     if (isLoadingMore) return;
     setState(() => isLoadingMore = true);
-    await Future.delayed(const Duration(seconds: 2));
 
-    setState(() {});
+    // se você tiver paginação real, chame o serviço aqui.
+    await Future.delayed(const Duration(seconds: 1));
+    // adicionar posts fictícios / ou buscar novos posts via serviço
+    setState(() {
+      isLoadingMore = false;
+    });
   }
 
   void _onScroll() {
+    if (!_scrollController.hasClients) return;
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMorePosts();
@@ -79,8 +107,160 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   void _toggleLove() {
     setState(() {
       isLoved = !isLoved;
-      // loveCount += isLoved ? 1 : -1?
+      loveCount = isLoved ? (loveCount + 1) : (loveCount - 1).clamp(0, 9999999);
+      // se quiser enviar para a API, adicione a chamada aqui (sem alterar backend).
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (user == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverToBoxAdapter(child: _buildProfileHeader()),
+          SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).size.height * 0.01)),
+          SliverToBoxAdapter(child: _buildDescription(user?.dados.descricao ?? '')),
+          SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).size.height * 0.02)),
+          SliverToBoxAdapter(child: _buildEspecializacao()),
+          SliverToBoxAdapter(
+            child: buildContactSection(
+              context: context,
+              telefone: telefone,
+              whatsapp: whatsapp,
+              email: email,
+              website: website,
+              x: x,
+              instagram: instagram,
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              if (index < posts.length) {
+                return FeedPerfilUser(post: posts[index]);
+              } else if (isLoadingMore && index == posts.length) {
+                return const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileHeader() {
+    final coverUrl = urlCapa != null ? '$URLAPISTORAGE$urlCapa' : null;
+    final profileUrl = urlPerfil != null ? '$URLAPISTORAGE$urlPerfil' : null;
+
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          // Capa com gradiente overlay
+          Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.20,
+                decoration: BoxDecoration(
+                  image: coverUrl != null
+                      ? DecorationImage(image: NetworkImage(coverUrl), fit: BoxFit.cover)
+                      : null,
+                  color: Colors.grey.shade200,
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.20,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black.withOpacity(0.2)],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 8,
+                left: 8,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white, size: MediaQuery.of(context).size.width * 0.07),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
+          ),
+
+          // Avatar, nome e informações
+          Transform.translate(
+            offset: const Offset(0, -50),
+            child: Column(
+              children: [
+                // Avatar com borda gradiente
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2196F3), Color(0xFF5E35B1)],
+                    ),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: profileUrl != null ? NetworkImage(profileUrl) : null,
+                      backgroundColor: Colors.grey.shade300,
+                      child: profileUrl == null ? const Icon(Icons.person, size: 48, color: Colors.white70) : null,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                Text(
+                  nome ?? razao_social ?? 'Sem nome',
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1A202C)),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  area ?? cat ?? '',
+                  style: const TextStyle(fontSize: 16, color: Color(0xFF718096)),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  tipo ?? '',
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF718096)),
+                ),
+                const SizedBox(height: 12),
+                const EstrelaRating(),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildLoveButton(),
+                    const SizedBox(width: 12),
+                    const SizedBox(width: 6),
+                    disponivel(), // widget de disponibilidade visual
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildLoveButton() {
@@ -122,125 +302,166 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Text(text, style: const TextStyle(color: Color(0xFF4A5568), height: 1.6, fontSize: 14)),
+    );
+  }
+
+  Widget _buildEspecializacao() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6, offset: const Offset(0, 2))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Text(
+            "Especializações",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          // aqui você pode adicionar a lista real de especializações se vier do backend
+        ],
+      ),
+    );
+  }
+}
+
+/// Seção de contato (reutilizável)
+Widget buildContactSection({
+  required BuildContext context,
+  String? telefone,
+  String? whatsapp,
+  String? email,
+  String? website,
+  String? x,
+  String? instagram,
+}) {
+  final List<Map<String, dynamic>> contacts = [
+    if (telefone != null && telefone.isNotEmpty) {'icon': Icons.phone, 'label': 'Telefone', 'url': telefone, 'color': const Color(0xFF2196F3)},
+    if (whatsapp != null && whatsapp.isNotEmpty) {'icon': Icons.message, 'label': 'WhatsApp', 'url': whatsapp, 'color': const Color(0xFF25D366)},
+    if (email != null && email.isNotEmpty) {'icon': Icons.email, 'label': 'Email', 'url': 'mailto:$email', 'color': const Color(0xFF2196F3)},
+    if (website != null && website.isNotEmpty) {'icon': Icons.language, 'label': 'Website', 'url': website, 'color': const Color(0xFF2196F3)},
+    if (x != null && x.isNotEmpty) {'icon': Icons.alternate_email, 'label': 'X', 'url': x, 'color': const Color(0xFF2196F3)},
+    if (instagram != null && instagram.isNotEmpty) {'icon': Icons.camera_alt, 'label': 'Instagram', 'url': instagram, 'color': const Color(0xFF2196F3)},
+  ];
+
+  if (contacts.isEmpty) return const SizedBox.shrink();
+
+  return Center(
+    child: Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 4))],
+      ),
+      child: Column(
+        children: [
+          const Text("Entre em Contato", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87)),
+          const SizedBox(height: 20),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 20,
+            runSpacing: 16,
+            children: contacts.map((contact) {
+              return GestureDetector(
+                onTap: () async {
+                  final urlString = contact['url'] as String;
+                  Uri url;
+                  try {
+                    url = Uri.parse(urlString);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('URL inválida')));
+                    return;
+                  }
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Não foi possível abrir o link')));
+                  }
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [(contact['color'] as Color).withOpacity(0.7), contact['color'] as Color],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [BoxShadow(color: (contact['color'] as Color).withOpacity(0.3), blurRadius: 6, offset: const Offset(0, 3))],
+                      ),
+                      child: Center(child: Icon(contact['icon'] as IconData, color: Colors.white, size: 28)),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(contact['label'] as String, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              );
+            }).toList(),
           ),
         ],
       ),
-      child: Text(text,
-          style: const TextStyle(
-              color: Color(0xFF4A5568), height: 1.6, fontSize: 14)),
-    );
-  }
+    ),
+  );
+}
+
+/// Disponibilidade visual (mantive como estava na versão frontend)
+class disponivel extends StatefulWidget {
+  const disponivel({Key? key}) : super(key: key);
+
+  @override
+  State<disponivel> createState() => _disponivelState();
+}
+
+class _disponivelState extends State<disponivel> {
+  bool _isAvailable = true;
 
   @override
   Widget build(BuildContext context) {
-
-    print("Tela do user");
-    print("id do user: ${widget.id}");
-    print("O user: ${user?.toJson()}");
-    print("O user.dados: ${user?.dados?.toJson()}");
-    print("O user.dados.cat: ${user?.dados?.categoriaNome}");
-    print("O user.dados.ramo: ${user?.dados?.ramoNome}");
-    print("O user.portfolio: ${user?.portfolios.toString()}");
-    print("O user.contatos: ${user?.contato?.toJson()}");
-    print("user curtidas: ${user?.curtidasQueRecebi}");
-    if (user == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          SliverToBoxAdapter(child: _buildProfileHeader(urlCapa, urlPerfil, nome, razao_social, tipo, area, cat)),
-          SliverToBoxAdapter(
-              child: _buildDescription(
-                  user?.dados.descricao! ?? '')),
-          SliverList.builder(
-            itemCount: posts.length + (isLoadingMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < posts.length) ; 
-              if (index < posts.length) return FeedPerfilUser();
-              return const Padding(
-                padding: EdgeInsets.all(20),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            },
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _isAvailable = !_isAvailable;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isAvailable ? Colors.green : const Color.fromARGB(255, 255, 0, 0),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 4,
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileHeader(String? urlCapa,String? urlPerfil, String? nome, String? razao_social, String? type, String? area, String? cat) {
-    print("${area} ou cat ${cat}");
-    print("url final perfil(capa):${URLAPISTORAGE}${urlCapa}");
-    print("url final perfil(perfil):${URLAPISTORAGE}${urlPerfil}");
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Stack(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          '${URLAPISTORAGE}${urlCapa}'),
-                      fit: BoxFit.cover),
-                ),
+              Icon(_isAvailable ? Icons.check_circle : Icons.cancel),
+              const SizedBox(width: 8),
+              Text(
+                _isAvailable ? 'Disponível' : 'Indisponível',
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.035, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          Transform.translate(
-            offset: const Offset(0, -50),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF2196F3), Color(0xFF5E35B1)],
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration:
-                        const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        '${URLAPISTORAGE}${urlPerfil}',
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(nome ?? razao_social ?? 'sem nome',
-                    style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.w700, color: Color(0xFF1A202C))),
-                const SizedBox(height: 4),
-                Text(area ?? cat ?? 'vagabundo',
-                    style: TextStyle(fontSize: 16, color: Color(0xFF718096))),
-                const SizedBox(height: 2),
-                Text(type ?? 's/n',
-                    style: TextStyle(fontSize: 14, color: Color(0xFF718096))),
-                const SizedBox(height: 12),
-                const EstrelaRating(),
-                const SizedBox(height: 16),
-                _buildLoveButton(),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

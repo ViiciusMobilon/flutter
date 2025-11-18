@@ -377,6 +377,8 @@ class _VerMaisPageState extends State<VerMaisPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
