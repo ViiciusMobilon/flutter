@@ -298,6 +298,7 @@ class Nome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength: 50,
       controller: controller,
       decoration: InputDecoration(
         labelText: "Nome",

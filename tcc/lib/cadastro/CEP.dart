@@ -326,6 +326,7 @@ class _RuaState extends State<RuaWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength: 100,
       
       controller: widget.controller,
       decoration: InputDecoration(

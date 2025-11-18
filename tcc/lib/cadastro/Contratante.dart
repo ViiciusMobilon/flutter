@@ -298,6 +298,7 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLength: 50,
       controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Nome",

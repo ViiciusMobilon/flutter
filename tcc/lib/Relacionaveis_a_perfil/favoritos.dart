@@ -233,17 +233,39 @@ class _FavoritosPageState extends State<FavoritosPage>
                                               ),
                                             ],
                                           ),
-                                          Text(
-                                            perfil.segmento,
-                                            style: TextStyle(
-                                              color: Colors.indigo,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.033,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
+                                 Row(
+                                crossAxisAlignment: CrossAxisAlignment.start, // Alinha ao topo
+                                children: [
+                                  Text(
+                                    "empresa" ?? "Serviço",
+                                    style: TextStyle(
+                                      color: Colors.indigo,
+                                      fontSize: MediaQuery.of(context).size.width * 0.035,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: "poppis",
+                                    ),
+                                  ),
+                                  Text(
+                                    " ● ",
+                                    style: TextStyle(
+                                      fontSize: MediaQuery.of(context).size.width * 0.03,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      "desenvolvedor full stackssssssssssssssssssss" ?? perfil.segmento,
+                                      style: TextStyle(
+                                        fontSize: MediaQuery.of(context).size.width * 0.035,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: "poppis",
+                                        color: Colors.black,
+                                      ),
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
+                              ),
                                           const SizedBox(height: 8),
 
                                           // Estatísticas
@@ -258,11 +280,7 @@ class _FavoritosPageState extends State<FavoritosPage>
                                                   color: Colors.pinkAccent,
                                                   size: 17),
                                               Text(" ${perfil.likes}  "),
-                                              const Icon(
-                                                  Icons.remove_red_eye_rounded,
-                                                  color: Colors.indigoAccent,
-                                                  size: 17),
-                                              Text(" ${perfil.views}"),
+                                             
                                             ],
                                           ),
                                         ],

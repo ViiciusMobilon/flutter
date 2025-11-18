@@ -42,6 +42,9 @@ class _SettinsPageState extends State<SettinsPage> {
         ),
 
         body: Container(
+          
+  width: double.infinity,
+  height: double.infinity, 
           color: Colors.white,
           child: SingleChildScrollView(
             child: Column(

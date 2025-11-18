@@ -209,6 +209,33 @@ class _EditarPostPageState extends State<EditarPostPage> {
         title: const Text("Editar Post"),
         actions: [
           IconButton(
+    icon: const Icon(Icons.delete, color: Colors.red),
+    onPressed: () async {
+      final confirmar = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Excluir Post"),
+          content: const Text("Tem certeza que deseja excluir este post?"),
+          actions: [
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+            TextButton(
+              child: const Text("Excluir", style: TextStyle(color: Colors.red)),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmar == true) {
+        Navigator.pop(context, "delete"); // você trata no caller
+      }
+    },
+  ),
+
+          IconButton(
             icon: const Icon(Icons.save),
             onPressed: () => _isLoading ? null : _salvarAlteracoes(id: postId!, _descricaoController,foto, video ),
           ),
