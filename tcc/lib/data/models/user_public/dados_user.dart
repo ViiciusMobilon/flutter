@@ -45,31 +45,32 @@ class DadosUsuario {
     this.updatedAt,
   });
 
-  factory DadosUsuario.fromJson(Map<String, dynamic> json) {
+factory DadosUsuario.fromJson(Map<String, dynamic> json) {
     return DadosUsuario(
-      id: json['id'],
-      userId: json['user_id'],
-      disponivel: json['disponivel'] ?? false,
-      nome: json['nome'],
-      razao_social: json['razao_social'],
-      cpf: json['cpf'],
-      cnpj: json['cnpj'],
-      descricao: json['descricao'],
-      foto: json['foto'],
-      capa: json['capa'],
-      localidade: json['localidade'],
-      uf: json['uf'],
-      estado: json['estado'],
-      cep: json['cep'],
-      numero: json['numero'],
-      rua: json['rua'],
-      infoadd: json['infoadd'],
-      ramoNome: json['ramo']?['nome'],
-      categoriaNome: json['categoria']?['nome'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: json['id'] as int,
+      userId: json['user_id'] as int,
+      disponivel: (json['disponivel'] as int?) == 1, // <-- conversão
+      nome: json['nome'] as String?,
+      razao_social: json['razao_social'] as String?,
+      cpf: json['cpf'] as String?,
+      cnpj: json['cnpj'] as String?,
+      descricao: json['descricao'] as String?,
+      foto: json['foto'] as String?,
+      capa: json['capa'] as String?,
+      localidade: json['localidade'] as String?,
+      uf: json['uf'] as String?,
+      estado: json['estado'] as String?,
+      cep: json['cep'] as String?,
+      numero: json['numero'] as String?,
+      rua: json['rua'] as String?,
+      infoadd: json['infoadd'] as String?,
+      ramoNome: json['ramo']?['nome'] as String?,
+      categoriaNome: json['categoria']?['nome'] as String?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
     );
   }
+
 
   Map<String, dynamic> toJson(){
     return{

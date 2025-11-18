@@ -89,7 +89,7 @@ class UsuarioGeral {
       tipo: json['logado']['type'],
       nome: json['user']['nome'],
       cpf: json['user']['cpf'],
-      cnpj: json['user']['cnpj'],
+      cnpj: json['user']?['cnpj'],
       razao_social: json['user']['razao_social'],
       descricao: json['user']['descricao'],
       fotoURL: json['foto'],
@@ -100,11 +100,16 @@ class UsuarioGeral {
       rua: json['user']['rua'],
       numero: json['user']['numero'],
       infoadd: json['user']['infoadd'],
-      createdAt: DateTime.parse(json['user']['created_at']),
-      updatedAt: DateTime.parse(json['user']['updated_at']),
+      createdAt: json['user']?['created_at'] != null
+        ? DateTime.tryParse(json['user']['created_at'])
+        : null,
+      updatedAt: json['user']?['updated_at'] != null
+          ? DateTime.tryParse(json['user']['updated_at'])
+          : null,
+
       ramo: json['user']['id_ramo'] ?? (json['ramo']?['id']),
       ramoNome: json['ramo']?['nome'],
-      categoria: json['user']['id_categoria'] ?? (json['categoria']?['id']),
+      categoria: json['user']?['id_categoria'] ?? (json['categoria']?['id']),
       categoriaNome: json['categoria']?['nome'],
       token: json['access_token'],
       logadoId: json['logado']['id'],
@@ -116,10 +121,11 @@ class UsuarioGeral {
       avaliacaoTotal: json['avaliacao']?['total'] != null
           ? double.tryParse(json['avaliacao']['total'].toString())
           : 0,
-      telefone: json['contatos']['telefone'],
-      whatsapp: json['contatos']['whatsapp'],
-      instagram: json['contatos']['instagram'],
-      site: json['contatos']['site'],
+      telefone: json['contatos']?['telefone']?.toString(),
+      whatsapp: json['contatos']?['whatsapp']?.toString(),
+      instagram: json['contatos']?['instagram']?.toString(),
+      site: json['contatos']?['site']?.toString(),
+
     );
 }
 

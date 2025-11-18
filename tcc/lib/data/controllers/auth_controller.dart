@@ -37,14 +37,14 @@ class AuthController extends ChangeNotifier{
 
   AuthController(this._authService);
 
-  Future<UsuarioGeral> cadastro(Userform form) async {
+  Future<UsuarioGeral?> cadastro(Userform form) async {
     try {
       print("Cadastro controller: $form");
       final usuario = await _authService.register(form);
-      setUsuario(usuario);  // salva no controller
+      setUsuario(usuario!);  // salva no controller
       return usuario;   
     } catch (e) {
-      print('erro cadastro controller');
+      print('erro cadastro controller ${e}');
       rethrow;
     }      // retorna para a tela
   }

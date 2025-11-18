@@ -84,33 +84,31 @@ class Userform {
   }
 
   /// Para serialização em Map
-  Map<String, dynamic> toMap() {
-    final data = {
-      "nome": nome,
-      "razao_social": razao_social,
-      "email": email,
-      "password": password,
-      "password_confirmation": confirmation_password ?? password,
-      "cpf": cpf,
-      "cnpj": cnpj,
-      "telefone": telefone,
-      "whatsapp": whatsapp,
-      "instagram": instagram,
-      "site": site,
-      "descricao": descricao,
-      "cep": cep,
-      "localidade": cidade,
-      "estado": estado,
-      "uf": uf,
-      "rua": rua,
-      "numero": numero,
-      "infoadd": infoadd,
-      "id_ramo": ramo,
-      "id_categoria": categoria,
-      "type": tipo,
+ Map<String, dynamic> toMap() {
+    return {
+      "nome": nome ?? "",
+      "razao_social": razao_social ?? "",
+      "email": email ?? "",
+      "password": password ?? "",
+      "password_confirmation": confirmation_password ?? password ?? "",
+      "cpf": cpf ?? "",
+      "cnpj": cnpj ?? "",
+      "telefone": telefone ?? "",
+      "whatsapp": whatsapp ?? "",
+      "instagram": instagram ?? "",
+      "site": site ?? "",
+      "descricao": descricao ?? "",
+      "cep": cep ?? "",
+      "localidade": cidade ?? "",
+      "estado": estado ?? "",
+      "uf": uf ?? "",
+      "rua": rua ?? "",
+      "numero": numero ?? "",
+      "infoadd": infoadd ?? "",
+      "id_ramo": ramo?.toString() ?? "",
+      "id_categoria": categoria?.toString() ?? "",
+      "type": tipo ?? "",
     };
-
-    data.removeWhere((key, value) => value == null);
-    return data;
   }
+
 }

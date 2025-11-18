@@ -250,7 +250,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => VerMaisPage(post: Portfolio(id: 1)),
+                                (context) => VerMaisPage(post:widget.post),
                           ),
                         );
                       },

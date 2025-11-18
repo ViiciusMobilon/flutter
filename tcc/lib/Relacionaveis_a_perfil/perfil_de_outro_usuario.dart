@@ -41,7 +41,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
       setState(() {
         user = _user.user;
         user = _user.user;
-        loveCount = user!.curtidasQueRecebi;
+        loveCount = user?.curtidasQueRecebi;
         urlCapa = user?.dados.capa;
         urlPerfil = user?.dados.foto;
         nome = user?.dados.nome;
@@ -152,6 +152,9 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+    final portfolios = user?.portfolios ?? [];
+    print("portfolio.lenght: ${portfolios.length}");
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
@@ -160,12 +163,11 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           SliverToBoxAdapter(child: _buildProfileHeader(urlCapa, urlPerfil, nome, razao_social, tipo, area, cat)),
           SliverToBoxAdapter(
               child: _buildDescription(
-                  user?.dados.descricao! ?? '')),
+                  user?.dados.descricao ?? '')),
           SliverList.builder(
-            itemCount: posts.length + (isLoadingMore ? 1 : 0),
+            itemCount: portfolios.length + (isLoadingMore ? 1 : 0),
             itemBuilder: (context, index) {
-              if (index < posts.length) ; 
-              if (index < posts.length) return FeedPerfilUser();
+              if (index < portfolios.length) return FeedPerfilUser(post: portfolios[index], user: user,);
               return const Padding(
                 padding: EdgeInsets.all(20),
                 child: Center(child: CircularProgressIndicator()),
@@ -190,10 +192,12 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                          '${URLAPISTORAGE}${urlCapa}'),
-                      fit: BoxFit.cover),
+                  image: urlCapa != null
+                      ? DecorationImage(
+                          image: NetworkImage('${URLAPISTORAGE}$urlCapa'),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
               ),
             ],
@@ -216,9 +220,9 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
                         const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: NetworkImage(
-                        '${URLAPISTORAGE}${urlPerfil}',
-                      ),
+                      backgroundImage: urlPerfil != null
+                        ? NetworkImage('${URLAPISTORAGE}$urlPerfil')
+                        : null, // mostra placeholder
                     ),
                   ),
                 ),

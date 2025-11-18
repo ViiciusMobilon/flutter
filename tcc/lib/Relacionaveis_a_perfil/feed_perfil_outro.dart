@@ -1,52 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:tcc/data/models/user_public/post_user.dart';
+import 'package:tcc/data/models/user_public/userPublic.dart';
 import 'package:tcc/ver_mais/VerMais.dart';
 import 'package:video_player/video_player.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
-import 'package:tcc/data/models/post.dart';
 import 'package:tcc/data/config.dart';
 
 // ------------------------ CARD DE PORTFÓLIO ------------------------
 class FeedPerfilUser extends StatelessWidget {
-  final Portfolio? post;
+  final PortfolioUser? post;
+  final UsuarioPublic? user;
 
-  const FeedPerfilUser({
+  FeedPerfilUser({
     super.key,
     this.post,
+    this.user
   });
 
   @override
   Widget build(BuildContext context) {
-    print('estou no feed do outro user');
-    final authController = context.watch<AuthController>();
-
-    final user = authController.usuario;
-    final fotoUrl = user?.fotoURL ?? 'https://via.placeholder.com/150';
+    print('estou no feed do outro user nome: ${post?.user_nome}');
+    print('estou no feed do outro user desc: ${post?.descricao}');
+    
+    // ✅ Use os dados do dono do post, não do user logado
+    final fotoUrl = post?.user_foto != null 
+        ? '${URLAPISTORAGE}${post!.user_foto}'
+        : 'https://via.placeholder.com/150';
 
     // 🔹 Lista de imagens e vídeos para o carrossel
     List<Widget> carouselItems = [];
 
     // Vídeos
-    if (post!.videos!.isNotEmpty) {
+    if (post?.videos?.isNotEmpty ?? false) {
       for (var v in post!.videos!) {
-        carouselItems.add(_CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}'));
+        carouselItems.add(
+          _CarouselVideoItem(videoUrl: '${URLAPISTORAGE}${v.url}')
+        );
       }
     }
 
     // Fotos
-    carouselItems.addAll(post!.fotos!.map((f) {
-      return ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-        child: Image.network(
-          '${URLAPISTORAGE}${f.url}',
-          width: double.infinity,
-          fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) =>
-              const Center(child: Icon(Icons.broken_image, size: 40)),
-        ),
-      );
-    }));
+    if (post?.fotos?.isNotEmpty ?? false) {
+      carouselItems.addAll(post!.fotos!.map((f) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+          child: Image.network(
+            '${URLAPISTORAGE}${f.url}',
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) =>
+                const Center(child: Icon(Icons.broken_image, size: 40)),
+          ),
+        );
+      }));
+    }
 
     return Card(
       color: Colors.white,
@@ -56,23 +65,22 @@ class FeedPerfilUser extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 🔹 Cabeçalho com nome e foto do usuário
+          // 🔹 Cabeçalho com nome e foto do DONO DO POST
           ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(fotoUrl),
               radius: 25,
             ),
             title: Text(
-              user?.nome ?? 'Usuário',
+              user?.dados.nome ?? 'Usuário', // ✅ Nome do dono do post
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              user?.ramoNome ?? '',
+              post?.user_ramo ?? '', // ✅ Ramo do dono do post
               style: const TextStyle(color: Colors.grey),
             ),
           ),
 
-        
           // 🔹 Carrossel de imagens/vídeos
           if (carouselItems.isNotEmpty)
             CarouselSlider(
@@ -83,19 +91,16 @@ class FeedPerfilUser extends StatelessWidget {
               ),
               items: carouselItems,
             ),
-          // 🔹 Descrição do post
-          if (post!.descricao != null && post!.descricao!.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    post!.descricao!,
-                    style: const TextStyle(fontSize: 15, color: Colors.black87),
-                  ),
-                ),
             
+          // 🔹 Descrição do post
+          if (post?.descricao?.isNotEmpty ?? false)
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                post!.descricao!,
+                style: const TextStyle(fontSize: 15, color: Colors.black87),
+              ),
+            ),
 
           // 🔹 Botão "Ver mais"
           Padding(
@@ -106,7 +111,7 @@ class FeedPerfilUser extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => VerMaisPage(post: post!),
+                      builder: (context) => VerMaisPage(postUser: post!),
                     ),
                   );
                 },
@@ -136,64 +141,123 @@ class FeedPerfilUser extends StatelessWidget {
                 ),
               ),
             ),
-          ),  ],
-            ),
+          ),
         ],
       ),
     );
   }
 }
-
-// ------------------------ COMPONENTE DE VÍDEO ------------------------
+// widget para mostrar um vídeo no carrossel
 class _CarouselVideoItem extends StatefulWidget {
   final String videoUrl;
-  const _CarouselVideoItem({required this.videoUrl});
+  const _CarouselVideoItem({Key? key, required this.videoUrl}) : super(key: key);
 
   @override
   State<_CarouselVideoItem> createState() => _CarouselVideoItemState();
 }
 
 class _CarouselVideoItemState extends State<_CarouselVideoItem> {
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controller;
+  bool _isInitializing = true;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) => setState(() {}));
+      ..setLooping(true)
+      ..setVolume(0.0) // mudo por padrão
+      ..initialize().then((_) {
+        if (!mounted) return;
+        setState(() => _isInitializing = false);
+        _controller?.play();
+      }).catchError((err) {
+        // opcional: trate erro aqui
+        if (mounted) setState(() => _isInitializing = false);
+      });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
+  }
+
+  void _togglePlayPause() {
+    if (_controller == null) return;
+    setState(() {
+      if (_controller!.value.isPlaying) {
+        _controller!.pause();
+      } else {
+        _controller!.play();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_controller.value.isInitialized) {
-      return const Center(child: CircularProgressIndicator());
+    // altura do carrossel no seu código é 240
+    const double height = 240;
+    if (_isInitializing) {
+      return SizedBox(
+        height: height,
+        child: const Center(child: CircularProgressIndicator()),
+      );
     }
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _controller.value.isPlaying ? _controller.pause() : _controller.play();
-        });
-      },
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          ),
-          Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-            color: const Color(0xB3FFFFFF),
-            size: 50,
-      ),
-        ],
+    if (_controller == null || !_controller!.value.isInitialized) {
+      return SizedBox(
+        height: height,
+        child: const Center(child: Icon(Icons.error)),
+      );
+    }
+
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: GestureDetector(
+        onTap: _togglePlayPause,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Ajusta para preencher mantendo a proporção
+            FittedBox(
+              fit: BoxFit.cover,
+              clipBehavior: Clip.hardEdge,
+              child: SizedBox(
+                width: _controller!.value.size.width,
+                height: _controller!.value.size.height,
+                child: VideoPlayer(_controller!),
+              ),
+            ),
+
+            // Overlay sutil (opcional)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(_controller!.value.isPlaying ? 0.0 : 0.15),
+              ),
+            ),
+
+            // Ícone de play/pause central (pequeno)
+            Center(
+              child: AnimatedOpacity(
+                opacity: _controller!.value.isPlaying ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -16,7 +16,7 @@ class AuthService {
   Map<String, dynamic>? ramo;
   String? foto;
 
-  Future<UsuarioGeral> register(Userform form) async {
+  Future<UsuarioGeral?> register(Userform form) async {
     try {
       final user = await _repository.register(form);
       await _storage.write(key: 'token', value: user.token);
