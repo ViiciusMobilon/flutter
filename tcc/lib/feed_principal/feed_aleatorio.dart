@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/auth_controller.dart';
 import 'package:tcc/data/controllers/portfolio_controller.dart';

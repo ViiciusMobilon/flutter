@@ -144,13 +144,6 @@ class _EditarPerfilState extends State<EditarPerfil> {
 
     // se quiser enviar ramo/categoria por nome ou id, depende do Userform.
     // Aqui enviamos nomes (já que CustomDropdownMultiSelect trabalha com strings).
-    if (tipoUsuario == 'prestador' && areasSelecionadas.isNotEmpty) {
-      userForm.ramo = areasSelecionadas.join(','); // ajuste conforme seu backend espera
-    }
-    if (tipoUsuario == 'empresa' && categoriasSelecionadas.isNotEmpty) {
-      userForm.categoria = categoriasSelecionadas.join(','); // ajuste conforme backend
-    }
-
     try {
       final userEdit = await authController.update(userForm);
       if (userEdit != null) {

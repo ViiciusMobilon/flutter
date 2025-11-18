@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 
 class BarraDePesquisa extends SearchDelegate<String> {
   final BuildContext context;
@@ -351,7 +352,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
         final meta = _meta[item]!;
 
         return GestureDetector(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PerfilDeOutroUsuario(id: 1,))),
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PerfilUser())),
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(

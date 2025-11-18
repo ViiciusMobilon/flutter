@@ -206,7 +206,7 @@ class _PerfilUserState extends State<PerfilUser> {
                 Text('${user?.categoriaNome ?? user?.ramoNome}', style: TextStyle(color: Colors.grey[700])),
                 Text('${user?.tipo}', style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
-                EstrelaPerfil(),
+                estrelaperfil(),
                 const SizedBox(height: 12),
                 _buildLoveButton(),
               ],

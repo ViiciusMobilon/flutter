@@ -108,7 +108,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       cursorColor: Colors.white,
                       readOnly: true,
                       onTap: () {
-                        showSearch(context: context, delegate: BarraDePesquisa());
+                        showSearch(context: context, delegate: BarraDePesquisa(context));
                       },
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search, color: Colors.white),

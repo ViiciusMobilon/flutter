@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:tcc/Relacionaveis_a_perfil/system_star.dart';
 import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/public_user_controller.dart';
+import 'package:tcc/data/models/user_public/post_user.dart';
 import 'package:tcc/data/models/user_public/userPublic.dart';
 import 'package:tcc/data/services/public_user_service.dart';
 import 'package:tcc/service_post.dart';
@@ -18,7 +19,6 @@ class PerfilDeOutroUsuario extends StatefulWidget {
 }
 
 class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
-  final List<ServicePostFeed> posts = [];
   bool isLoadingMore = false;
   final ScrollController _scrollController = ScrollController();
   final UserPublicController _user = UserPublicController(PublicUserService());
@@ -26,7 +26,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
   UsuarioPublic? user;
   bool isLoved = false;
   int loveCount = 0;
-
+  
   String? urlPerfil;
   String? urlCapa;
   String? nome;
@@ -52,7 +52,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
       setState(() {
         user = _user.user;
         if (user != null) {
-          loveCount = user!.curtidasQueRecebi ?? 0;
+          loveCount = user?.curtidasQueRecebi ?? 0;
           urlCapa = user?.dados.capa;
           urlPerfil = user?.dados.foto;
           nome = user?.dados.nome;
@@ -119,6 +119,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+    final portfolios = user?.portfolios ?? [];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -143,9 +144,9 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              if (index < posts.length) {
-                return FeedPerfilUser(post: posts[index]);
-              } else if (isLoadingMore && index == posts.length) {
+              if (index < portfolios.length) {
+                return FeedPerfilUser(post: portfolios[index]);
+              } else if (isLoadingMore && index == portfolios.length) {
                 return const Padding(
                   padding: EdgeInsets.all(20),
                   child: Center(child: CircularProgressIndicator()),
@@ -153,7 +154,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
               } else {
                 return const SizedBox.shrink();
               }
-            }, childCount: posts.length + (isLoadingMore ? 1 : 0)),
+            }, childCount: portfolios.length + (isLoadingMore ? 1 : 0)),
           ),
         ],
       ),

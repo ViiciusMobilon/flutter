@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
-import 'package:tcc/data/controllers/auth_controller.dart';
 
-/// EstrelaRating: barra de avaliação interativa
 class EstrelaRating extends StatelessWidget {
-  final double initialRating;
-  final bool isInteractive;
-
-  const EstrelaRating({
-    super.key,
-    this.initialRating = 5,
-    this.isInteractive = true,
-  });
+  const EstrelaRating({super.key});
 
   void _mostrarConfirmacao(BuildContext context, double rating) {
     showDialog(
@@ -58,45 +48,6 @@ class EstrelaRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isInteractive) {
-      return RatingBar.builder(
-        initialRating: initialRating,
-        minRating: 1,
-        direction: Axis.horizontal,
-        allowHalfRating: true,
-        updateOnDrag: false, // não arrasta
-        glow: false,         // sem sombra ao tocar
-        itemCount: 5,
-        itemSize: 32,
-        itemBuilder: (context, _) => const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        onRatingUpdate: (rating) {
-          print("Usuário avaliou: $rating estrelas");
-        },
-      );
-    } else {
-      return RatingBarIndicator(
-        rating: initialRating,
-        direction: Axis.horizontal,
-        itemCount: 5,
-        itemSize: 32,
-        itemBuilder: (context, _) => const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-      );
-    }
-  }
-}
-
-/// EstrelaPerfil: apenas exibe estrelas (não interativa)
-class EstrelaPerfil extends StatelessWidget {
-  // final double estrelas;
-
-  EstrelaPerfil({super.key});
-
     return RatingBar.builder(
       initialRating: 5,
       minRating: 1,
@@ -106,7 +57,7 @@ class EstrelaPerfil extends StatelessWidget {
       glow: false,
       itemCount: 5,
       itemSize: 32,
-      itemBuilder: (context, _) => Icon(
+      itemBuilder: (context, _) => const Icon(
         Icons.star,
         color: Colors.amber,
       ),
@@ -115,7 +66,7 @@ class EstrelaPerfil extends StatelessWidget {
       },
     );
   }
-
+}
 
 class estrelaperfil extends StatefulWidget {
   const estrelaperfil({super.key});
@@ -127,12 +78,7 @@ class estrelaperfil extends StatefulWidget {
 class _estrelaperfilState extends State<estrelaperfil> {
   @override
   Widget build(BuildContext context) {
-    final controller = context.read<AuthController>();
-    final user = controller.usuario;
-    var estrelas = user!.avaliacaoMedia;
-    print("Estrelas do usuario: ${estrelas}");
     return RatingBarIndicator(
-      rating: estrelas == null ? estrelas = 5 : estrelas,
       direction: Axis.horizontal,
       itemCount: 5,
       itemSize: 32,
@@ -140,7 +86,7 @@ class _estrelaperfilState extends State<estrelaperfil> {
         Icons.star,
         color: Colors.amber,
       ),
+      
     );
   }
 }
-

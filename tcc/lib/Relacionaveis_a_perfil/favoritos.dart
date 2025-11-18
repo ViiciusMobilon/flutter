@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/perfil_de_outro_usuario.dart';
+import 'package:tcc/Relacionaveis_a_perfil/perfil_dono_conta.dart';
 
 class PerfilFavorito {
   final String nome;
@@ -152,7 +153,7 @@ class _FavoritosPageState extends State<FavoritosPage>
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => PerfilDeOutroUsuario(id: 1,)),
+                                  builder: (_) => PerfilUser()),
                             ),
                             child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 8),
