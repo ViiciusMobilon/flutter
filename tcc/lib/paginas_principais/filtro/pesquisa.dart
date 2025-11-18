@@ -54,7 +54,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
 
   // Filtros de intervalo (curtidas e views)
   RangeValues filtroCurtidas = RangeValues(0, 1000);
-  RangeValues filtroViews = RangeValues(0, 10000);
+
 
   // Filtros de categoria e avaliação
   Set<String> filtroSegmentosSelecionados = {};
@@ -65,7 +65,6 @@ class BarraDePesquisa extends SearchDelegate<String> {
     int count = 0;
     if (filtroTempo != null) count++;
     if (filtroCurtidas.start > 0 || filtroCurtidas.end < 1000) count++;
-    if (filtroViews.start > 0 || filtroViews.end < 10000) count++;
     if (filtroSegmentosSelecionados.isNotEmpty) count++;
     if (filtroAvaliacaoMinima > 0.0) count++;
     return count;
@@ -80,6 +79,7 @@ class BarraDePesquisa extends SearchDelegate<String> {
 ThemeData appBarTheme(BuildContext context) {
   return Theme.of(context).copyWith(
     appBarTheme: const AppBarTheme(
+        surfaceTintColor: Colors.transparent,
       backgroundColor: Color(0xFF1976D2),
       foregroundColor: Colors.white,
       elevation: 0,
@@ -142,7 +142,7 @@ ThemeData appBarTheme(BuildContext context) {
                 filtroDataInicio = null;
                 filtroDataFim = null;
                 filtroCurtidas = RangeValues(0, 1000);
-                filtroViews = RangeValues(0, 10000);
+              
                 filtroSegmentosSelecionados.clear();
                 filtroAvaliacaoMinima = 0.0;
               });
@@ -188,99 +188,8 @@ ThemeData appBarTheme(BuildContext context) {
                     Divider(),
 
                     // Filtro por período de publicação
-                    Text('Período de publicação', style: TextStyle(fontWeight: FontWeight.w600)),
-                    SizedBox(height: 6),
+                   
 
-                    // Opções padrão de tempo
-                    RadioListTile<String?>(
-                      title: Text('Últimas 24 horas'),
-                      value: '24h',
-                      groupValue: filtroTempo,
-                      onChanged: (v) => setStateModal(() {
-                        filtroTempo = v;
-                        filtroDataInicio = filtroDataFim = null;
-                      }),
-                    ),
-                    RadioListTile<String?>(
-                      title: Text('Últimos 7 dias'),
-                      value: '7d',
-                      groupValue: filtroTempo,
-                      onChanged: (v) => setStateModal(() {
-                        filtroTempo = v;
-                        filtroDataInicio = filtroDataFim = null;
-                      }),
-                    ),
-                    RadioListTile<String?>(
-                      title: Text('Últimos 30 dias'),
-                      value: '30d',
-                      groupValue: filtroTempo,
-                      onChanged: (v) => setStateModal(() {
-                        filtroTempo = v;
-                        filtroDataInicio = filtroDataFim = null;
-                      }),
-                    ),
-                    RadioListTile<String?>(
-                      title: Text('Intervalo personalizado'),
-                      value: 'personalizado',
-                      groupValue: filtroTempo,
-                      onChanged: (v) => setStateModal(() => filtroTempo = v),
-                    ),
-
-                    // Campos de data se "personalizado" estiver ativo
-                    if (filtroTempo == 'personalizado')
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        child: Row(
-                          children: [
-                            // Data inicial
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () async {
-                                  final picked = await showDatePicker(
-                                    context: context,
-                                    initialDate: filtroDataInicio ?? DateTime.now(),
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime.now(),
-                                  );
-                                  if (picked != null) {
-                                    setStateModal(() => filtroDataInicio = picked);
-                                  }
-                                },
-                                child: Text(
-                                  filtroDataInicio == null
-                                      ? "Data inicial"
-                                      : DateFormat('dd/MM/yyyy').format(filtroDataInicio!),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            // Data final
-                            Expanded(
-                              child: OutlinedButton(
-                                onPressed: () async {
-                                  final picked = await showDatePicker(
-                                    context: context,
-                                    initialDate: filtroDataFim ?? DateTime.now(),
-                                    firstDate: DateTime(2020),
-                                    lastDate: DateTime.now(),
-                                  );
-                                  if (picked != null) {
-                                    setStateModal(() => filtroDataFim = picked);
-                                  }
-                                },
-                                child: Text(
-                                  filtroDataFim == null
-                                      ? "Data final"
-                                      : DateFormat('dd/MM/yyyy').format(filtroDataFim!),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                    SizedBox(height: 10),
-                    Divider(),
 
                     // Filtro por curtidas
                     Text('Curtidas (intervalo)', style: TextStyle(fontWeight: FontWeight.w600)),
@@ -299,21 +208,9 @@ ThemeData appBarTheme(BuildContext context) {
                     Divider(),
 
                     // Filtro por visualizações
-                    Text('Visualizações (intervalo)', style: TextStyle(fontWeight: FontWeight.w600)),
-                    RangeSlider(
-                      values: filtroViews,
-                      min: 0,
-                      max: 10000,
-                      divisions: 10000,
-                      labels: RangeLabels(
-                        filtroViews.start.round().toString(),
-                        filtroViews.end.round().toString(),
-                      ),
-                      onChanged: (v) => setStateModal(() => filtroViews = v),
-                    ),
+                  
 
-                    Divider(),
-
+                   
                     // Filtro por segmento
                     Text('Segmento', style: TextStyle(fontWeight: FontWeight.w600)),
                     SizedBox(height: 6),

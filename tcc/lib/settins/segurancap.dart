@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:tcc/cadastro/CEP.dart';
+import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
 import 'package:tcc/settins/seguranca/email.dart';
 
@@ -15,6 +16,7 @@ class _SegurancaState extends State<Seguranca> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: Text(
           "Segurança",
           style: TextStyle(
@@ -43,6 +45,7 @@ class _SegurancaState extends State<Seguranca> {
               MaterialPageRoute(builder: (context) => TrocarEmail()),
             ),
           ),
+
           ListTile(
             leading: Icon(Icons.lock, color: Colors.indigoAccent),
             title: Text(
@@ -54,6 +57,21 @@ class _SegurancaState extends State<Seguranca> {
               MaterialPageRoute(builder: (context) => TrocarEmail()),
             ),
           ),
+
+          ListTile(
+            leading: Icon(Icons.lock, color: Colors.indigoAccent),
+            title: Text(
+              'Alterar CEP',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.05,
+              ),
+            ),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CEP(usuario: Userform(),)),
+            ),
+          ),
+
           CamposSenha(),
         ],
       ),
@@ -88,7 +106,6 @@ class _CamposSenhaState extends State<CamposSenha> {
 
   void _salvarSenha() {
     if (_formKey.currentState!.validate()) {
-      // Aqui você pode colocar a lógica de salvar a senha
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Senha alterada com sucesso!")),
       );
@@ -111,7 +128,6 @@ class _CamposSenhaState extends State<CamposSenha> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Senha Atual
             Text(
               'Senha Atual',
               style: TextStyle(
@@ -129,7 +145,6 @@ class _CamposSenhaState extends State<CamposSenha> {
                 hintText: 'Digite sua senha atual',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
-        
                 ),
                 filled: true,
                 fillColor: Colors.white,
@@ -169,7 +184,6 @@ class _CamposSenhaState extends State<CamposSenha> {
             ),
             SizedBox(height: screenHeight * 0.03),
 
-            // Nova Senha
             Text(
               'Nova Senha',
               style: TextStyle(
@@ -214,7 +228,6 @@ class _CamposSenhaState extends State<CamposSenha> {
             ),
             SizedBox(height: screenHeight * 0.03),
 
-            // Confirmar Nova Senha
             Text(
               'Confirmar Nova Senha',
               style: TextStyle(
@@ -259,7 +272,6 @@ class _CamposSenhaState extends State<CamposSenha> {
             ),
             SizedBox(height: screenHeight * 0.05),
 
-            // Botão Salvar
             Center(
               child: GestureDetector(
                 onTap: _salvarSenha,

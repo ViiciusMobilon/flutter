@@ -33,7 +33,26 @@ class VerMaisPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Veja mais"),
+            surfaceTintColor: Colors.transparent,
+
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 0.8,
+        title: const Text(
+          "Detalhes",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

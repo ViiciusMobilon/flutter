@@ -5,6 +5,9 @@ import 'package:tcc/data/models/ramo.dart';
 import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/ramo_repository.dart';
 
+import '../../../projeto_principal/lib/data/models/ramo.dart';
+import '../../../projeto_principal/lib/data/repositories/ramo_repository.dart';
+
 class Area extends StatefulWidget {
   final Userform usuario;
   final void Function(RamoModel?) onRamoSelecionado;

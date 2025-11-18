@@ -204,6 +204,8 @@ class _EditarPostPageState extends State<EditarPostPage> {
 
     return Scaffold(
       appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+
         title: const Text("Editar Post"),
         actions: [
           IconButton(
