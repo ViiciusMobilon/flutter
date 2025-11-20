@@ -7,7 +7,6 @@ class RamoModel{
   RamoModel({required this.id, required this.nome});
 
   factory RamoModel.fromJson(Map<String, dynamic> json){
-
     return
       RamoModel(
         id: json['id'] ?? '',

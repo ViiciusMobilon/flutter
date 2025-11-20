@@ -1,6 +1,6 @@
 import 'dart:io';
 
-
+import 'package:tcc/data/models/user.dart';
 
 class Userform {
   String? nome;
@@ -26,6 +26,7 @@ class Userform {
   int? ramo;
   int? categoria;
   String? tipo;
+  List<int>? skills;
 
   Userform({
     this.nome,
@@ -51,12 +52,12 @@ class Userform {
     this.ramo,
     this.categoria,
     this.tipo,
+    this.skills,
   });
 
-  /// Para debug legível
   @override
   String toString() {
-    return [  
+    return [
       'nome: $nome',
       'razao_social: $razao_social',
       'email: $email',
@@ -80,11 +81,58 @@ class Userform {
       'ramo: $ramo',
       'categoria: $categoria',
       'tipo: $tipo',
+      'skills: $skills',
     ].toString();
   }
 
-  /// Para serialização em Map
- Map<String, dynamic> toMap() {
+  // Construtor para popular a partir do JSON da API
+  factory Userform.fromJson(Map<String, dynamic> json) {
+    int? parseInt(dynamic value) {
+      if (value == null) return null;
+      if (value is int) return value;
+      return int.tryParse(value.toString());
+    }
+
+    List<int> parseSkills(dynamic value) {
+      if (value == null) return [];
+      if (value is List) {
+        return value.map((e) {
+          if (e is int) return e;
+          if (e is Map && e['id'] != null) return e['id'] as int;
+          return int.parse(e.toString());
+        }).toList();
+      }
+      return [];
+    }
+
+    return Userform(
+      nome: json['nome']?.toString(),
+      razao_social: json['razao_social']?.toString(),
+      email: json['email']?.toString(),
+      password: null,
+      confirmation_password: null,
+      cpf: json['cpf']?.toString(),
+      cnpj: json['cnpj']?.toString(),
+      telefone: json['telefone']?.toString(),
+      whatsapp: json['whatsapp']?.toString(),
+      instagram: json['instagram']?.toString(),
+      site: json['site']?.toString(),
+      descricao: json['descricao']?.toString(),
+      cep: json['cep']?.toString(),
+      cidade: json['localidade']?.toString(),
+      estado: json['estado']?.toString(),
+      uf: json['uf']?.toString(),
+      rua: json['rua']?.toString(),
+      numero: json['numero']?.toString(),
+      infoadd: json['infoadd']?.toString(),
+      ramo: parseInt(json['id_ramo']),
+      categoria: parseInt(json['id_categoria']),
+      tipo: json['type']?.toString(),
+      skills: parseSkills(json['skills']),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
     return {
       "nome": nome ?? "",
       "razao_social": razao_social ?? "",
@@ -105,10 +153,10 @@ class Userform {
       "rua": rua ?? "",
       "numero": numero ?? "",
       "infoadd": infoadd ?? "",
-      "id_ramo": ramo?.toString() ?? "",
-      "id_categoria": categoria?.toString() ?? "",
+      "id_ramo": ramo,
+      "id_categoria": categoria,
       "type": tipo ?? "",
+      "skills": skills?.toList() ?? [],
     };
   }
-
 }

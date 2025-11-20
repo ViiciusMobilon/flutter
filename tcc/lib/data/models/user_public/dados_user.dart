@@ -20,6 +20,7 @@ class DadosUsuario {
   final String? categoriaNome;
   final String? createdAt;
   final String? updatedAt;
+  final List<Skills?>? skills;
 
   DadosUsuario({
     required this.id,
@@ -43,6 +44,7 @@ class DadosUsuario {
     this.categoriaNome,
     this.createdAt,
     this.updatedAt,
+    this.skills
   });
 
 factory DadosUsuario.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,10 @@ factory DadosUsuario.fromJson(Map<String, dynamic> json) {
       categoriaNome: json['categoria']?['nome'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
+      skills: (json['skills'] as List<dynamic>?)
+        ?.map((item) => Skills.fromJson(item))
+        .toList(),
+
     );
   }
 
@@ -95,6 +101,36 @@ factory DadosUsuario.fromJson(Map<String, dynamic> json) {
       'categoriaNome': categoriaNome,
       'createdAt':createdAt,
       'updatedAt':updatedAt,
+    };
+  }
+}
+
+class Skills{
+  final int id;
+  final String nome;
+  final int id_ramo;
+
+  Skills(
+    {
+    required this.id,
+    required this.nome,
+    required this.id_ramo
+    }
+  );
+
+  factory Skills.fromJson(Map<String, dynamic> json) {
+    return Skills(
+      id: json['id'],
+      nome: json['nome'],
+      id_ramo: json['id_ramo'],
+    );
+  }
+
+  Map<String, dynamic> toJson(){
+    return{
+      'id':id,
+      'nome':nome,
+      'id_ramo':id_ramo,
     };
   }
 }

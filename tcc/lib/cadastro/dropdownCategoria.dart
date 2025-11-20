@@ -6,17 +6,21 @@ import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/Categoria_repository.dart';
 
 class Categoria extends StatefulWidget {
-  final Userform usuario;
+  final Userform? usuario;
   final void Function(CategoriaModel?) onCategoriaSelecionado;
   final String? erro;
   final VoidCallback onClearerror;
+
+  final CategoriaModel? catInicial;
+
   
   Categoria({
     super.key,
-    required this.usuario,
+    this.usuario,
     required this.onCategoriaSelecionado,
     required this.erro,
-    required this.onClearerror
+    required this.onClearerror,
+    this.catInicial
   });
 
   @override
@@ -37,6 +41,8 @@ class _CategoriaState extends State<Categoria> {
   Widget build(BuildContext context) => SizedBox(
     width: MediaQuery.of(context).size.width * 0.8,
     child: DropdownSearch<CategoriaModel>(
+      selectedItem: widget.catInicial,
+      compareFn: (a, b) => a.id == b.id,
       items: (String filter, infiniteScrollProps) async {
         // Busca todas as categorias
         final categorias = await categoriaRepository.getCategoria();

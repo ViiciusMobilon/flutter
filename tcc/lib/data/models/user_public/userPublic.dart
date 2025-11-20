@@ -18,7 +18,7 @@ class UsuarioPublic {
     required this.curtidasQueRecebi,
     required this.dados,
     required this.portfolios,
-    this.contato,
+    this.contato
   });
 
   factory UsuarioPublic.fromJson(Map<String, dynamic> json) {
@@ -50,3 +50,5 @@ class UsuarioPublic {
     };
   }
 }
+
+

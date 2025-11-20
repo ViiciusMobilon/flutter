@@ -23,11 +23,13 @@ class FeedPerfilUser extends StatelessWidget {
   Widget build(BuildContext context) {
     print('estou no feed do outro user nome: ${post?.user_nome}');
     print('estou no feed do outro user desc: ${post?.descricao}');
+    print('estou no feed do outro user nome user: ${user?.dados.nome}');
     
     // ✅ Use os dados do dono do post, não do user logado
-    final fotoUrl = post?.user_foto != null 
-        ? '${URLAPISTORAGE}${post!.user_foto}'
+    final fotoUrl = user?.dados.foto != null 
+        ? '${URLAPISTORAGE}''/storage/''${user?.dados.foto}'
         : 'https://via.placeholder.com/150';
+        print('foto: ${fotoUrl}');
 
     // 🔹 Lista de imagens e vídeos para o carrossel
     List<Widget> carouselItems = [];
@@ -44,10 +46,11 @@ class FeedPerfilUser extends StatelessWidget {
     // Fotos
     if (post?.fotos?.isNotEmpty ?? false) {
       carouselItems.addAll(post!.fotos!.map((f) {
+        print('card perfil:${URLAPISTORAGE}''${f.url}');
         return ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           child: Image.network(
-            '${URLAPISTORAGE}${f.url}',
+            '${URLAPISTORAGE}''${f.url}',
             width: double.infinity,
             fit: BoxFit.cover,
             errorBuilder: (_, __, ___) =>

@@ -69,7 +69,8 @@ class EstrelaRating extends StatelessWidget {
 }
 
 class estrelaperfil extends StatefulWidget {
-  const estrelaperfil({super.key});
+  final double? star;
+  estrelaperfil({super.key, this.star});
 
   @override
   State<estrelaperfil> createState() => _estrelaperfilState();
@@ -78,8 +79,10 @@ class estrelaperfil extends StatefulWidget {
 class _estrelaperfilState extends State<estrelaperfil> {
   @override
   Widget build(BuildContext context) {
+    double valorEstrelas = widget.star == 0 ? 5.0 : widget.star!.toDouble();
     return RatingBarIndicator(
       direction: Axis.horizontal,
+      rating:valorEstrelas ,
       itemCount: 5,
       itemSize: 32,
       itemBuilder: (context, _) => const Icon(

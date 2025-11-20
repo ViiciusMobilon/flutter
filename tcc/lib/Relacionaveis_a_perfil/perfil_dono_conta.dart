@@ -24,7 +24,7 @@ class PerfilUser extends StatefulWidget {
 
 class _PerfilUserState extends State<PerfilUser> {
   bool isLoved = false;
-  int loveCount = 0;
+  int? loveCount;
 
   // campos opcionais para exibir contatos (poderão vir do user)
   String? telefone;
@@ -57,6 +57,7 @@ class _PerfilUserState extends State<PerfilUser> {
         email = user.email;
         website = user.site;
         instagram = user.instagram;
+        loveCount = user.avaliacaoTotal!.toInt();
         // x = user.x;
       }
     });
@@ -79,21 +80,27 @@ class _PerfilUserState extends State<PerfilUser> {
     }
   }
 
-  void _toggleLove() {
-    setState(() {
-      isLoved = !isLoved;
-      loveCount += isLoved ? 1 : -1;
-    });
+  // void _toggleLove() {
+  //   setState(() {
+  //     isLoved = !isLoved;
+  //     loveCount += isLoved ? 1 : -1;
+  //   });
 
-    // Lógica de backend: faça uma chamada à API para atualizar o "like" do perfil.
-    // Exemplo (pseudo): context.read<ProfileController>().toggleLove(userId, isLoved);
-  }
+  //   // Lógica de backend: faça uma chamada à API para atualizar o "like" do perfil.
+  //   // Exemplo (pseudo): context.read<ProfileController>().toggleLove(userId, isLoved);
+  // }
 
   @override
   Widget build(BuildContext context) {
     final _portfolioController = context.watch<PortfolioController>();
     final user = context.watch<AuthController>().usuario;
     print('user tell: ${user?.telefone}');
+    print('user skills: ${user?.skills.length}');
+    final skillsNomes = user?.skills
+      ?.map((s) => s?.nome)
+      .where((nome) => nome != null)
+      .join(', ');
+      print('nomes skills: ${skillsNomes}');
     // String data = DateFormat('dd/MM/yyyy').format(user!.createdAt!);
 
     return Scaffold(
@@ -111,7 +118,7 @@ class _PerfilUserState extends State<PerfilUser> {
           SliverToBoxAdapter(
             child: SizedBox(height: MediaQuery.of(context).size.height * 0.02),
           ),
-          SliverToBoxAdapter(child: _buildEspecializacao()),
+          SliverToBoxAdapter(child: _buildEspecializacao(skillsNomes!)),
           SliverToBoxAdapter(
             child: buildContactSection(
               context: context,
@@ -158,6 +165,7 @@ class _PerfilUserState extends State<PerfilUser> {
   Widget _buildProfileHeader(user) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    print('estrelas: ${user.avaliacaoTotal}');
 
     return SizedBox(
       height: height * 0.40,
@@ -206,7 +214,7 @@ class _PerfilUserState extends State<PerfilUser> {
                 Text('${user?.categoriaNome ?? user?.ramoNome}', style: TextStyle(color: Colors.grey[700])),
                 Text('${user?.tipo}', style: TextStyle(color: Colors.grey[500])),
                 const SizedBox(height: 8),
-                estrelaperfil(),
+                estrelaperfil(star: user.avaliacaoTotal),
                 const SizedBox(height: 12),
                 _buildLoveButton(),
               ],
@@ -232,46 +240,45 @@ class _PerfilUserState extends State<PerfilUser> {
   }
 
   Widget _buildLoveButton() {
-    return GestureDetector(
-      onTap: _toggleLove,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-        decoration: BoxDecoration(
-          color: isLoved ? Colors.red : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey[300]!),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isLoved ? Icons.favorite : Icons.favorite_border,
-              color: isLoved ? Colors.white : Colors.grey[700],
-              size: 18,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              isLoved ? 'Amei' : 'Amar',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.w600,
+    return Container(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          decoration: BoxDecoration(
+            color:Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.favorite,
+                color: Colors.grey[700],
+                size: 18,
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '$loveCount',
-              style: TextStyle(
-                color: isLoved ? Colors.white : Colors.grey[700],
-                fontWeight: FontWeight.bold,
+              const SizedBox(width: 6),
+              Text(
+                'Curtidas',
+                style: TextStyle(
+                  color:Colors.grey[700],
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              Text(
+                '$loveCount',
+                style: TextStyle(
+                  color:Colors.grey[700],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
-  Widget _buildEspecializacao() {
+  Widget _buildEspecializacao(String skills) {
     return Container(
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(16),
@@ -289,7 +296,7 @@ class _PerfilUserState extends State<PerfilUser> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             "Especializações",
             style: TextStyle(
@@ -299,6 +306,7 @@ class _PerfilUserState extends State<PerfilUser> {
             ),
             textAlign: TextAlign.justify,
           ),
+          Text(skills ?? ''),
         ],
       ),
     );

@@ -6,17 +6,21 @@ import 'package:tcc/data/models/userForm.dart';
 import 'package:tcc/data/repositories/ramo_repository.dart';
 
 class Area extends StatefulWidget {
-  final Userform usuario;
+  final Userform? usuario;
   final void Function(RamoModel?) onRamoSelecionado;
   final String? erro;
   final VoidCallback onClearerror;
-  
+
+  // 🔥 Novo parâmetro para EDIÇÃO
+  final RamoModel? ramoInicial;
+
   Area({
     super.key,
-    required this.usuario,
+    this.usuario,
     required this.onRamoSelecionado,
     required this.erro,
-    required this.onClearerror
+    required this.onClearerror,
+    this.ramoInicial, // 👈 adicionado
   });
 
   @override
@@ -31,78 +35,77 @@ class _AreaState extends State<Area> {
   void initState() {
     super.initState();
     ramoRepository = RamoRepository(client: apiHttp.DioClient.dio);
+
+    // 🔥 Se veio do EDITAR, já deixa carregado o ramo atual do usuário
+    ramoselecionado = widget.ramoInicial;
   }
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    width: MediaQuery.of(context).size.width * 0.8,
-    child: DropdownSearch<RamoModel>(
-      items: (String filter, infiniteScrollProps) async {
-        // Busca todos os ramos
-        final ramos = await ramoRepository.getRamo();
-        
-        // Se houver filtro, aplica a busca local
-        if (filter.isNotEmpty) {
-          return ramos.where((ramo) => 
-            ramo.nome.toLowerCase().contains(filter.toLowerCase())
-          ).toList();
-        }
-        
-        return ramos;
-      },
-      itemAsString: (RamoModel ramo) => ramo.nome,
-      onChanged: (RamoModel? ramo) {
-        setState(() {
-          ramoselecionado = ramo;
-        });
-        widget.onRamoSelecionado(ramo);
-        widget.onClearerror();
-      },
-      popupProps: PopupProps.menu(
-        showSearchBox: true,
-        searchFieldProps: TextFieldProps(
-          decoration: InputDecoration(
-            labelText: "Pesquisar área...",
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: DropdownSearch<RamoModel>(
+          selectedItem: widget.ramoInicial,      // 👈 IMPORTANTÍSSIMO
+          compareFn: (a, b) => a.id == b.id, 
+
+          items: (String filter, infiniteScrollProps) async {
+            final ramos = await ramoRepository.getRamo();
+
+            if (filter.isNotEmpty) {
+              return ramos
+                  .where((ramo) =>
+                      ramo.nome.toLowerCase().contains(filter.toLowerCase()))
+                  .toList();
+            }
+
+            return ramos;
+          },
+
+          itemAsString: (RamoModel ramo) => ramo.nome,
+
+          onChanged: (RamoModel? ramo) {
+            setState(() {
+              ramoselecionado = ramo;
+            });
+            widget.onRamoSelecionado(ramo);
+            widget.onClearerror();
+          },
+
+          popupProps: PopupProps.menu(
+            showSearchBox: true,
+            searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                labelText: "Pesquisar área...",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            fit: FlexFit.loose,
+            constraints: BoxConstraints(
+              maxHeight: 250,
             ),
           ),
-        ),
-        fit: FlexFit.loose,
-        constraints: BoxConstraints(
-          maxHeight: 250,
-        ),
-      ),
-      decoratorProps: DropDownDecoratorProps(
-        decoration: InputDecoration(
-          labelText: "Área de atuação",
-          hintText: "Escolha a área de atuação",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: const Color.fromRGBO(121, 180, 217, 1),
-              width: 1.5,
+
+          decoratorProps: DropDownDecoratorProps(
+            decoration: InputDecoration(
+              labelText: "Área de atuação",
+              hintText: "Escolha a área de atuação",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              errorText: widget.erro,
             ),
-            borderRadius: BorderRadius.circular(10),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          errorText: widget.erro,
+
+          dropdownBuilder: (context, RamoModel? selectedItem) {
+            return Text(
+              selectedItem?.nome ?? "Escolha a área de atuação",
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.045,
+                fontFamily: "Poppins",
+              ),
+            );
+          },
         ),
-      ),
-      dropdownBuilder: (context, RamoModel? selectedItem) {
-        return Text(
-          selectedItem?.nome ?? "Escolha a área de atuação",
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width * 0.045,
-            fontFamily: "Poppins",
-          ),
-        );
-      },
-    ),
-  );
+      );
 }

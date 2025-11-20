@@ -126,6 +126,7 @@ class _ServiceProviderFeedState extends State<ServiceProviderFeed> {
 
     carouselItems.addAll(
       widget.post.fotos!.map((f) {
+        print('url fotos: ${URLAPISTORAGE}${f.url}');
         return ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
           child: SizedBox(

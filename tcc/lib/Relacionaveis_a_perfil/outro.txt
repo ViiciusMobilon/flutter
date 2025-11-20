@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:tcc/Relacionaveis_a_perfil/feed_perfil_outro.dart';
 import 'dart:async';
@@ -7,7 +6,6 @@ import 'package:tcc/data/config.dart';
 import 'package:tcc/data/controllers/public_user_controller.dart';
 import 'package:tcc/data/models/user_public/post_user.dart';
 import 'package:tcc/data/models/user_public/userPublic.dart';
-import 'package:tcc/data/repositories/auth_repository.dart';
 import 'package:tcc/data/services/public_user_service.dart';
 import 'package:tcc/service_post.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,9 +68,6 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           website = user?.contato?.site;
           // x = user?.contato?.x;
           instagram = user?.contato?.instagram;
-          loveCount = user?.curtidasQueRecebi ?? 0;
-      // aqui podemos setar isLoved
-          // isLoved = user!.; 
         }
       });
     });
@@ -109,20 +104,13 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     }
   }
 
-  final repository = AuthRepository();
-
-  void _toggleLove(int perfilId) async {
-  if (isLoved) {
-    await repository.descurtirPerfil(perfilId);
-  } else {
-    await repository.curtirPerfil(perfilId);
+  void _toggleLove() {
+    setState(() {
+      isLoved = !isLoved;
+      loveCount = isLoved ? (loveCount + 1) : (loveCount - 1).clamp(0, 9999999);
+      // se quiser enviar para a API, adicione a chamada aqui (sem alterar backend).
+    });
   }
-
-  // Recarrega o usuário para atualizar curtidas, foto, etc
-  await _user.loadUser(id: widget.id);
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -132,15 +120,6 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
       );
     }
     final portfolios = user?.portfolios ?? [];
-    print("skills: ${user?.dados.skills?.length}");
-    print("curtida: ${user!.curtidasQueRecebi}");
-    final skillsNomes = user?.dados.skills
-      ?.map((s) => s?.nome)
-      .where((nome) => nome != null)
-      .join(', ');
-
-    print('skills nomes: ${skillsNomes}');
-
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -151,7 +130,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).size.height * 0.01)),
           SliverToBoxAdapter(child: _buildDescription(user?.dados.descricao ?? '')),
           SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).size.height * 0.02)),
-          SliverToBoxAdapter(child: _buildEspecializacao(skillsNomes)),
+          SliverToBoxAdapter(child: _buildEspecializacao()),
           SliverToBoxAdapter(
             child: buildContactSection(
               context: context,
@@ -166,7 +145,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
               if (index < portfolios.length) {
-                return FeedPerfilUser(post: portfolios[index], user: user,);
+                return FeedPerfilUser(post: portfolios[index]);
               } else if (isLoadingMore && index == portfolios.length) {
                 return const Padding(
                   padding: EdgeInsets.all(20),
@@ -184,8 +163,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
 
   Widget _buildProfileHeader() {
     final coverUrl = urlCapa != null ? '$URLAPISTORAGE$urlCapa' : null;
-    final profileUrl = urlPerfil != null ? '${URLAPISTORAGE}''/storage/''${urlPerfil}' : null;
-    print("foto perfil: ${profileUrl}");
+    final profileUrl = urlPerfil != null ? '$URLAPISTORAGE$urlPerfil' : null;
 
     return Container(
       color: Colors.white,
@@ -267,7 +245,6 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
                 ),
                 const SizedBox(height: 12),
                 const EstrelaRating(),
-                Text('Avaliações'),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -275,7 +252,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
                     _buildLoveButton(),
                     const SizedBox(width: 12),
                     const SizedBox(width: 6),
-                    disponivel(status: user!.dados.disponivel,), // widget de disponibilidade visual
+                    disponivel(), // widget de disponibilidade visual
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -287,9 +264,9 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     );
   }
 
-  Widget _buildLoveButton(){
+  Widget _buildLoveButton() {
     return GestureDetector(
-      onTap:() => _toggleLove(user!.id),
+      onTap: _toggleLove,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
@@ -333,7 +310,7 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
     );
   }
 
-  Widget _buildEspecializacao(String? skills) {
+  Widget _buildEspecializacao() {
     return Container(
       margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(16),
@@ -344,14 +321,13 @@ class _PerfilDeOutroUsuarioState extends State<PerfilDeOutroUsuario> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+        children: const [
           Text(
             "Especializações",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           // aqui você pode adicionar a lista real de especializações se vier do backend
-          Text(skills ?? '')
         ],
       ),
     );
@@ -446,53 +422,48 @@ Widget buildContactSection({
 
 /// Disponibilidade visual (mantive como estava na versão frontend)
 class disponivel extends StatefulWidget {
-  final bool status;
-  disponivel({Key? key,required this.status }) : super(key: key);
+  const disponivel({Key? key}) : super(key: key);
 
   @override
   State<disponivel> createState() => _disponivelState();
 }
 
 class _disponivelState extends State<disponivel> {
-  
+  bool _isAvailable = true;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(2),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: widget.status ? Colors.green : const Color.fromARGB(255, 255, 0, 0),
-          borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-              ),
-            ],
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _isAvailable = !_isAvailable;
+            });
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isAvailable ? Colors.green : const Color.fromARGB(255, 255, 0, 0),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            elevation: 4,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-            Icon(widget.status ? Icons.check_circle : Icons.cancel, color: Colors.white),
-            const SizedBox(width: 8),
-            Text(
-              widget.status ? 'Disponível' : 'Indisponível',
-              style: TextStyle(
-              fontSize: MediaQuery.of(context).size.width * 0.035,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              Icon(_isAvailable ? Icons.check_circle : Icons.cancel),
+              const SizedBox(width: 8),
+              Text(
+                _isAvailable ? 'Disponível' : 'Indisponível',
+                style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.035, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
-
 }

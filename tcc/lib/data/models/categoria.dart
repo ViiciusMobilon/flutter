@@ -5,7 +5,6 @@ class CategoriaModel{
   CategoriaModel({required this.id, required this.nome});
 
   factory CategoriaModel.fromJson(Map<String, dynamic> json){
-
     return
       CategoriaModel(
         id: json['id'] ?? '',
