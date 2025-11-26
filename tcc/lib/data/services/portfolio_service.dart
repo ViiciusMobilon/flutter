@@ -1,0 +1,78 @@
+
+import 'package:tcc/data/models/paginate.dart';
+import 'package:tcc/data/models/post.dart';
+import 'package:tcc/data/models/postForm.dart';
+import 'package:tcc/data/repositories/portfolio_repository.dart';
+
+class PortfolioService {
+  final PortfolioRepository _repository = PortfolioRepository();
+
+
+
+  Future<List<Portfolio>> getPortfolioAuth({int page = 1}) async {
+    try{
+      final post = await _repository.getPortfolioAuth(page: page);
+      print('Portfolio service auth: ${post.length}');
+      return post;
+    } catch (e) {
+      print("Erro no Portfolio service: $e");
+      rethrow;
+    }
+
+  }
+
+  Future<PaginationResult<Portfolio>?> getPortfolios({int page =1 }) async {
+    try {
+      final posts = await _repository.getPortfolios(page: page);
+      print('portfolio geral service: ${posts.data.length}');
+      return posts;
+    } catch (e) {
+      print("Erro no Portfolio service Geral: $e");
+      rethrow;
+    }
+  }
+
+  Future<Portfolio> createPortfolio(Postform form) async {
+    try{
+      final post = await _repository.createPortfolio(form);
+      print('Portfolio criado service: ${post.id}');
+      return post;
+    } catch (e) {
+      print("Erro no Portfolio service: $e");
+      rethrow;
+    }
+
+  }
+
+  Future<Portfolio> getPortfolioId({required int id}) async {
+    try{
+      final post = await _repository.getPortfolioId(id: id);
+      print('Portfolio id service: ${post.id}');
+      print('getPortfolioid service: ${post.toString()}');
+      return post;
+    } catch (e) {
+      print("Erro no Portfolio service: $e");
+      rethrow;
+    }
+
+  }
+
+
+  Future<Portfolio> update(Postform form,{required int idPost}) async{
+    try{
+      final post = await _repository.updatePortfolio(form, idPost: idPost);
+
+      print('Update post service: ${post.toJson()}');
+
+      return post;
+    }catch(e){
+      print("Erro update form ${e.toString()}");
+      throw Exception(e);
+    }
+  }
+
+
+
+
+
+}

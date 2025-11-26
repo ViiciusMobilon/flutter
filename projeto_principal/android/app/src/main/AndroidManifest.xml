@@ -1,13 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.projeto_principal"> <!-- substitua pelo seu package real -->
+    package="com.example.tcc"> <!-- substitua pelo seu package real -->
+    package="com.example.tcc"> <!-- substitua pelo seu package real -->
 
     <!-- Permissões necessárias para câmera e acesso a arquivos -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
-        android:label="projeto_principal"
+        android:usesCleartextTraffic="true"
+        android:label="tcc"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true">
 

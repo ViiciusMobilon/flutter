@@ -4,6 +4,12 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
+<<<<<<< HEAD
+  flutter_secure_storage_windows
+=======
+  share_plus
+  url_launcher_windows
+>>>>>>> frontend
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

@@ -1,27 +1,100 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:projeto_principal/cadastro/cadastro1.dart';
-import 'package:projeto_principal/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/cadastro/cadastro1.dart';
+import 'package:tcc/data/controllers/portfolio_controller.dart';
+import 'package:tcc/esqueci_a_senha/esqueciasenha.dart';
+import 'package:tcc/data/controllers/auth_controller.dart';
+import 'package:tcc/data/repositories/auth_repository.dart';
+import 'package:tcc/data/services/auth_service.dart';
+import 'package:tcc/paginas%20principais/pagina_principal.dart';
+import 'package:tcc/teste_video.dart';
+import 'package:provider/provider.dart';
 
+
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp
-  ]);
 
-  runApp(const Main());
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  runApp(MainApp());
+  // runApp( MaterialApp(
+  //   debugShowCheckedModeBanner: false,
+  //   home: TesteVideo(),
+  // ));
+}
+class MainApp extends StatelessWidget {
+
+  MainApp({super.key});
+ 
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(providers:   [
+      ChangeNotifierProvider(
+        create: (_) => PortfolioController()),
+    ],
+      child: MaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        debugShowCheckedModeBanner: false,
+        home: Login(),
+      ),
+    );
+  }
 }
 
-class Main extends StatelessWidget {
-  const Main({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+  
+}
+
+class _LoginState extends State<Login> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  late final AuthController _authController;
+  @override
+  void initState() {
+    super.initState();
+    _authController = AuthController(AuthService());
+  }
+
+  Future<void> login() async {
+  final email = emailController.text;
+  final password = passwordController.text;
+
+  try {
+      final usuarioLogado = await _authController.login(email, password);
+      print("Usuario Login tela:${usuarioLogado}"); 
+
+      if (usuarioLogado?.token?.isNotEmpty ?? false) {
+        // Redireciona só se token existe
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TelaPrincipal(authController: _authController),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email ou senha inválidos')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao fazer login: $e')),
+      );
+      print('Erro ao fazer login: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
         body: Container(
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
@@ -68,7 +141,7 @@ class Main extends StatelessWidget {
                     left: MediaQuery.of(context).size.width * 0.08,
                     right: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  child: email(),
+                  child: email(controller: emailController,),
                 ),
                 //fim email
                 //textfield senha
@@ -78,23 +151,17 @@ class Main extends StatelessWidget {
                     right: MediaQuery.of(context).size.width * 0.08,
                     top: MediaQuery.of(context).size.height * 0.04,
                   ),
-                  child: senha(),
+                  child: senha(controller: passwordController,),
                 ),
 
                 // fim senha
                 //esqueci a senha
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.08,
-                  ),
-                  child: Text(
-                    "Esqueci a senha",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: MediaQuery.of(context).size.width * 0.03,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w100,
+                GestureDetector(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.08,
                     ),
+                    child: esqueci(),
                   ),
                 ),
                 //fim esqueci a senha
@@ -103,7 +170,8 @@ class Main extends StatelessWidget {
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(onPressed:login)
+                    ),
                 ),
 
                 //fim botao
@@ -118,9 +186,7 @@ class Main extends StatelessWidget {
             ),
           ),
         ),
-      ),
-     
-    );
+      );
   }
 }
 
@@ -166,7 +232,8 @@ class _nomeState extends State<nome> {
 }
 
 class email extends StatefulWidget {
-  const email({super.key});
+  final TextEditingController controller;
+  const email({super.key, required this.controller});
 
   @override
   State<email> createState() => _emailState();
@@ -176,6 +243,7 @@ class _emailState extends State<email> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         hintText: "xxxxx@gmail.com",
         hintStyle: TextStyle(
@@ -207,7 +275,8 @@ class _emailState extends State<email> {
 }
 
 class senha extends StatefulWidget {
-  const senha({super.key});
+  final TextEditingController controller;
+  const senha({super.key, required this.controller});
 
   @override
   _senhaState createState() => _senhaState();
@@ -225,6 +294,7 @@ class _senhaState extends State<senha> {
 
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       autofocus: false,
       obscureText: senha,
       decoration: InputDecoration(
@@ -261,7 +331,9 @@ class _senhaState extends State<senha> {
 }
 
 class botao extends StatefulWidget {
-  const botao({super.key});
+  // final UsuarioGeral usuario;
+  final VoidCallback onPressed;
+  botao({super.key, required this.onPressed});
 
   @override
   State<botao> createState() => _botaoState();
@@ -272,9 +344,7 @@ class _botaoState extends State<botao> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => TelaPrincipal())),
+        widget.onPressed,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -283,14 +353,6 @@ class _botaoState extends State<botao> {
             colors: [Colors.blue, Colors.indigoAccent],
           ),
           borderRadius: const BorderRadius.all(Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
-              offset: const Offset(0, 4),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -327,7 +389,7 @@ class imagem extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.25,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/imagens/LOGO.png"), //fundo da imagem
+          image: AssetImage("assets/imagens/logo.png"), //fundo da imagem
           fit: BoxFit.fill,
         ),
       ),
@@ -353,6 +415,34 @@ class texcadastro extends StatelessWidget {
           fontSize: MediaQuery.of(context).size.width * 0.03,
           fontFamily: "Poppins",
           fontWeight: FontWeight.w200,
+        ),
+      ),
+    );
+  }
+}
+
+class esqueci extends StatefulWidget {
+  const esqueci({super.key});
+
+  @override
+  State<esqueci> createState() => _esqueciState();
+}
+
+class _esqueciState extends State<esqueci> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap:
+          () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => Esqueciasenha())),
+      child: Text(
+        "Esqueci a senha",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.width * 0.03,
+          fontFamily: "Poppins",
+          fontWeight: FontWeight.w100,
         ),
       ),
     );

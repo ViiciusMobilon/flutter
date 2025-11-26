@@ -1,29 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_principal/cadastro/Contratante.dart';
-import 'package:projeto_principal/cadastro/Empresa.dart';
-import 'package:projeto_principal/cadastro/Prestador.dart';
-import 'package:projeto_principal/cadastro/cadastro1.dart';
+import 'package:tcc/cadastro/Contratante.dart';
+import 'package:tcc/cadastro/Empresa.dart';
+import 'package:tcc/cadastro/Prestador.dart';
+import 'package:tcc/cadastro/cadastro1.dart';
+import 'package:tcc/data/models/user.dart';
+import 'package:tcc/data/models/userForm.dart';
 
-void main() => runApp(Escolha());
+
+// void main() => runApp(Escolha());
+
 
 class Escolha extends StatelessWidget {
-  const Escolha({super.key});
+  final Userform usuario;
+  const Escolha({super.key, required  this.usuario});
 
   @override
   Widget build(BuildContext context) {
+    print( "Email: ${usuario.email}");
+    print( "senha: ${usuario.password}");
+    print( "senhaconfirmation: ${usuario.confirmation_password}");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
-  icon: Icon(Icons.arrow_back, color: Colors.black),
-  onPressed: () {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Cadastro()),
-    );
-  },
-),
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Cadastro()),
+              );
+            },
+          ),
           title: Text(
             "Faça sua escolha",
             style: TextStyle(
@@ -50,7 +58,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: button_empresa(),
+                    child: button_empresa(usuario: usuario,),
                   ),
                 ),
                 //fim button_empresa
@@ -62,7 +70,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: button_prestador(),
+                    child: button_prestador(usuario: usuario,),
                   ),
                 ),
                 //fim prestador
@@ -74,7 +82,7 @@ class Escolha extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.25,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: _button_contratante(),
+                    child: _button_contratante(usuario: usuario,),
                   ),
                 ),
                 //fim contratante
@@ -88,7 +96,8 @@ class Escolha extends StatelessWidget {
 }
 
 class button_empresa extends StatefulWidget {
-  const button_empresa({super.key});
+  final Userform usuario;
+  const button_empresa({super.key, required this.usuario});
 
   @override
   State<button_empresa> createState() => _button_empresaState();
@@ -99,9 +108,13 @@ class _button_empresaState extends State<button_empresa> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Empresa())),
+          () {
+            widget.usuario.tipo = TipoUsuario.empresa.name;
+            print("tipo: ${TipoUsuario.empresa.name}");
+
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Empresa(usuario: widget.usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.8,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -141,7 +154,8 @@ class _button_empresaState extends State<button_empresa> {
 }
 
 class button_prestador extends StatefulWidget {
-  const button_prestador({super.key});
+  final Userform usuario;
+  const button_prestador({super.key, required this.usuario});
 
   @override
   State<button_prestador> createState() => _button_prestadorState();
@@ -152,9 +166,12 @@ class _button_prestadorState extends State<button_prestador> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Prestador())),
+          (){
+            widget.usuario.tipo = TipoUsuario.prestador.name;
+            print("tipo: ${TipoUsuario.prestador.name}");
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Prestador(usuario: widget.usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,
@@ -194,7 +211,8 @@ class _button_prestadorState extends State<button_prestador> {
 }
 
 class _button_contratante extends StatefulWidget {
-  const _button_contratante({super.key});
+  final Userform usuario;
+  const _button_contratante({super.key,  required this.usuario});
 
   @override
   State<_button_contratante> createState() => __button_contratanState();
@@ -205,9 +223,12 @@ class __button_contratanState extends State<_button_contratante> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:
-          () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute(builder: (context) => Contratante())),
+          () {
+            // final Userform usuario = Userform();
+            widget.usuario.tipo = TipoUsuario.contratante.name;
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Contratante(usuario: widget.usuario),),);
+            
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.3,
         width: MediaQuery.of(context).size.width * 0.5,

@@ -2,24 +2,66 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:projeto_principal/cadastro/CEP.dart';
-import 'package:projeto_principal/cadastro/Escolha.dart';
+import 'package:tcc/cadastro/CEP.dart';
+import 'package:tcc/cadastro/Escolha.dart';
+<<<<<<< HEAD
+// ignore: unused_import
+=======
+>>>>>>> frontend
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:tcc/data/controllers/verificar_controller.dart';
+import 'package:tcc/cadastro/dropdown.dart';
+import 'package:tcc/data/models/userForm.dart';
 
 final maskFormatter = MaskTextInputFormatter(
   mask: '(##) #####-####',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 final cpfMaskFormatter = MaskTextInputFormatter(
   mask: '###.###.###-##',
-  filter: { "#": RegExp(r'[0-9]') },
+  filter: {"#": RegExp(r'[0-9]')},
 );
 
-void main() => runApp(const Prestador());
+<<<<<<< HEAD
 
+// void main() => runApp(Prestador(usuario: UsuarioGeral(),));
+=======
 class Prestador extends StatelessWidget {
   const Prestador({super.key});
+>>>>>>> frontend
 
+class Prestador extends StatefulWidget {
+  final Userform usuario;
+  Prestador({super.key, required this.usuario});
+
+  @override
+  State<Prestador> createState() => _PrestadorState();
+}
+
+class _PrestadorState extends State<Prestador> {
+  File? foto;
+  int? id_ramo;
+  final nomeController = TextEditingController();
+  final telefoneController = TextEditingController();
+  final cpfController = TextEditingController();
+  String? erroCPF;
+  String? erroTelefone;
+  String? erroRamo;
+  void limparCPF(){
+    if(erroCPF != null){
+      setState(() => erroCPF = null);
+    }
+  }
+  void limparTel(){
+    if(erroTelefone != null){
+      setState(() => erroTelefone = null);
+    }
+  }
+  void limparRamo(){
+    if(erroRamo != null){
+      setState(() => erroRamo = null);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,21 +70,34 @@ class Prestador extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFFFEF7FD),
+<<<<<<< HEAD
            leading: IconButton(
   icon: Icon(Icons.arrow_back, color: Colors.black),
   onPressed: () {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => Escolha()),
+      MaterialPageRoute(builder: (context) => Escolha(usuario: widget.usuario,)),
     );
   },
 ),
           title:  Text(
+=======
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Escolha()),
+              );
+            },
+          ),
+          title: Text(
+>>>>>>> frontend
             "Cadastro",
-            style: TextStyle(color: Colors.black,
-            fontSize: MediaQuery.of(context).size.width*0.07,
-            fontWeight: FontWeight.w800,
-            fontFamily: "Poppins",),
-             
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: MediaQuery.of(context).size.width * 0.07,
+              fontWeight: FontWeight.w800,
+              fontFamily: "Poppins",
+            ),
           ),
           centerTitle: true,
         ),
@@ -55,7 +110,12 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.2,
               ),
-              child: const Perfilimagem(),
+              child: Perfilimagem(image: foto,
+              OnImageSelected: (file){
+                setState(() {
+                  foto = file;
+                });
+              },),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -64,16 +124,16 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.01,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Nome(),
+              child: Nome(controller: nomeController,),
             ),
             Padding(
               padding: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.03,
                 left: MediaQuery.of(context).size.width * 0.1,
-               
+
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: const Telefone(),
+              child: Telefone(controller: telefoneController, erroTel: erroTelefone, onClearerror: limparTel),
             ),
 
             Padding(
@@ -82,7 +142,7 @@ class Prestador extends StatelessWidget {
                 left: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: cpf(),
+              child: cpf(controller: cpfController, erroCPF: erroCPF, onClearerror: limparCPF),
             ),
 
             Padding(
@@ -92,15 +152,44 @@ class Prestador extends StatelessWidget {
                 bottom: MediaQuery.of(context).size.width * 0.1,
                 right: MediaQuery.of(context).size.width * 0.1,
               ),
-              child: Area(),
+              child: Area(usuario: widget.usuario,
+              erro: erroRamo,
+              onClearerror: limparRamo,
+              onRamoSelecionado: (item){
+                if(item != null){
+                  setState(() {
+                    id_ramo = item.id;
+                  });
+                }
+              },
+              ),
             ),
+<<<<<<< HEAD
          
            Padding(
                   padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.08,
                   ),
-                  child: Center(child: botao()),
+                  child: Center(child: botao(usuario: widget.usuario,
+                  erroRamo: (msg) => setState(() => erroRamo = msg),
+                  idramo: id_ramo,
+                  cpfController: cpfController,
+                  nomeController: nomeController,
+                  telefoneController: telefoneController,
+                  foto: foto,
+                  erroCPF: (msg) => setState(() => erroCPF = msg),
+                  erroTelefone: (msg) => setState(() => erroTelefone = msg)
+                  )),
                 ),
+=======
+
+            Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.08,
+              ),
+              child: Center(child: botao()),
+            ),
+>>>>>>> frontend
           ],
         ),
       ),
@@ -109,22 +198,22 @@ class Prestador extends StatelessWidget {
 }
 
 class Perfilimagem extends StatefulWidget {
-  const Perfilimagem({super.key});
+  final File? image;
+  final void Function(File?) OnImageSelected;
+  Perfilimagem({super.key, required this.image, required this.OnImageSelected});
 
   @override
   State<Perfilimagem> createState() => _PerfilimagemState();
 }
 
 class _PerfilimagemState extends State<Perfilimagem> {
-  File? _image;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+      final file = File(pickedFile.path);
+      widget.OnImageSelected(file);
     }
   }
 
@@ -164,9 +253,10 @@ class _PerfilimagemState extends State<Perfilimagem> {
       child: GestureDetector(
         onTap: _showImageSourceDialog,
         child: ClipOval(
-          child: _image != null
+<<<<<<< HEAD
+          child: widget.image != null
               ? Image.file(
-                  _image!,
+                  widget.image!,
                   width: 150,
                   height: 150,
                   fit: BoxFit.cover,
@@ -183,9 +273,31 @@ class _PerfilimagemState extends State<Perfilimagem> {
                       Icons.camera_alt,
                       size: MediaQuery.of(context).size.width * 0.1,
                       color: Colors.white70,
+=======
+          child:
+              _image != null
+                  ? Image.file(
+                    _image!,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  )
+                  : Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    height: MediaQuery.of(context).size.width * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: MediaQuery.of(context).size.width * 0.1,
+                        color: Colors.white70,
+                      ),
+>>>>>>> frontend
                     ),
                   ),
-                ),
         ),
       ),
     );
@@ -193,7 +305,8 @@ class _PerfilimagemState extends State<Perfilimagem> {
 }
 
 class Nome extends StatefulWidget {
-  const Nome({super.key});
+  final TextEditingController controller; 
+  Nome({super.key, required this.controller});
 
   @override
   State<Nome> createState() => _NomeState();
@@ -203,27 +316,26 @@ class _NomeState extends State<Nome> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       decoration: InputDecoration(
         labelText: "Nome",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "Fulano de Tal",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
-        focusedBorder:OutlineInputBorder(
-           borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
       ),
     );
@@ -231,7 +343,10 @@ class _NomeState extends State<Nome> {
 }
 
 class Telefone extends StatefulWidget {
-  const Telefone({super.key});
+  final TextEditingController controller;
+  final String? erroTel;
+  final VoidCallback onClearerror;
+  Telefone({super.key, required this.controller, required this.erroTel, required this.onClearerror});
 
   @override
   State<Telefone> createState() => _TelefoneState();
@@ -241,39 +356,45 @@ class _TelefoneState extends State<Telefone> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       inputFormatters: [maskFormatter],
-      
+
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         labelText: "Telefone",
         labelStyle: TextStyle(
           color: Colors.black,
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         hintText: "(14)999999999",
         hintStyle: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.05, fontFamily: "Poppins",
+          fontSize: MediaQuery.of(context).size.width * 0.05,
+          fontFamily: "Poppins",
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: const Color.fromRGBO(121, 180, 217, 1),
-          ),
+          borderSide: BorderSide(color: const Color.fromRGBO(121, 180, 217, 1)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.grey,
-           
-          ),
+          borderSide: BorderSide(color: Colors.grey),
         ),
+        errorText: widget.erroTel,
       ),
+      onChanged:  (value){
+        widget.onClearerror();
+      },
     );
+    
   }
 }
 
 class cpf extends StatefulWidget {
-  const cpf({super.key});
+  final TextEditingController controller;
+  final String? erroCPF;
+  final VoidCallback onClearerror;
+  cpf({super.key, required this.controller, required this.erroCPF, required this.onClearerror});
 
   @override
   State<cpf> createState() => _cpfState();
@@ -283,8 +404,9 @@ class _cpfState extends State<cpf> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.controller,
       keyboardType: TextInputType.number,
-  inputFormatters: [cpfMaskFormatter],
+      inputFormatters: [cpfMaskFormatter],
       decoration: InputDecoration(
         hintText: "000.000.000.00",
         hintStyle: TextStyle(
@@ -310,13 +432,17 @@ class _cpfState extends State<cpf> {
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorText: widget.erroCPF
       ),
+      onChanged:  (value){
+        widget.onClearerror();
+      },
     );
   }
 }
 
-
-
+<<<<<<< HEAD
+=======
 class Area extends StatelessWidget {
   final dropValue = ValueNotifier('');
   final dropOpcoes = [
@@ -334,7 +460,7 @@ class Area extends StatelessWidget {
     'Azulejista',
     'Instalador de drywall',
     'Servente de obras',
-    'Outros'
+    'Outros',
   ];
 
   Area({super.key});
@@ -364,9 +490,7 @@ class Area extends StatelessWidget {
                   ),
                 ),
                 fit: FlexFit.loose,
-                constraints: BoxConstraints(
-                  maxHeight: 250,
-                ),
+                constraints: BoxConstraints(maxHeight: 250),
               ),
               dropdownDecoratorProps: DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
@@ -405,22 +529,110 @@ class Area extends StatelessWidget {
   }
 }
 
-
+>>>>>>> frontend
 class botao extends StatefulWidget {
-  const botao({super.key});
+  final Userform usuario;
+  final int? idramo;
+  final File? foto;
+  final TextEditingController nomeController;
+  final TextEditingController telefoneController;
+  final TextEditingController cpfController;
+  final void Function (String?) erroTelefone;
+  final void Function (String?) erroCPF;
+  final void Function (String?) erroRamo;
+  botao({super.key, required this.usuario,
+    required this.idramo,
+    required this.foto,
+    required this.nomeController,
+    required this.telefoneController,
+    required this.cpfController,
+    required this.erroCPF,
+    required this.erroRamo,
+    required this.erroTelefone});
 
   @override
   State<botao> createState() => _botaoState();
 }
 
 class _botaoState extends State<botao> {
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+<<<<<<< HEAD
      onTap:
+          () async{
+            widget.usuario.ramo = widget.idramo;
+            widget.usuario.foto = widget.foto;
+            widget.usuario.nome = widget.nomeController.text;
+            widget.usuario.telefone = widget.telefoneController.text;
+            widget.usuario.cpf = widget.cpfController.text;
+
+            if(widget.telefoneController.text.isEmpty){
+                widget.erroTelefone('Digite um telefone');
+                print('digite um telefone');
+                return;
+              }
+            if(widget.cpfController.text.isEmpty){
+                widget.erroCPF('Digite um cpf');
+                widget.erroCPF('Digite um cpf');
+                print('digite um cpf');
+                return;
+              }
+            
+            if(widget.idramo == null){
+              widget.erroRamo("Selecione um ramo");
+              return;
+            }
+            
+            
+            final verificarController = VerificarController();
+              final vTel = await verificarController.verificar(widget.telefoneController.text, 'check-numero');
+              final vCPF = await verificarController.verificar(widget.cpfController.text, 'check-cpf');
+
+            if((vTel['msg'] as String).isNotEmpty){
+                widget.erroTelefone(vTel['msg']);
+                print('digite um telefone valido');
+                return;
+              }
+            
+            
+            if(vTel['existe'] == true){
+                widget.erroTelefone(vTel['msg']);
+                return;
+              }
+            if((vCPF['msg'] as String).isNotEmpty){
+                widget.erroCPF(vCPF['msg']);
+                print('digite um cpf valido');
+                return;
+              }
+            
+            
+            if(vCPF['existe'] == true){
+                widget.erroCPF(vCPF['msg']);
+                return;
+              }else{
+                Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => CEP(usuario: widget.usuario,)));
+              }
+            
+            print("email:${widget.usuario.email}");
+            print("senha:${widget.usuario.password}");
+            print("senhacon:${widget.usuario.confirmation_password}");
+            print("tipo:${widget.usuario.tipo}");
+            print("foto:${widget.usuario.foto}");
+            print("nome:${widget.usuario.nome}");
+            print("tel:${widget.usuario.telefone}");
+            print("cpf:${widget.usuario.cpf}");
+            print("ramo:${widget.usuario.ramo}");
+      ;},
+=======
+      onTap:
           () => Navigator.of(
             context,
           ).push(MaterialPageRoute(builder: (context) => CEP())),
+>>>>>>> frontend
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -437,7 +649,7 @@ class _botaoState extends State<botao> {
             ),
           ],
         ),
-      
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -446,7 +658,7 @@ class _botaoState extends State<botao> {
                 left: MediaQuery.of(context).size.width * 0.09,
               ),
               child: Text(
-                "Entrar",
+                "Proximo",
                 style: TextStyle(
                   color: const Color.from(
                     alpha: 1,
@@ -467,4 +679,3 @@ class _botaoState extends State<botao> {
     );
   }
 }
-
